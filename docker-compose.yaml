@@ -1,0 +1,16 @@
+version: '3'
+services:
+  database:
+    image: postgres:alpine
+    ports:
+      - "5436:5432"
+    networks:
+      - backend
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    env_file:
+      - .env
+volumes:
+  postgres:
+networks:
+  backend:

@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: tinder
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tinder
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+logging:
+  level:
+    org.springframework.security.web: DEBUG
+    org:
+      hibernate:
+        type: TRACE
+        SQL: DEBUG
+    org.springframework.data.jpa: DEBUG
