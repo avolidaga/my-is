@@ -1,10 +1,9 @@
 package ru.se.ifmo.tinder.dto;
 
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
 
-//как то добавить нужные значения полей
+
 @Data
 @Builder
 public class UserDto{
@@ -13,7 +12,7 @@ public class UserDto{
     private String password;
 //    private String firstName;
 //    private String lastName;
-//    private Integer userSpacesuitDataId; // тут либо тип int либо класса spacesuit??
+//    private Integer userSpacesuitDataId;
 //    private Integer userDataId;
 //    @NotEmpty(message = "Email should not be empty")
 //    private String username;

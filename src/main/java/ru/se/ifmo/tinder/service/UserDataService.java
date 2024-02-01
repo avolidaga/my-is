@@ -20,3 +20,4 @@ public class UserDataService {
         return userDataRepository.getUserDataOnEarth();
     }
 }
+
