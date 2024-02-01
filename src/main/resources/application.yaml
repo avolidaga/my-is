@@ -2,9 +2,9 @@ spring:
   application:
     name: tinder
   datasource:
-    url: jdbc:postgresql://localhost:5436/tinder
+    url: jdbc:postgresql://localhost:5433/tinder
     username: postgres
-    password: root
+    password: saintitmo336204
     driver-class-name: org.postgresql.Driver
 logging:
   level:
