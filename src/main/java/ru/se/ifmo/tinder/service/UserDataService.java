@@ -13,8 +13,9 @@ import java.util.List;
 public class UserDataService {
     private final UserDataRepository userDataRepository;
 
-    public List<UserDataDto> getMars(){
-        return userDataRepository.getUserDataOnMars();
+    public List<UserData> getMars(){
+        List<Integer> idList = userDataRepository.getUserDataOnMars();
+        return userDataRepository.getListAllByUserDataIdIn(idList);
     }
     public List<UserDataDto> getEarth(){
         return userDataRepository.getUserDataOnEarth();

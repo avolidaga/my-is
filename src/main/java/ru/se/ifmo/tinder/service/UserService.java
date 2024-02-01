@@ -23,6 +23,7 @@ public class UserService {
     public void createUser(UserDto userDto){
         User user = UserMapper.toEntityUser(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setUser_data_id(null);
         userRepository.save(user);
     }
 

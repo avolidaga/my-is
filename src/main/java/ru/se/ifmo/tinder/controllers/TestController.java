@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.se.ifmo.tinder.dto.ShootingDto;
 import ru.se.ifmo.tinder.dto.UserDataDto;
+import ru.se.ifmo.tinder.model.UserData;
 import ru.se.ifmo.tinder.service.ShootingService;
 import ru.se.ifmo.tinder.service.UserDataService;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/test")
-@SecurityRequirement(name = "basicAuth")
+//@SecurityRequirement(name = "basicAuth")
 public class TestController {
     private final ShootingService shootingService;
     private final UserDataService userDataService;
@@ -38,8 +39,8 @@ public class TestController {
     }
 
     @PostMapping("getMars")
-    public ResponseEntity<List<UserDataDto>> getMars(){
-        List<UserDataDto> list = userDataService.getMars();
+    public ResponseEntity<List<UserData>> getMars(){
+        List<UserData> list = userDataService.getMars();
         return ResponseEntity.ok(list);
     }
 

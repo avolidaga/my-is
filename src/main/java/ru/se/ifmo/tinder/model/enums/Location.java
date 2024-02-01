@@ -2,9 +2,9 @@ package ru.se.ifmo.tinder.model.enums;
 
 import java.io.Serializable;
 
-public enum Location implements Serializable{
-    EARTH("earth"),
-    MARS("mars");
+public enum Location {
+    EARTH("EARTH"),
+    MARS("MARS");
 
     private final String planet;
 

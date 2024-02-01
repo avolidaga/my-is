@@ -13,7 +13,7 @@ public class UserDto{
 //    private String firstName;
 //    private String lastName;
 //    private Integer userSpacesuitDataId;
-//    private Integer userDataId;
+    //private Integer userDataId;
 //    @NotEmpty(message = "Email should not be empty")
 //    private String username;
 //    @NotEmpty(message = "Password should not be empty")

@@ -1,8 +1,8 @@
 package ru.se.ifmo.tinder.model.enums;
 
 public enum Sex {
-    MEN("men"),
-    WOMEN("women");
+    MEN("MEN"),
+    WOMEN("WOMEN");
 
     private final String sex;
 

@@ -17,11 +17,17 @@ import java.time.LocalDate;
 public class UserData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_data_id")
+    private Integer id;
+    @Column(name = "birth_date")
     private LocalDate birthdate;
+    @Column(name = "sex")
+    @Enumerated(EnumType.STRING)
     private Sex sex;
     private Integer weight;
     private Integer height;
+    @Column(name = "hair_color")
     private String hairColor;
+    @Enumerated(EnumType.STRING)
     private Location location;
 }

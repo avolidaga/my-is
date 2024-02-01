@@ -1,4 +1,4 @@
-CREATE FUNCTION GetUserDataOnMars()
+CREATE FUNCTION GetUserDataOnEarth()
     RETURNS TABLE (
         birthdate DATE,
         sex VARCHAR(10),
