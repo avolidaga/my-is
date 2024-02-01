@@ -131,8 +131,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>target/classes/template</outputDirectory>
-                            <resources>
+                            <outputDirectory>target/classes/static</outputDirectory>                            <resources>
                                 <resource>
                                     <directory>frontend/build</directory>
                                 </resource>
