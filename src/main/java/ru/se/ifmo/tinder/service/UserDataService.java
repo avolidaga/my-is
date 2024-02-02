@@ -24,8 +24,8 @@ public class UserDataService {
         List<Integer> idList = userDataRepository.getUserDataOnEarth();
         return userDataRepository.getListAllByUserDataIdIn(idList);
     }
-    public Integer insertUserData(LocalDate birthdate, Sex sex,Integer weight, Integer height, String hairColor,Location location){
-        return userDataRepository.insertUserData(birthdate,sex,weight,height,hairColor, location);
+    public Integer insertUserData(LocalDate birthdate, Sex sex,Integer weight, Integer height, String hairColor,Location location, Integer user_id){
+        return userDataRepository.insertUserData(birthdate,sex.toString(),weight,height,hairColor, location.toString(), user_id);
     }
 }
 

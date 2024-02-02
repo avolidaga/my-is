@@ -28,6 +28,7 @@ const LoginPage: React.FC = () => {
             password: data.password
         }).then((response => saveTokenInLocalStorage(response.data.credentials)))
         tryPost();
+        localStorage.removeItem("accessToken");
 
     }
 

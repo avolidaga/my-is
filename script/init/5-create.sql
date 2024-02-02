@@ -1,19 +1,19 @@
-CREATE TYPE request_status_enum  AS ENUM (
- 'DECLINED',
- 'ON_CHECKING',
- 'IN_PROGRESS',
- 'ACCEPTED'
-);
-
-CREATE TYPE sex_enum AS ENUM (
- 'MEN',
- 'WOMEN'
-);
-
-CREATE TYPE location_enum AS ENUM (
- 'EARTH',
- 'MARS'
-);
+-- CREATE TYPE request_status_enum  AS ENUM (
+--  'DECLINED',
+--  'ON_CHECKING',
+--  'IN_PROGRESS',
+--  'ACCEPTED'
+-- );
+--
+-- CREATE TYPE sex_enum AS ENUM (
+--  'MEN',
+--  'WOMEN'
+-- );
+--
+-- CREATE TYPE location_enum AS ENUM (
+--  'EARTH',
+--  'MARS'
+-- );
 
 -- CREATE TABLE IF NOT EXISTS company_specialisation (
 --                                                       company_specialisation_id serial PRIMARY KEY,

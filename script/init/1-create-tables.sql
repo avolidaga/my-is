@@ -1,9 +1,3 @@
-CREATE TABLE users (
-                       id SERIAL PRIMARY KEY,
-                       username VARCHAR(255) NOT NULL,
-                       password VARCHAR(255) NOT NULL
-);
-
 CREATE TABLE shooting (
                           id SERIAL PRIMARY KEY,
                           coach VARCHAR,
@@ -29,3 +23,12 @@ CREATE TABLE IF NOT EXISTS user_data (
     hair_color VARCHAR(255) NOT NULL,
     location location_enum NOT NULL CHECK (location IN ('EARTH', 'MARS'))
     );
+
+CREATE TABLE users (
+   id SERIAL PRIMARY KEY,
+   username VARCHAR(255) NOT NULL,
+   password VARCHAR(255) NOT NULL,
+   user_data_id INT,
+   CONSTRAINT fk_user_user_data FOREIGN KEY (user_data_id) REFERENCES user_data(user_data_id) ON DELETE CASCADE
+
+);

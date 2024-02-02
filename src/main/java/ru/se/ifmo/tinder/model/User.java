@@ -18,7 +18,9 @@ public class User {
     private Integer id;
     private String username;
     private String password;
-    private Integer user_data_id;
+    @ManyToOne
+    @JoinColumn(name="user_data_id")
+    private UserData user_data_id;
 //    private String firstName;
 
 }

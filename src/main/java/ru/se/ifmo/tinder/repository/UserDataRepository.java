@@ -29,9 +29,9 @@ public interface UserDataRepository extends JpaRepository<UserData,Integer> {
 
 
     @Transactional
-    @Query(value = "SELECT * FROM insert_user_data(:birth_date, :sex, :weight, :height, :hair_color, :location)", nativeQuery = true)
-    Integer insertUserData(@Param("birth_date") LocalDate birth_date, @Param("sex") Sex sex, @Param("weight") int weight,
-                           @Param("height") int height, @Param("hair_color") String hair_color, @Param("location") Location location);
+    @Query(value = "SELECT * FROM insert_user_data(:birth_date, CAST(:sex AS sex_enum), :weight, :height, :hair_color, CAST(:location AS location_enum), :user_id)", nativeQuery = true)
+    Integer insertUserData(@Param("birth_date") LocalDate birth_date, @Param("sex") String sex, @Param("weight") int weight,
+                           @Param("height") int height, @Param("hair_color") String hair_color, @Param("location") String location, @Param("user_id") Integer user_id);
 
 }
 
