@@ -45,8 +45,8 @@ public class TestController {
     }
 
     @PostMapping("getEarth")
-    public ResponseEntity<List<UserDataDto>> getEarth(){
-        List<UserDataDto> list = userDataService.getEarth();
+    public ResponseEntity<List<UserData>> getEarth(){
+        List<UserData> list = userDataService.getEarth();
         return ResponseEntity.ok(list);
     }
 }

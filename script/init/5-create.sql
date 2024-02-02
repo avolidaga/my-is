@@ -1,20 +1,20 @@
--- CREATE TYPE request_status_enum  AS ENUM (
---  'DECLINED',
---  'ON_CHECKING',
---  'IN_PROGRESS',
---  'ACCEPTED'
--- );
---
--- CREATE TYPE sex_enum AS ENUM (
---  'MEN',
---  'WOMEN'
--- );
---
--- CREATE TYPE location_enum AS ENUM (
---  'EARTH',
---  'MARS'
--- );
---
+CREATE TYPE request_status_enum  AS ENUM (
+ 'DECLINED',
+ 'ON_CHECKING',
+ 'IN_PROGRESS',
+ 'ACCEPTED'
+);
+
+CREATE TYPE sex_enum AS ENUM (
+ 'MEN',
+ 'WOMEN'
+);
+
+CREATE TYPE location_enum AS ENUM (
+ 'EARTH',
+ 'MARS'
+);
+
 -- CREATE TABLE IF NOT EXISTS company_specialisation (
 --                                                       company_specialisation_id serial PRIMARY KEY,
 --                                                       company_specialisation_name VARCHAR(100) NOT NULL,
@@ -92,7 +92,7 @@
 --     hair_color VARCHAR(255) NOT NULL,
 --     location location_enum NOT NULL CHECK (location IN ('EARTH', 'MARS'))
 --     );
---
+
 -- CREATE TABLE IF NOT EXISTS users (
 --                                      user_id serial PRIMARY KEY,
 --                                      user_spacesuit_data_id INT,

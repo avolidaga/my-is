@@ -1,4 +1,6 @@
-CREATE OR REPLACE FUNCTION insert_shooting_data(username VARCHAR, isKronbars BOOLEAN)
+CREATE OR REPLACE FUNCTION insert_shooting_data(
+username VARCHAR,
+isKronbars BOOLEAN)
 RETURNS INT AS
 $$
 DECLARE

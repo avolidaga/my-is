@@ -13,6 +13,8 @@ import lombok.*;
 public class FabricTexture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "fabric_texture_id")
+    private Integer id;
+    @Column(name = "fabric_texture_name")
     private String name;
 }

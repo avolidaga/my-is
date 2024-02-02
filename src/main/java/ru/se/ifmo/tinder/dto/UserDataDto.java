@@ -10,10 +10,10 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class UserDataDto {
-    private LocalDate birthdate;
+    private LocalDate birth_date;
     private Sex sex;
     private Integer weight;
     private Integer height;
-    private String hairColor;
+    private String hair_color;
     private Location location;
 }

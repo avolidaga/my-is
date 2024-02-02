@@ -13,12 +13,14 @@ import lombok.*;
 public class UserSpacesuitData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_spacesuit_data_id")
+    private Integer id;
     private Integer head;
     private Integer chest;
     private Integer waist;
     private Integer hips;
     private Integer foot_size;
     private Integer height;
+    @Column(name = "fabric_texture_id")
     private Integer fabricTextureDto;
 }
