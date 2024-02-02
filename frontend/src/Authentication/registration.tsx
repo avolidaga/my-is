@@ -1,7 +1,7 @@
 import {Box, Button, styled, TextField, Typography} from "@mui/material";
 import React from "react";
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
-import useNavigate  from 'react-router-dom';
+import {useNavigate}  from 'react-router-dom';
 import axiosApiInstance from "../utils/tokenHelper";
 
 export interface IFormInput {
@@ -19,6 +19,8 @@ const Registration: React.FC = () => {
         })
 
     }
+    const navigate = useNavigate();
+
     const {control, handleSubmit} = useForm<IFormInput>();
 
 
@@ -57,7 +59,7 @@ const Registration: React.FC = () => {
                     <Button
                         style={{
                             margin: "15px 0",
-                            height: "40px", // Уменьшаем высоту кнопки
+                            height: "40px",
                             fontSize: "18px",
                             color: "#FFFFFF"
                         }}
@@ -73,12 +75,12 @@ const Registration: React.FC = () => {
                         display: "block",  alignItems: "center",}} >
                         <Typography sx={{ color: "#48A1D3", textAlign: "center", minWidth: "60%"}}>Уже есть учетная запись?</Typography>
 
-                        <Button sx={{left: "3%"}}
-
+                        <Button sx={{left: "3%"}} onClick={() => navigate("/")}
                         >
                             Войти.</Button>
 
                     </Box>
+
                 </Box>
 
 

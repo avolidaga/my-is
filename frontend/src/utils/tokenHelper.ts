@@ -14,7 +14,7 @@ axiosApiInstance.interceptors.request.use(
         config.headers = config.headers || {};
 
         if (accessToken) {
-            config.headers['Authorization'] = `Bearer ${accessToken}`;
+            config.headers['Authorization'] = `Basic ${accessToken}`;
         } else {
             delete config.headers['Authorization'];
         }

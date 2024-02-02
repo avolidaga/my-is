@@ -2,27 +2,25 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from "axios";
-
-
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import LoginPage from "./Authentication/login";
+import Registration from "./Authentication/registration";
+import UserDataForm from "./UserDataForm";
 
 const App: React.FC = () => {
-    const sendUserData = () => {
-        axios.post('http://localhost:8080/api/auth/register', {
-            username: "string1",
-            password: "string1"
-        })
 
-    }
   return (
-    <div className="App">
-
-        <div>
-            <button onClick={sendUserData}>
-                send
-            </button>
-        </div>
-
-    </div>
+      <BrowserRouter>
+          <Routes>
+              <Route
+                  path="*"
+                  element={<Navigate to="/" replace={true} />}
+              />
+              <Route path="/" element={<LoginPage/>}/>
+              <Route path="/register" element={<Registration/>}/>
+              <Route path="/form" element={ <UserDataForm/>}/>
+          </Routes>
+      </BrowserRouter>
   );
 }
 
