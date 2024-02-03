@@ -18,17 +18,15 @@ const LoginPage: React.FC = () => {
     const tryPost = () => {
         axiosApiInstance.post('/test/post').then((response => console.log(response)))
 
-        // localStorage.removeItem("accessToken");
 
     }
     const onSubmit: SubmitHandler<IFormInput> = data => {
-
+        localStorage.removeItem("accessToken");
         axiosApiInstance.post('/auth/login', {
             username: data.username,
             password: data.password
         }).then((response => saveTokenInLocalStorage(response.data.credentials)))
         tryPost();
-        localStorage.removeItem("accessToken");
 
     }
 

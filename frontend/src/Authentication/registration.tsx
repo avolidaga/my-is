@@ -12,6 +12,8 @@ export interface IFormInput {
 const Registration: React.FC = () => {
 
     const onSubmit: SubmitHandler<IFormInput> = data => {
+        //TODO fix interceptors
+        localStorage.removeItem("accessToken");
 
         axiosApiInstance.post('/auth/register', {
             username: data.username,
