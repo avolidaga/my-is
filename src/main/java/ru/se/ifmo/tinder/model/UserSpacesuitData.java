@@ -21,6 +21,7 @@ public class UserSpacesuitData {
     private Integer hips;
     private Integer foot_size;
     private Integer height;
-    @Column(name = "fabric_texture_id")
-    private Integer fabricTextureDto;
+    @ManyToOne
+    @JoinColumn(name="fabric_texture_id")
+    private FabricTexture fabricTextureId;
 }

@@ -13,6 +13,6 @@ public class UserSpacesuitDataDto {
     private Integer hips;
     private Integer foot_size;
     private Integer height;
-    private Integer fabricTextureDto;
+    private Integer fabric_texture_id;
 
 }

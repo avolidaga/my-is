@@ -26,14 +26,11 @@ package ru.se.ifmo.tinder.controllers;
 public class FormController {
 
     private final UserDataService userDataService;
-    private final UserRepository userRepository;
+
 
     @PostMapping("submitForm")
-    public ResponseEntity<Integer> submitForm(@RequestBody UserDataDto userDataDto, Principal principal){
-        String username = principal.getName();
-        Optional<User> user = userRepository.findByUsername(username);
-        Integer userId = user.get().getId();
-        Integer id = userDataService.insertUserData(userDataDto.getBirth_date(),userDataDto.getSex(),userDataDto.getWeight(),userDataDto.getHeight(),userDataDto.getHair_color(),userDataDto.getLocation(), userId);
+    public ResponseEntity<Integer> submitForm(@RequestBody UserDataDto userDataDto,  Principal principal){
+        Integer id = userDataService.insertUserData(userDataDto.getBirth_date(),userDataDto.getSex(),userDataDto.getWeight(),userDataDto.getHeight(),userDataDto.getHair_color(),userDataDto.getLocation(), principal);
         return ResponseEntity.ok(id);
     }
 
