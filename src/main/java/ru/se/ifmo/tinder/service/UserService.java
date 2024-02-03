@@ -9,10 +9,13 @@ import ru.se.ifmo.tinder.dto.LoginResponseDto;
 import ru.se.ifmo.tinder.dto.UserDto;
 import ru.se.ifmo.tinder.mapper.UserMapper;
 import ru.se.ifmo.tinder.model.User;
+import ru.se.ifmo.tinder.model.UserData;
+import ru.se.ifmo.tinder.repository.UserDataRepository;
 import ru.se.ifmo.tinder.repository.UserRepository;
 
 import java.security.Principal;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final UserDataRepository userDataRepository;
 
     public void createUser(UserDto userDto){
         User user = UserMapper.toEntityUser(userDto);
@@ -50,5 +54,16 @@ public class UserService {
 
         // Вызываем метод репозитория для добавления связи
         userRepository.addUserConnection(userId1, userId2);
+    }
+
+
+
+    public List<UserData> getConnections(Principal principal){
+        String username = principal.getName();
+        Optional<User> user1 = userRepository.findByUsername(username);
+        Integer userId1 = user1.get().getId();
+        List<Integer> idList = userRepository.getUsersIdConnection(userId1);
+
+        return userDataRepository.getListAllByUserDataIdIn(idList);
     }
 }
