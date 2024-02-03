@@ -6,6 +6,7 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import LoginPage from "./Authentication/login";
 import Registration from "./Authentication/registration";
 import UserDataForm from "./UserDataForm";
+import SpacesuitForm from "./SpacesuitForm";
 
 const App: React.FC = () => {
 
@@ -19,6 +20,8 @@ const App: React.FC = () => {
               <Route path="/" element={<LoginPage/>}/>
               <Route path="/register" element={<Registration/>}/>
               <Route path="/form" element={ <UserDataForm/>}/>
+              <Route path="/spacesuit-form" element={ <SpacesuitForm/>}/>
+
           </Routes>
       </BrowserRouter>
   );

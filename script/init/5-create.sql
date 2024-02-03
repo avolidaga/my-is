@@ -1,3 +1,4 @@
+для Шаха: это НЕ запускать
 -- CREATE TYPE request_status_enum  AS ENUM (
 --  'DECLINED',
 --  'ON_CHECKING',
@@ -50,7 +51,11 @@
 --     CONSTRAINT unique_fabric_texture_name UNIQUE (fabric_texture_name)
 --     );
 --
+произошел ивент в юзер ревестах
+    перешел из созданного в готовый
+    идем делать апдейт в спейсьют дата
 -- CREATE TABLE IF NOT EXISTS user_spacesuit_data (
+добавить поле готов не готов, менять в зависимости от обработки заявки
 --                                                    user_spacesuit_data_id serial PRIMARY KEY,
 --                                                    head INT NOT NULL CHECK (head > 0),
 --     chest INT NOT NULL CHECK (chest > 0),
@@ -65,15 +70,10 @@
 -- CREATE TABLE IF NOT EXISTS user_request (
 --                                             user_request_id serial PRIMARY KEY,
 --                                             user_spacesuit_data_id INT NOT NULL,
+статус
 --                                             CONSTRAINT fk_user_request_user_spacesuit_data FOREIGN KEY (user_spacesuit_data_id) REFERENCES user_spacesuit_data(user_spacesuit_data_id) ON DELETE CASCADE
 --     );
--- CREATE TABLE IF NOT EXISTS staff_request (
---                                              staff_request_id serial PRIMARY KEY,
---                                              status request_status_enum NOT NULL,
---                                              name VARCHAR(100) NOT NULL,
---     user_request_id INT,
---     CONSTRAINT fk_staff_request_user_request FOREIGN KEY (user_request_id) REFERENCES user_request(user_request_id) ON DELETE CASCADE
---     );
+
 --
 -- CREATE TABLE IF NOT EXISTS staff (
 --                                      staff_id serial PRIMARY KEY,
