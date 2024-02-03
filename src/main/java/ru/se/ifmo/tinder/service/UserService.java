@@ -11,7 +11,9 @@ import ru.se.ifmo.tinder.mapper.UserMapper;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.repository.UserRepository;
 
+import java.security.Principal;
 import java.util.Base64;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -38,5 +40,15 @@ public class UserService {
         return LoginResponseDto.builder()
                 .credentials(base64Credentials)
                 .build();
+    }
+
+    public void addConnection(Principal principal, Integer userId2) {
+        // Получаем id первого пользователя из Principal
+        String username = principal.getName();
+        Optional<User> user1 = userRepository.findByUsername(username);
+        Integer userId1 = user1.get().getId();
+
+        // Вызываем метод репозитория для добавления связи
+        userRepository.addUserConnection(userId1, userId2);
     }
 }

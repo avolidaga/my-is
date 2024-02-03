@@ -66,14 +66,15 @@ CREATE TABLE users (
 
 );
 
-
-
-
-
-
 CREATE TABLE IF NOT EXISTS user_request (
     user_request_id serial PRIMARY KEY,
     user_spacesuit_data_id INT NOT NULL,
     status request_status_enum DEFAULT  'IN_PROGRESS',
     CONSTRAINT fk_user_request_user_spacesuit_data FOREIGN KEY (user_spacesuit_data_id) REFERENCES user_spacesuit_data(user_spacesuit_data_id) ON DELETE CASCADE
+);
+
+CREATE TABLE user_connections (
+      id SERIAL PRIMARY KEY,
+      user_id_1 INTEGER REFERENCES users(id),
+      user_id_2 INTEGER REFERENCES users(id)
 );
