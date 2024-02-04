@@ -15,12 +15,13 @@ import ru.se.ifmo.tinder.service.ShootingService;
 import ru.se.ifmo.tinder.service.UserDataService;
 import ru.se.ifmo.tinder.service.UserService;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/test")
-//@SecurityRequirement(name = "basicAuth")
+@SecurityRequirement(name = "basicAuth")
 public class InformationController {
     private final ShootingService shootingService;
     private final UserDataService userDataService;
@@ -54,8 +55,8 @@ public class InformationController {
     }
 
     @PostMapping("getAllUserData")
-    public  ResponseEntity<List<UserData>> getAllUserData(){
-        List<UserData> list = userDataService.getAllUserData();
+    public  ResponseEntity<List<UserData>> getAllUserData(Principal principal){
+        List<UserData> list = userDataService.getAllUserData(principal);
         return ResponseEntity.ok(list);
     }
 }

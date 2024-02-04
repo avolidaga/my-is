@@ -1,11 +1,11 @@
 import React from 'react';
-import '../App.css';
+import '../../App.css';
 import axios from "axios";
-import {saveTokenInLocalStorage} from "../utils/saveDataInLocalstorage";
+import {saveTokenInLocalStorage} from "../../utils/saveDataInLocalstorage";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {Box, Button, TextField, Typography} from "@mui/material";
 import {IFormInput} from "./registration";
-import axiosApiInstance from "../utils/tokenHelper";
+import axiosApiInstance from "../../utils/tokenHelper";
 import {useNavigate} from "react-router-dom";
 
 
@@ -20,13 +20,18 @@ const LoginPage: React.FC = () => {
 
 
     }
-    const onSubmit: SubmitHandler<IFormInput> = data => {
+
+    const match = () => {
+        axios.post('http://localhost:8080/api/connection/getConnections', {}, {headers: {'Authorization' : `Basic ${localStorage.getItem("accessToken")}`}}).then((response => console.log(response)))
+    }
+    const onSubmit: SubmitHandler<IFormInput> = async data => {
         localStorage.removeItem("accessToken");
-        axiosApiInstance.post('/auth/login', {
+        await axiosApiInstance.post('/auth/login', {
             username: data.username,
             password: data.password
         }).then((response => saveTokenInLocalStorage(response.data.credentials)))
-        tryPost();
+        // tryPost();
+        match();
 
     }
 

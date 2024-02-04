@@ -2,7 +2,7 @@ import {Box, Button, styled, TextField, Typography} from "@mui/material";
 import React from "react";
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import {useNavigate}  from 'react-router-dom';
-import axiosApiInstance from "../utils/tokenHelper";
+import axiosApiInstance from "../../utils/tokenHelper";
 
 export interface IFormInput {
     username: string,

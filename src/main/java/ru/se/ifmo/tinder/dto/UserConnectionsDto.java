@@ -1,13 +1,13 @@
 package ru.se.ifmo.tinder.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 @Data
 @Builder
-@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserConnectionsDto {
     //private Integer user_id_1;
-    private Integer user_id_2;
+    private Integer user2;
+
 }

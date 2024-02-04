@@ -37,6 +37,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
 //    List<Integer> getListAllUserById(List<Integer> idList);
 
 
+    @Transactional
+    @Query(value = "SELECT id FROM users WHERE user_data_id=(:userDataId)", nativeQuery = true)
+    Integer findUserByUserDataId(Integer userDataId);
+
 }
 
 

@@ -29,8 +29,8 @@ public interface UserDataRepository extends JpaRepository<UserData,Integer> {
     List<UserData> getListAllByUserDataIdIn(List<Integer> idList);
 
     @Transactional
-    @Query(value = "SELECT * FROM GetAllUserData()", nativeQuery = true)
-    List<Integer> getAllUserData();
+    @Query(value = "SELECT * FROM GetAllUserData(:user_id)", nativeQuery = true)
+    List<Integer> getAllUserData(Integer user_id);
 
 
 
@@ -39,8 +39,8 @@ public interface UserDataRepository extends JpaRepository<UserData,Integer> {
     Integer insertUserData(@Param("birth_date") LocalDate birth_date, @Param("sex") String sex, @Param("weight") int weight,
                            @Param("height") int height, @Param("hair_color") String hair_color, @Param("location") String location,@Param("firstname") String firstname,  @Param("user_id") Integer user_id);
 
-//    @Transactional
-//    @Query(value = "SELECT * FROM user_data WHERE user_data_id IN (SELECT user_data_id FROM users WHERE id IN (:idList))", nativeQuery = true)
-//    List<UserData> getListAllByUserDataIdIn(List<Integer> idList);
+    @Transactional
+    @Query(value = "SELECT * FROM user_data WHERE user_data_id IN (SELECT user_data_id FROM users WHERE id IN (:idList))", nativeQuery = true)
+    List<UserData> getListAllByUserDataIdInForConnections(List<Integer> idList);
 
 }

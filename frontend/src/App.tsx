@@ -3,10 +3,11 @@ import logo from './logo.svg';
 import './App.css';
 import axios from "axios";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import LoginPage from "./Authentication/login";
-import Registration from "./Authentication/registration";
-import UserDataForm from "./UserDataForm";
-import SpacesuitForm from "./SpacesuitForm";
+import LoginPage from "./pages/Authentication/login";
+import Registration from "./pages/Authentication/registration";
+import UserDataForm from "./pages/UserDataForm";
+import SpacesuitForm from "./pages/SpacesuitForm";
+import MatchPage from "./pages/Match";
 
 const App: React.FC = () => {
 
@@ -21,6 +22,8 @@ const App: React.FC = () => {
               <Route path="/register" element={<Registration/>}/>
               <Route path="/form" element={ <UserDataForm/>}/>
               <Route path="/spacesuit-form" element={ <SpacesuitForm/>}/>
+              <Route path="/match" element={ <MatchPage/>}/>
+
 
           </Routes>
       </BrowserRouter>

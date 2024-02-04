@@ -53,8 +53,10 @@ public class UserService {
         Optional<User> user1 = userRepository.findByUsername(username);
         Integer userId1 = user1.get().getId();
 
+        Integer userId2 = userRepository.findUserByUserDataId(user_id_2);
+
         // Вызываем метод репозитория для добавления связи
-        return userRepository.addUserConnection(userId1, user_id_2);
+        return userRepository.addUserConnection(userId1, userId2);
     }
 
 
@@ -66,6 +68,6 @@ public class UserService {
         Integer userId1 = user1.get().getId();
         List<Integer> idList = userRepository.getUsersIdConnection(userId1);
 
-        return userDataRepository.getListAllByUserDataIdIn(idList);
+        return userDataRepository.getListAllByUserDataIdInForConnections(idList);
     }
 }

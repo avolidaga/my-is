@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import LoginPage from "./Authentication/login";
-import Registration from "./Authentication/registration";
-import UserDataForm from "./UserDataForm";
+import LoginPage from "./pages/Authentication/login";
+import Registration from "./pages/Authentication/registration";
+import UserDataForm from "./pages/UserDataForm";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

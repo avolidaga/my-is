@@ -10,7 +10,7 @@ BEGIN
     -- Вставка данных в таблицу "user_connections"
 INSERT INTO user_connections (user_id_1, user_id_2)
 VALUES (user_id_1, user_id_2)
-    RETURNING user_connections_id INTO inserted_id;
+    RETURNING id INTO inserted_id;
 
 -- Возвращаем ID вставленной строки
 RETURN inserted_id;

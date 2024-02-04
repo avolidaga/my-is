@@ -19,6 +19,8 @@ import ru.se.ifmo.tinder.service.UserService;
 import java.security.Principal;
 import java.util.List;
 
+import static org.aspectj.runtime.internal.Conversions.intValue;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +32,8 @@ public class ConnectionController {
 
     @PostMapping("connectUsers")
     public ResponseEntity<Integer> connectUsers(@RequestBody UserConnectionsDto userConnectionsDto, Principal principal){
-        Integer id = userService.addConnection(principal, userConnectionsDto.getUser_id_2());
+
+        Integer id = userService.addConnection(principal, (intValue(userConnectionsDto.getUser2())));
         return ResponseEntity.ok(id);
     }
 
