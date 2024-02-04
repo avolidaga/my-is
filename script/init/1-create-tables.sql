@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS fabric_texture (
 CREATE TABLE IF NOT EXISTS user_spacesuit_data (
    user_spacesuit_data_id serial PRIMARY KEY,
    head INT NOT NULL CHECK (head > 0),
-   status request_status_enum DEFAULT  'IN_PROGRESS',
+   status request_status_enum DEFAULT 'IN_PROGRESS',
    chest INT NOT NULL CHECK (chest > 0),
    waist INT NOT NULL CHECK (waist > 0),
    hips INT NOT NULL CHECK (hips > 0),
