@@ -30,4 +30,5 @@ public class UserData {
     private String hairColor;
     @Enumerated(EnumType.STRING)
     private Location location;
+    String firstname;
 }

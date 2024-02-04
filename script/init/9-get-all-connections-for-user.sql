@@ -25,4 +25,3 @@ $$
 
 SELECT * FROM getallconnectionsforuser(1);
 
-DELETE FROM user_connections WHERE user_id_1=1 AND user_id_2=2;

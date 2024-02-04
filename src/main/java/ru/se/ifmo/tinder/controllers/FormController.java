@@ -30,7 +30,7 @@ public class FormController {
 
     @PostMapping("submitForm")
     public ResponseEntity<Integer> submitForm(@RequestBody UserDataDto userDataDto,  Principal principal){
-        Integer id = userDataService.insertUserData(userDataDto.getBirth_date(),userDataDto.getSex(),userDataDto.getWeight(),userDataDto.getHeight(),userDataDto.getHair_color(),userDataDto.getLocation(), principal);
+        Integer id = userDataService.insertUserData(userDataDto.getBirth_date(),userDataDto.getSex(),userDataDto.getWeight(),userDataDto.getHeight(),userDataDto.getHair_color(),userDataDto.getLocation(),userDataDto.getFirstname(), principal);
         return ResponseEntity.ok(id);
     }
 

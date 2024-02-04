@@ -16,4 +16,5 @@ public class UserDataDto {
     private Integer height;
     private String hair_color;
     private Location location;
+    private String firstname;
 }

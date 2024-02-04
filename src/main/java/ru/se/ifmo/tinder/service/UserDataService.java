@@ -29,11 +29,15 @@ public class UserDataService {
         List<Integer> idList = userDataRepository.getUserDataOnEarth();
         return userDataRepository.getListAllByUserDataIdIn(idList);
     }
-    public Integer insertUserData(LocalDate birthdate, Sex sex, Integer weight, Integer height, String hairColor, Location location, Principal principal){
+    public Integer insertUserData(LocalDate birthdate, Sex sex, Integer weight, Integer height, String hairColor, Location location, String firstname, Principal principal){
         String username = principal.getName();
         Optional<User> user = userRepository.findByUsername(username);
         Integer userId = user.get().getId();
-        return userDataRepository.insertUserData(birthdate,sex.toString(),weight,height,hairColor, location.toString(), userId);
+        return userDataRepository.insertUserData(birthdate,sex.toString(),weight,height,hairColor, location.toString(),firstname, userId);
+    }
+    public List<UserData> getAllUserData(){
+        List<Integer> idList = userDataRepository.getAllUserData();
+        return userDataRepository.getListAllByUserDataIdIn(idList);
     }
 
 }

@@ -52,12 +52,11 @@ CREATE TABLE IF NOT EXISTS roles (
     role_name text
 );
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
    id SERIAL PRIMARY KEY,
    username VARCHAR(255) NOT NULL,
    password VARCHAR(255) NOT NULL,
    user_spacesuit_data_id INT,
-    name VARCHAR(100) ,
     CONSTRAINT fk_user_user_spacesuit_data FOREIGN KEY (user_spacesuit_data_id) REFERENCES user_spacesuit_data(user_spacesuit_data_id) ON DELETE CASCADE,
    user_data_id INT,
    CONSTRAINT fk_user_user_data FOREIGN KEY (user_data_id) REFERENCES user_data(user_data_id) ON DELETE CASCADE,

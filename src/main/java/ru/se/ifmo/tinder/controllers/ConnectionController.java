@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.se.ifmo.tinder.dto.ShootingDto;
+import ru.se.ifmo.tinder.dto.UserConnectionsDto;
 import ru.se.ifmo.tinder.model.User;
+import ru.se.ifmo.tinder.model.UserConnection;
 import ru.se.ifmo.tinder.model.UserData;
 import ru.se.ifmo.tinder.service.ShootingService;
 import ru.se.ifmo.tinder.service.UserDataService;
@@ -27,9 +29,9 @@ public class ConnectionController {
     private final UserService userService;
 
     @PostMapping("connectUsers")
-    public ResponseEntity<String> connectUsers(@RequestBody Integer userId2, Principal principal){
-        userService.addConnection(principal, userId2);
-        return ResponseEntity.ok("николаев");
+    public ResponseEntity<Integer> connectUsers(@RequestBody UserConnectionsDto userConnectionsDto, Principal principal){
+        Integer id = userService.addConnection(principal, userConnectionsDto.getUser_id_2());
+        return ResponseEntity.ok(id);
     }
 
     @PostMapping("getConnections")
