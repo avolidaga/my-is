@@ -1,16 +1,18 @@
 package ru.se.ifmo.tinder.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.se.ifmo.tinder.dto.LoginResponseDto;
-import ru.se.ifmo.tinder.dto.UserConnectionsDto;
 import ru.se.ifmo.tinder.dto.UserDto;
 import ru.se.ifmo.tinder.mapper.UserMapper;
+import ru.se.ifmo.tinder.model.Roles;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserData;
+import ru.se.ifmo.tinder.repository.RoleRepository;
 import ru.se.ifmo.tinder.repository.UserDataRepository;
 import ru.se.ifmo.tinder.repository.UserRepository;
 
@@ -26,11 +28,14 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final UserDataRepository userDataRepository;
+    private final RoleRepository roleRepository;
 
-    public void createUser(UserDto userDto){
+    public void createUser(UserDto userDto) {
         User user = UserMapper.toEntityUser(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        Roles role = roleRepository.findRolesByRoleName("user");
         user.setUser_data_id(null);
+        user.setRole(role);
         userRepository.save(user);
     }
 
@@ -39,11 +44,13 @@ public class UserService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
         );
-
         String credentials = authRequest.getUsername() + ":" + authRequest.getPassword();
         String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
+        User user = userRepository.findByUsername(authRequest.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException("User not found username: %s".formatted(authRequest.getUsername())));
         return LoginResponseDto.builder()
                 .credentials(base64Credentials)
+                .role(user.getRole().getRoleName())
                 .build();
     }
 
@@ -60,9 +67,7 @@ public class UserService {
     }
 
 
-
-
-    public List<UserData> getConnections(Principal principal){
+    public List<UserData> getConnections(Principal principal) {
         String username = principal.getName();
         Optional<User> user1 = userRepository.findByUsername(username);
         Integer userId1 = user1.get().getId();
