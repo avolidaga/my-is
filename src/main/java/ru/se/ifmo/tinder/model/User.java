@@ -20,9 +20,14 @@ public class User {
     private String username;
     private String password;
     @ManyToOne
+    @JoinColumn(name="user_spacesuit_data_id")
+    private UserSpacesuitData user_spacesuit_data_id;
+    @ManyToOne
     @JoinColumn(name="user_data_id")
     private UserData user_data_id;
-//    private String firstName;
+    @ManyToOne
+    @JoinColumn(name="role_id")
+    private Roles role_id;
 
     @ManyToMany
     @JoinTable(

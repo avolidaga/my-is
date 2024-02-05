@@ -1,10 +1,9 @@
 package ru.se.ifmo.tinder.model.enums;
 
 public enum Status {
-    DECLINED("declined"),
-    ON_CHECKING("on checking"),
-    IN_PROGRESS("in progress"),
-    ACCEPTED("accepted");
+    DECLINED("DECLINED"),
+    READY("READY"),
+    IN_PROGRESS("IN_PROGRESS");
 
     private final String status;
 
@@ -20,5 +19,6 @@ public enum Status {
     public String toString() {
         return super.toString().toUpperCase();
     }
+
 }
 
