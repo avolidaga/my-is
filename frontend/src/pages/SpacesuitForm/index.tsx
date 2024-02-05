@@ -5,6 +5,7 @@ import useNavigate  from 'react-router-dom';
 import axiosApiInstance from "../../utils/tokenHelper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
 export interface SpacesuitFormInput {
     head: number,
     chest: number,
@@ -21,6 +22,19 @@ const SpacesuitForm: React.FC = () => {
         console.log(data)
 
         //post запрос
+        axiosApiInstance.post('api/formSpacesuit/submitFormSpacesuit',
+            {
+            head: data.head,
+                chest: data.chest, waist: data.waist, hips: data.hips, foot_size: data.foot_size,
+                height: data.foot_size, fabric_texture_id: data.fabric_texture_id
+
+        }, {headers: {'Authorization' : `Basic ${localStorage.getItem("accessToken")}`}})
+            .then((response => {
+                console.log(response);
+            }))
+            .catch((error) => {
+                console.error(error);
+            });
 
     }
     const {control, handleSubmit} = useForm<SpacesuitFormInput>();

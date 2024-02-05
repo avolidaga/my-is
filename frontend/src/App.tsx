@@ -8,6 +8,7 @@ import Registration from "./pages/Authentication/registration";
 import UserDataForm from "./pages/UserDataForm";
 import SpacesuitForm from "./pages/SpacesuitForm";
 import MatchPage from "./pages/Match";
+import GalleryPage from "./pages/Gallery";
 
 const App: React.FC = () => {
 
@@ -23,8 +24,7 @@ const App: React.FC = () => {
               <Route path="/form" element={ <UserDataForm/>}/>
               <Route path="/spacesuit-form" element={ <SpacesuitForm/>}/>
               <Route path="/match" element={ <MatchPage/>}/>
-
-
+              <Route path="/gallery" element={ <GalleryPage/>}/>
           </Routes>
       </BrowserRouter>
   );

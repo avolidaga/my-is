@@ -12,8 +12,8 @@ const MatchPage: React.FC = () => {
     const navigate = useNavigate();
     const [resultArray, setResultArray] = useState<any[]>([]);
 
-    const match = () => {
-        axios.post('http://localhost:8080/api/test/getAllUserData', {}, {headers: {'Authorization' : `Basic ${localStorage.getItem("accessToken")}`}})
+    const getMatches = () => {
+        axiosApiInstance.post('/connection/getConnections', {}, {headers: {'Authorization' : `Basic ${localStorage.getItem("accessToken")}`}})
             .then((response => {
                 console.log(response);
                 setResultArray(response.data);
@@ -24,24 +24,8 @@ const MatchPage: React.FC = () => {
             });
     }
 
-    const connectUsers = (userId: number) => {
-        axios.post(
-            'http://localhost:8080/api/connection/connectUsers',
-            {user2: userId},
-            { headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`} }
-        )
-            .then((response) => {
-                console.log(response);
-                // Дополнительные действия после успешного соединения пользователей
-            })
-            .catch((error) => {
-                console.error(error);
-                // Обработка ошибок при соединении пользователей
-            });
-    }
-
     useEffect(() => {
-        match();
+        getMatches();
     }, []);
 
     return (
@@ -70,13 +54,21 @@ const MatchPage: React.FC = () => {
                                 hair_color={item.hairColor}
                                 location={item.location}
                             />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => connectUsers(item.id)}
-                            >
-                                Connect Users
-                            </Button>
+                            {
+                                item.location == "MARS" ? <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => navigate("/spacesuit-form")}
+                                >
+                                    Создать скафандр
+                                </Button> :
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                    >
+                                        Организовать встречу
+                                    </Button>
+                            }
                         </Grid>
                     ))
                 }

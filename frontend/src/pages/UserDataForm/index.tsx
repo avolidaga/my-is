@@ -1,7 +1,7 @@
 import {Box, Button, FormControlLabel, Radio, RadioGroup, styled, TextField, Typography} from "@mui/material";
 import React, {useState} from "react";
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
-import useNavigate  from 'react-router-dom';
+import {useNavigate}  from 'react-router-dom';
 import axiosApiInstance from "../../utils/tokenHelper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -16,6 +16,7 @@ export interface UserDataFormInput {
 }
 
 const UserDataForm: React.FC = () => {
+    const navigate = useNavigate();
 
     const onSubmit: SubmitHandler<UserDataFormInput> = data => {
 
@@ -29,6 +30,15 @@ const UserDataForm: React.FC = () => {
         console.log(data)
 
         //post запрос
+        axiosApiInstance.post('/form/submitForm', {birth_date: formattedDate,
+            sex: data.sex,
+            weight: data.weight,
+            height: data.height,
+            hair_color: data.hair_color,
+            location: data.location} )
+
+        navigate("/gallery");
+
 
     }
     const {control, handleSubmit} = useForm<UserDataFormInput>();
@@ -116,6 +126,7 @@ const UserDataForm: React.FC = () => {
                         size="large"
                         variant="contained"
                         type="submit"
+                        // onClick={() => navigate("/gallery")}
 
                     >
                         Отправить

@@ -92,9 +92,9 @@ const LoginPage: React.FC = () => {
 
                         <Button sx={{left: "3%"}}
                             onClick={() => navigate("/register")}
-
                         >
-                            Зарегистрироваться.</Button>
+                            Зарегистрироваться.
+                        </Button>
 
                     </Box>
                 </Box>
