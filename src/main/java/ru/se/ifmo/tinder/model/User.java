@@ -27,8 +27,7 @@ public class User {
     private UserData user_data_id;
     @ManyToOne
     @JoinColumn(name="role_id")
-    private Roles role_id;
-
+    private Roles role;
     @ManyToMany
     @JoinTable(
             name = "user_connections",

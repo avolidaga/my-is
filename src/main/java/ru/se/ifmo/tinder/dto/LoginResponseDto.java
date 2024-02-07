@@ -7,5 +7,5 @@ import lombok.Data;
 @Builder
 public class LoginResponseDto {
     private String credentials;
-
+    private String role;
 }
