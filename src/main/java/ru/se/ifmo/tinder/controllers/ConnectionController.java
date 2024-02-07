@@ -33,7 +33,7 @@ public class ConnectionController {
     @PostMapping("connectUsers")
     public ResponseEntity<Integer> connectUsers(@RequestBody UserConnectionsDto userConnectionsDto, Principal principal){
 
-        Integer id = userService.addConnection(principal, (intValue(userConnectionsDto.getUser2())));
+        Integer id = userService.addConnection(principal, (intValue(userConnectionsDto.getUser_data_id_2())));
         return ResponseEntity.ok(id);
     }
 

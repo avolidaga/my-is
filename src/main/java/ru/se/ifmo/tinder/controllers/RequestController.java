@@ -26,5 +26,25 @@ public class RequestController {
         return ResponseEntity.ok(list);
     }
 
+    @PostMapping("getDeclinedUserRequest")
+    public ResponseEntity<List<UserRequest>> getDeclinedUserRequest(){
+        List<UserRequest> list = requestService.getDeclinedUserRequest();
+        return ResponseEntity.ok(list);
+    }
+
+    @PostMapping("getReadyUserRequest")
+    public ResponseEntity<List<UserRequest>> getReadyUserRequest(){
+        List<UserRequest> list = requestService.getReadyUserRequest();
+        return ResponseEntity.ok(list);
+    }
+    @PostMapping("getInProgressUserRequest")
+    public ResponseEntity<List<UserRequest>> getInProgressUserRequest(){
+        List<UserRequest> list = requestService.getInProgressUserRequest();
+        return ResponseEntity.ok(list);
+    }
+
+
+
+
 
 }

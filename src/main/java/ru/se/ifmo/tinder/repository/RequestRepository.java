@@ -20,18 +20,27 @@ public interface RequestRepository extends JpaRepository<UserRequest,Integer> {
     List<Integer> getAllUserRequest();
 
 
+
+
+
+
+    @Transactional
+    @Query(value = "SELECT * FROM GetDeclinedUserRequest()", nativeQuery = true)
+    List<Integer> getDeclinedUserRequest();
+
+
+    @Transactional
+    @Query(value = "SELECT * FROM GetReadyUserRequest()", nativeQuery = true)
+    List<Integer> getReadyUserRequest();
+
+    @Transactional
+    @Query(value = "SELECT * FROM GetInProgressUserRequest()", nativeQuery = true)
+    List<Integer> getInProgressUserRequest();
+
+
+
     @Transactional
     @Query(value = "SELECT * FROM user_request WHERE user_request_id IN (:idList)", nativeQuery = true)
     List<UserRequest> getListAllByUserRequestIdIn(List<Integer> idList);
 
-
-
-
-//    @Transactional
-//    @Query(value = "SELECT * FROM insert_shooting_data(:username, :isKronbars)", nativeQuery = true)
-//    Long insertShootingData(@Param("username") String username, @Param("isKronbars") boolean isKronbars);
-
-
-//    getAllUserRequest
-//getListAllByUserRequestIdIn
 }

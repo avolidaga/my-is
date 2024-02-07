@@ -19,4 +19,19 @@ public class RequestService {
         return requestRepository.getListAllByUserRequestIdIn(idList);
     }
 
+    public List<UserRequest> getDeclinedUserRequest(){
+        List<Integer> idList = requestRepository.getDeclinedUserRequest();
+        return requestRepository.getListAllByUserRequestIdIn(idList);
+    }
+
+    public List<UserRequest> getReadyUserRequest(){
+        List<Integer> idList = requestRepository.getReadyUserRequest();
+        return requestRepository.getListAllByUserRequestIdIn(idList);
+    }
+
+    public List<UserRequest> getInProgressUserRequest(){
+        List<Integer> idList = requestRepository.getInProgressUserRequest();
+        return requestRepository.getListAllByUserRequestIdIn(idList);
+    }
+
 }

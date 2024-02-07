@@ -8,6 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 public class UserConnectionsDto {
     //private Integer user_id_1;
-    private Integer user2;
-
+    private Integer user_data_id_2;
 }
