@@ -40,10 +40,15 @@ public class RequestService {
         requestRepository.updateStatusReady(user_request_id);
     }
 
+
+    public void updateStatusDeclined(Integer user_request_id){
+        requestRepository.updateStatusDeclined(user_request_id);
+    }
+
     //public Integer insertUserData(LocalDate birthdate, Sex sex, Integer weight, Integer height, String hairColor, Location location, String firstname, Principal principal){
     //        String username = principal.getName();
     //        Optional<User> user = userRepository.findByUsername(username);
     //        Integer userId = user.get().getId();
     //        return userDataRepository.insertUserData(birthdate,sex.toString(),weight,height,hairColor, location.toString(),firstname, userId);
-    //    }
+    //    } updateStatusDeclined
 }

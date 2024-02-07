@@ -50,4 +50,11 @@ public interface RequestRepository extends JpaRepository<UserRequest,Integer> {
     @Modifying
     @Query(value = "UPDATE user_request SET status= 'READY' WHERE user_spacesuit_data_id = (:user_spacesuit_data_id)", nativeQuery = true)
     void updateStatusReady(@Param("user_spacesuit_data_id") Integer user_spacesuit_data_id);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE user_request SET status= 'DECLINED' WHERE user_spacesuit_data_id = (:user_spacesuit_data_id)", nativeQuery = true)
+    void updateStatusDeclined(@Param("user_spacesuit_data_id") Integer user_spacesuit_data_id);
+
 }

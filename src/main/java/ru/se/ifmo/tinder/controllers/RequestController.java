@@ -47,18 +47,22 @@ public class RequestController {
     }
 
 
-    @PostMapping("updateStatus")
-    public void updateStatus(@RequestBody RequestDto userRequestDto){
+    @PostMapping("updateStatusReady")
+    public void updateStatusReady(@RequestBody RequestDto userRequestDto){
         requestService.updateStatusReady(userRequestDto.getUser_spacesuit_data_id());
     }
 
+    @PostMapping("updateStatusDeclined")
+    public void updateStatusDeclined(@RequestBody RequestDto userRequestDto){
+        requestService.updateStatusDeclined(userRequestDto.getUser_spacesuit_data_id());
+    }
 
 
     //@PostMapping("submitForm")
     //    public ResponseEntity<Integer> submitForm(@RequestBody UserDataDto userDataDto,  Principal principal){
     //        Integer id = userDataService.insertUserData(userDataDto.getBirth_date(),userDataDto.getSex(),userDataDto.getWeight(),userDataDto.getHeight(),userDataDto.getHair_color(),userDataDto.getLocation(),userDataDto.getFirstname(), principal);
     //        return ResponseEntity.ok(id);
-    //    }
+    //    } updateStatusDeclined
 
 
 }
