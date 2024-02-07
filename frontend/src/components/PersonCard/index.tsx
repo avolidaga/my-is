@@ -1,5 +1,5 @@
 import {Avatar, Box, Divider, Stack, Typography} from "@mui/material";
-// import { parseISO, differenceInYears } from 'date-fns';
+import images from './imagesImport';
 
 interface IPersonCard{
     id: number,
@@ -14,8 +14,33 @@ interface IPersonCard{
 
 const PersonCard: React.FC<IPersonCard> = (props) => {
     const {id, firstname, birth_date, sex, weight, height, hair_color, location} = props;
-    // const birthDateObject = parseISO(birth_date);
-    // const age = differenceInYears(new Date(), birthDateObject);
+
+    const parts = birth_date.split("-");
+
+    const birthYear = parseInt(parts[0], 10);
+    const birthMonth = parseInt(parts[1], 10);
+    const birthDay = parseInt(parts[2], 10);
+
+    const currentDate = new Date();
+
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentDay = currentDate.getDate();
+
+    let age = currentYear - birthYear;
+
+    if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDay < birthDay)) {
+        age--;
+    }
+
+    const imageFolderPrefix = location === 'MARS' ? 'Mars' : 'Earth';
+    const genderFolder = sex === 'MEN' ? 'Men' : 'Women';
+    const ageFolder = age > 35 ? 'Old' : 'Young';
+    const hairColorFolder = ['black', 'brown', 'blonde', 'red', 'gray'].includes(hair_color) ? hair_color : 'brown';
+
+    const imageKey = `${hairColorFolder}${genderFolder}${imageFolderPrefix}${ageFolder}`;
+
+    const selectedImage = images[imageKey];
 
     return (
         <Box
@@ -33,15 +58,14 @@ const PersonCard: React.FC<IPersonCard> = (props) => {
             }}
         >
             <Avatar
-                // alt={`${user.name} ${user.lastName}`}
-                // src={`${user.photo}`}
+                src={selectedImage}
                 sx={{ width: '180px', height: '180px', border: '2px solid #42b1d6', marginTop: '10px' }}
             />
             <Box sx={{ marginTop: "10px", textAlign: "center" }}>
                 <Typography sx={{ fontSize: 16, justifyContent: 'center', cursor: 'pointer' }}>Имя: {firstname}</Typography>
             </Box>
             <Box sx={{ marginTop: "5px", textAlign: "center" }}>
-                <Typography sx={{ fontSize: 16, justifyContent: 'center', cursor: 'pointer' }}>Возраст: {birth_date}</Typography>
+                <Typography sx={{ fontSize: 16, justifyContent: 'center', cursor: 'pointer' }}>Возраст: {age}</Typography>
             </Box>
 
             <Box sx={{ marginTop: "5px", textAlign: "center" }}>

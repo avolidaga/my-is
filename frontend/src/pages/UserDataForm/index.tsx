@@ -1,4 +1,15 @@
-import {Box, Button, FormControlLabel, Radio, RadioGroup, styled, TextField, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    MenuItem,
+    Radio,
+    RadioGroup,
+    Select,
+    styled,
+    TextField,
+    Typography
+} from "@mui/material";
 import React, {useState} from "react";
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import {useNavigate}  from 'react-router-dom';
@@ -7,6 +18,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./style.css"
 export interface UserDataFormInput {
+    firstname: string,
     birth_date: Date,
     sex: string,
     weight: number,
@@ -18,7 +30,7 @@ export interface UserDataFormInput {
 const UserDataForm: React.FC = () => {
     const navigate = useNavigate();
 
-    const onSubmit: SubmitHandler<UserDataFormInput> = data => {
+    const onSubmit: SubmitHandler<UserDataFormInput> = async data => {
 
         //тут дата в нужный формат преобразовывается
         const year = data.birth_date.getFullYear();
@@ -30,12 +42,14 @@ const UserDataForm: React.FC = () => {
         console.log(data)
 
         //post запрос
-        axiosApiInstance.post('/form/submitForm', {birth_date: formattedDate,
+        await axiosApiInstance.post('/form/submitForm', {
+            firstname: data.firstname, birth_date: formattedDate,
             sex: data.sex,
             weight: data.weight,
             height: data.height,
             hair_color: data.hair_color,
-            location: data.location} )
+            location: data.location
+        })
 
         navigate("/gallery");
 
@@ -56,14 +70,26 @@ const UserDataForm: React.FC = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Box
                     sx={{
+                        padding: "25px",
                         width: "300px",
                         height: "500px",
                         flexDirection: "column",
                         justifyContent: "center",
                         display: "flex",
                         position: "relative",
+                        border: "1px solid black"
+
                     }}
                 >
+                    <Controller
+                        name="firstname"
+                        control={control}
+
+                        render={({ field }) => <TextField variant="standard" required fullWidth type="text" label="имя" {...field}/>}
+                    />
+                    <Typography margin="10px 0">
+                        Дата рождения:
+                    </Typography>
                     <Controller
                         name="birth_date"
                         control={control}
@@ -72,7 +98,7 @@ const UserDataForm: React.FC = () => {
                             // TODO ширину пофиксить
                             <div className="customDatePickerWidth">
                                     <DatePicker wrapperClassName="datepicker"
-                                                placeholderText='Select date'
+                                                placeholderText='Выберите дату, начиная с года рождения'
                                                 onChange={(date) => field.onChange(date)}
                                                 selected={field.value}
 
@@ -80,6 +106,9 @@ const UserDataForm: React.FC = () => {
                             </div>
                         )}
                     />
+                    <Typography margin="10px 0">
+                        Пол:
+                    </Typography>
                     <Controller
                         name="sex"
                         control={control}
@@ -102,11 +131,26 @@ const UserDataForm: React.FC = () => {
                         control={control}
                         render={({ field }) => <TextField variant="standard" required fullWidth type="number" label="рост" {...field}/>}
                     />
+                    <Typography margin="10px 0">
+                        Цвет волос:
+                    </Typography>
                     <Controller
                         name="hair_color"
                         control={control}
-                        render={({ field }) => <TextField variant="standard" required fullWidth type="text" label="цвет волос" {...field}/>}
-                    />
+                        defaultValue=""
+                        render={({ field }) => (
+                            <Select
+                                labelId="hairColorLabel"
+                                {...field}
+                            >
+                                <MenuItem value="" disabled>Выберите цвет</MenuItem>
+                                <MenuItem value="black">Черный</MenuItem>
+                                <MenuItem value="brown">Коричневый</MenuItem>
+                                <MenuItem value="blonde">Блонд</MenuItem>
+                                <MenuItem value="red">Рыжий</MenuItem>
+                                <MenuItem value="gray">Седой</MenuItem>
+                            </Select> )}
+                            />
                     <Controller
                         name="location"
                         control={control}
@@ -127,7 +171,6 @@ const UserDataForm: React.FC = () => {
                         variant="contained"
                         type="submit"
                         // onClick={() => navigate("/gallery")}
-
                     >
                         Отправить
                     </Button>

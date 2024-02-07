@@ -1,114 +1,645 @@
--- для Шаха: это НЕ запускать
--- -- CREATE TYPE request_status_enum  AS ENUM (
--- --  'DECLINED',
--- --  'ON_CHECKING',
--- --  'IN_PROGRESS',
--- --  'ACCEPTED'
--- -- );
--- --
--- -- CREATE TYPE sex_enum AS ENUM (
--- --  'MEN',
--- --  'WOMEN'
--- -- );
--- --
--- -- CREATE TYPE location_enum AS ENUM (
--- --  'EARTH',
--- --  'MARS'
--- -- );
---
--- -- CREATE TABLE IF NOT EXISTS company_specialisation (
--- --                                                       company_specialisation_id serial PRIMARY KEY,
--- --                                                       company_specialisation_name VARCHAR(100) NOT NULL,
--- --     CONSTRAINT unique_company_specialisation_name UNIQUE (company_specialisation_name)
--- --     );
--- --
--- -- CREATE TABLE IF NOT EXISTS science_lab (
--- --                                            science_lab_id serial PRIMARY KEY,
--- --                                            sector VARCHAR(255) NOT NULL,
--- --     CONSTRAINT unique_science_lab_sector UNIQUE (sector)
--- --     );
--- --
--- -- CREATE TABLE IF NOT EXISTS lab_request (
--- --                                            staff_request_id serial PRIMARY KEY,
--- --                                            science_lab_id INT NOT NULL,
--- --                                            CONSTRAINT fk_lab_request_science_lab FOREIGN KEY (science_lab_id) REFERENCES science_lab(science_lab_id) ON DELETE CASCADE
--- --     );
--- --
--- -- CREATE TABLE IF NOT EXISTS company_request (
--- --                                                company_request_id serial PRIMARY KEY,
--- --                                                status request_status_enum NOT NULL
--- -- );
--- --
--- -- CREATE TABLE IF NOT EXISTS company (
--- --                                        company_id serial PRIMARY KEY,
--- --                                        name VARCHAR(255) NOT NULL,
--- --     company_specialisation_id INT NOT NULL,
--- --     CONSTRAINT fk_company_company_specialisation FOREIGN KEY (company_specialisation_id) REFERENCES company_specialisation(company_specialisation_id) ON DELETE CASCADE
--- --     );
--- -- CREATE TABLE IF NOT EXISTS fabric_texture (
--- --                                               fabric_texture_id serial PRIMARY KEY,
--- --                                               fabric_texture_name VARCHAR(100) NOT NULL,
--- --     CONSTRAINT unique_fabric_texture_name UNIQUE (fabric_texture_name)
--- --     );
--- --
--- произошел ивент в юзер ревестах
---     перешел из созданного в готовый
---     идем делать апдейт в спейсьют дата
--- -- CREATE TABLE IF NOT EXISTS user_spacesuit_data (
--- добавить поле готов не готов, менять в зависимости от обработки заявки
--- --                                                    user_spacesuit_data_id serial PRIMARY KEY,
--- --                                                    head INT NOT NULL CHECK (head > 0),
--- --     chest INT NOT NULL CHECK (chest > 0),
--- --     waist INT NOT NULL CHECK (waist > 0),
--- --     hips INT NOT NULL CHECK (hips > 0),
--- --     foot_size INT NOT NULL CHECK (foot_size > 0),
--- --     height INT NOT NULL CHECK (height > 0 AND height <= 300),
--- --     fabric_texture_id INT NOT NULL,
--- --     CONSTRAINT fk_user_spacesuit_data_fabric_texture FOREIGN KEY (fabric_texture_id) REFERENCES fabric_texture(fabric_texture_id) ON DELETE CASCADE
--- --     );
--- --
--- -- CREATE TABLE IF NOT EXISTS user_request (
--- --                                             user_request_id serial PRIMARY KEY,
--- --                                             user_spacesuit_data_id INT NOT NULL,
--- статус
--- --                                             CONSTRAINT fk_user_request_user_spacesuit_data FOREIGN KEY (user_spacesuit_data_id) REFERENCES user_spacesuit_data(user_spacesuit_data_id) ON DELETE CASCADE
--- --     );
---
--- --
--- -- CREATE TABLE IF NOT EXISTS staff (
--- --                                      staff_id serial PRIMARY KEY,
--- --                                      specialisation VARCHAR(255) NOT NULL
--- --     );
--- --
--- --
--- --
--- --
--- -- CREATE TABLE IF NOT EXISTS user_data (
--- --                                          user_data_id serial PRIMARY KEY,
--- --                                          birth_date DATE NOT NULL CHECK (birth_date <= CURRENT_DATE - 18 * INTERVAL '1 year'),
--- --     sex sex_enum NOT NULL,
--- --     weight INT NOT NULL CHECK (weight > 0),
--- --     height INT NOT NULL CHECK (height > 0 AND height <= 300),
--- --     hair_color VARCHAR(255) NOT NULL,
--- --     location location_enum NOT NULL CHECK (location IN ('EARTH', 'MARS'))
--- --     );
---
--- -- CREATE TABLE IF NOT EXISTS users (
--- --                                      user_id serial PRIMARY KEY,
--- --                                      user_spacesuit_data_id INT,
--- --                                      user_data_id INT NOT NULL,
--- --                                      name VARCHAR(100) NOT NULL,
--- --     CONSTRAINT fk_user_user_spacesuit_data FOREIGN KEY (user_spacesuit_data_id) REFERENCES user_spacesuit_data(user_spacesuit_data_id) ON DELETE CASCADE,
--- --     CONSTRAINT fk_user_user_data FOREIGN KEY (user_data_id) REFERENCES user_data(user_data_id) ON DELETE CASCADE
--- --     );
--- --
--- -- CREATE TABLE IF NOT EXISTS additional_char (
--- --                                                user_id INT NOT NULL,
--- --                                                user_data_id INT NOT NULL,
--- --                                                value_name VARCHAR(255) NOT NULL,
--- --     value VARCHAR(255) NOT NULL,
--- --     CONSTRAINT fk_additional_char_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
--- --     CONSTRAINT fk_additional_char_user_data FOREIGN KEY (user_data_id) REFERENCES user_data(user_data_id) ON DELETE CASCADE,
--- --     CONSTRAINT unique_additional_char UNIQUE (user_id, user_data_id, value_name)
--- --     );
--- --
+
+
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-12-19', 'WOMEN', 96, 142, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-02-16', 'MEN', 84, 206, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-06-26', 'WOMEN', 148, 204, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-11-11', 'WOMEN', 99, 111, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-11-27', 'WOMEN', 92, 198, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-09-21', 'MEN', 92, 185, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1970-09-16', 'WOMEN', 103, 138, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-07-13', 'WOMEN', 123, 142, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1961-12-05', 'MEN', 110, 168, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-01-19', 'WOMEN', 89, 102, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-02-03', 'MEN', 47, 111, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-08-21', 'WOMEN', 88, 151, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-09-16', 'WOMEN', 112, 196, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-11-05', 'MEN', 120, 113, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-04-02', 'MEN', 139, 114, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-10-12', 'WOMEN', 97, 170, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1980-03-17', 'WOMEN', 88, 115, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1998-08-03', 'MEN', 150, 139, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-12-26', 'MEN', 66, 105, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-02-06', 'MEN', 62, 135, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-06-10', 'MEN', 147, 183, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-05-27', 'WOMEN', 42, 186, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-08-14', 'WOMEN', 82, 142, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-11-08', 'WOMEN', 136, 111, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-05-23', 'MEN', 127, 115, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-11-05', 'MEN', 133, 176, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-03-10', 'WOMEN', 91, 170, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2004-10-01', 'MEN', 54, 192, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-02-21', 'WOMEN', 125, 177, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-04-20', 'WOMEN', 77, 192, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-10-20', 'MEN', 123, 144, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-01-07', 'MEN', 94, 174, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-12-20', 'WOMEN', 82, 109, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-01-21', 'MEN', 125, 163, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-08-25', 'WOMEN', 141, 125, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-04-30', 'WOMEN', 74, 181, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1999-12-15', 'WOMEN', 52, 180, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-07-11', 'MEN', 66, 116, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-08-26', 'WOMEN', 126, 169, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-11-07', 'WOMEN', 45, 120, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-03-18', 'MEN', 133, 163, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-12-07', 'MEN', 87, 170, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-10-03', 'WOMEN', 69, 102, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-09-28', 'WOMEN', 149, 171, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-08-28', 'WOMEN', 65, 202, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1998-06-06', 'MEN', 107, 193, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1996-04-08', 'WOMEN', 136, 156, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-06-22', 'MEN', 136, 102, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-09-09', 'MEN', 127, 123, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-09-11', 'WOMEN', 133, 153, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-11-04', 'MEN', 46, 105, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-07-23', 'MEN', 77, 153, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-10-24', 'MEN', 51, 112, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-08-22', 'WOMEN', 57, 132, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-06-08', 'WOMEN', 122, 126, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-05-19', 'MEN', 107, 135, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-07-28', 'WOMEN', 83, 177, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-12-18', 'MEN', 99, 132, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-12-27', 'WOMEN', 111, 210, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1980-09-05', 'WOMEN', 63, 111, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1994-10-07', 'WOMEN', 70, 209, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-05-15', 'MEN', 144, 148, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-03-19', 'WOMEN', 98, 101, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1983-11-30', 'MEN', 98, 192, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1964-02-06', 'WOMEN', 84, 101, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-06-02', 'WOMEN', 63, 180, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-11-26', 'WOMEN', 106, 163, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-04-07', 'MEN', 99, 112, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1992-05-27', 'MEN', 44, 207, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1961-11-02', 'MEN', 44, 150, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-07-15', 'WOMEN', 137, 114, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1961-06-07', 'MEN', 79, 116, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-08-28', 'WOMEN', 64, 108, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-10-15', 'WOMEN', 77, 148, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-06-01', 'WOMEN', 94, 103, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-10-04', 'MEN', 78, 203, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-11-12', 'WOMEN', 99, 149, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1973-01-31', 'MEN', 79, 147, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1999-11-26', 'WOMEN', 149, 135, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-03-30', 'MEN', 73, 186, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-05-25', 'MEN', 96, 198, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-03-24', 'MEN', 83, 170, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-02-02', 'MEN', 122, 202, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1964-08-03', 'MEN', 52, 176, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-05-19', 'WOMEN', 90, 139, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-07-29', 'WOMEN', 83, 168, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-02-04', 'WOMEN', 117, 203, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-04-01', 'WOMEN', 41, 119, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-12-04', 'MEN', 97, 147, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1998-08-10', 'WOMEN', 109, 192, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-02-13', 'MEN', 105, 151, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-02-04', 'WOMEN', 49, 159, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-08-17', 'WOMEN', 85, 117, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1961-04-27', 'WOMEN', 101, 113, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-09-16', 'WOMEN', 102, 118, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-06-01', 'WOMEN', 131, 141, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-04-20', 'WOMEN', 68, 122, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-09-05', 'WOMEN', 136, 203, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-05-21', 'WOMEN', 149, 164, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-10-23', 'WOMEN', 99, 185, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-10-27', 'MEN', 125, 131, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1985-05-21', 'WOMEN', 141, 154, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1964-03-17', 'MEN', 90, 134, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-03-15', 'MEN', 81, 180, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1980-10-24', 'WOMEN', 116, 108, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-04-22', 'MEN', 114, 169, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-11-18', 'WOMEN', 81, 131, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-01-02', 'WOMEN', 78, 132, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-01-08', 'WOMEN', 45, 135, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1998-04-28', 'MEN', 101, 136, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-08-20', 'MEN', 60, 208, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-07-04', 'MEN', 59, 125, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1964-11-08', 'WOMEN', 55, 109, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1980-05-16', 'WOMEN', 146, 150, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1983-01-27', 'WOMEN', 133, 140, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-09-28', 'MEN', 102, 171, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-07-28', 'WOMEN', 72, 144, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-02-04', 'MEN', 133, 103, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-05-22', 'MEN', 40, 206, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-01-27', 'WOMEN', 123, 184, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-03-12', 'WOMEN', 53, 151, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-07-24', 'WOMEN', 72, 139, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-06-13', 'MEN', 110, 196, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-04-04', 'MEN', 124, 206, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-11-05', 'WOMEN', 112, 107, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-03-06', 'MEN', 116, 205, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1979-11-24', 'MEN', 130, 122, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2004-07-02', 'MEN', 121, 192, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-06-16', 'MEN', 109, 158, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1979-03-08', 'MEN', 147, 169, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-06-06', 'MEN', 77, 185, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-01-05', 'WOMEN', 133, 196, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1994-12-07', 'WOMEN', 124, 143, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-02-01', 'MEN', 75, 116, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-10-16', 'MEN', 136, 195, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-12-27', 'MEN', 64, 169, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-05-22', 'MEN', 110, 154, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1980-07-08', 'WOMEN', 73, 165, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-10-17', 'MEN', 126, 168, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-04-18', 'MEN', 125, 124, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-03-11', 'WOMEN', 101, 192, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-04-25', 'WOMEN', 109, 118, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1992-12-25', 'WOMEN', 115, 108, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-09-02', 'WOMEN', 96, 183, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-04-15', 'WOMEN', 105, 120, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-10-24', 'WOMEN', 71, 113, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-09-23', 'MEN', 108, 126, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1973-08-26', 'MEN', 138, 105, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-01-19', 'MEN', 120, 179, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-05-02', 'MEN', 111, 188, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-12-28', 'MEN', 116, 127, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1985-10-23', 'MEN', 125, 206, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-06-11', 'WOMEN', 65, 170, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1961-03-02', 'MEN', 57, 115, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-05-16', 'WOMEN', 104, 105, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-12-13', 'MEN', 67, 122, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-02-23', 'MEN', 105, 137, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1980-03-20', 'WOMEN', 98, 103, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-11-26', 'WOMEN', 119, 172, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-05-13', 'MEN', 120, 191, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1992-01-14', 'MEN', 142, 143, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-03-03', 'WOMEN', 88, 155, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-06-15', 'MEN', 149, 174, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-08-14', 'MEN', 79, 152, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-12-21', 'WOMEN', 83, 135, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1994-08-15', 'WOMEN', 108, 126, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1996-05-16', 'MEN', 90, 109, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-11-02', 'WOMEN', 109, 107, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-12-05', 'WOMEN', 143, 120, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-07-22', 'WOMEN', 80, 120, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-03-17', 'MEN', 97, 157, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-12-15', 'WOMEN', 104, 203, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-01-13', 'MEN', 58, 190, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-11-04', 'WOMEN', 83, 106, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-09-26', 'WOMEN', 108, 182, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-07-17', 'WOMEN', 48, 192, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1994-11-24', 'WOMEN', 97, 150, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-07-07', 'MEN', 119, 157, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-08-07', 'WOMEN', 148, 200, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-09-15', 'MEN', 73, 176, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1999-06-24', 'MEN', 46, 122, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-06-05', 'WOMEN', 76, 185, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-02-18', 'MEN', 49, 157, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-05-22', 'WOMEN', 128, 185, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1961-10-17', 'MEN', 122, 182, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-02-12', 'MEN', 79, 122, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-09-19', 'WOMEN', 139, 151, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-06-07', 'MEN', 129, 167, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1979-01-08', 'MEN', 95, 145, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1985-05-29', 'MEN', 93, 182, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-03-31', 'WOMEN', 113, 110, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-03-25', 'MEN', 109, 203, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1994-01-03', 'MEN', 122, 190, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-09-21', 'WOMEN', 131, 146, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-08-11', 'WOMEN', 110, 167, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-03-22', 'MEN', 145, 193, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-12-27', 'WOMEN', 75, 121, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-07-27', 'MEN', 146, 108, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-03-27', 'MEN', 91, 191, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-06-07', 'WOMEN', 116, 210, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-09-01', 'WOMEN', 126, 131, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1970-12-15', 'MEN', 110, 208, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1996-09-13', 'MEN', 55, 185, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-12-27', 'WOMEN', 44, 116, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-06-18', 'WOMEN', 43, 168, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-06-24', 'MEN', 100, 114, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1983-05-15', 'WOMEN', 66, 177, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1973-10-11', 'MEN', 43, 172, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1964-07-24', 'WOMEN', 55, 174, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-09-21', 'MEN', 119, 130, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1964-10-08', 'WOMEN', 145, 117, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-07-08', 'MEN', 103, 137, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2004-09-07', 'MEN', 103, 149, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1970-11-04', 'MEN', 54, 173, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-05-19', 'MEN', 81, 210, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1983-09-29', 'WOMEN', 68, 188, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-01-21', 'WOMEN', 82, 102, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1983-02-13', 'MEN', 99, 154, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-07-23', 'MEN', 51, 148, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-09-24', 'MEN', 60, 140, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-06-22', 'MEN', 108, 100, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-01-19', 'MEN', 78, 122, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-10-18', 'WOMEN', 44, 145, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-09-15', 'WOMEN', 86, 111, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-02-04', 'WOMEN', 137, 102, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-04-04', 'MEN', 67, 192, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-12-22', 'MEN', 87, 175, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-01-03', 'WOMEN', 67, 103, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-02-12', 'MEN', 41, 160, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-04-18', 'WOMEN', 104, 194, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1970-12-09', 'MEN', 71, 124, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1996-08-15', 'WOMEN', 86, 200, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-09-17', 'MEN', 96, 187, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-08-13', 'WOMEN', 93, 176, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1979-07-31', 'MEN', 104, 173, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1961-04-02', 'WOMEN', 123, 208, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-05-14', 'MEN', 143, 122, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1983-03-30', 'WOMEN', 138, 184, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-07-22', 'MEN', 41, 157, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-02-10', 'WOMEN', 96, 206, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-04-19', 'MEN', 129, 150, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-08-26', 'WOMEN', 86, 161, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-07-03', 'WOMEN', 40, 200, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1996-08-22', 'WOMEN', 46, 165, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-06-15', 'WOMEN', 101, 161, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-02-15', 'MEN', 67, 199, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1973-10-10', 'WOMEN', 104, 173, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-08-14', 'WOMEN', 65, 163, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-11-18', 'WOMEN', 75, 135, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-05-14', 'WOMEN', 83, 203, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1999-05-23', 'MEN', 109, 149, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-10-11', 'WOMEN', 134, 158, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-10-14', 'WOMEN', 148, 164, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-09-23', 'MEN', 131, 210, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-06-19', 'MEN', 60, 104, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-02-07', 'WOMEN', 65, 171, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-05-19', 'MEN', 133, 179, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-03-28', 'WOMEN', 87, 127, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2004-09-04', 'MEN', 115, 163, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-04-28', 'WOMEN', 88, 104, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-01-24', 'WOMEN', 74, 109, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-04-30', 'WOMEN', 56, 193, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-11-04', 'WOMEN', 96, 206, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-04-23', 'MEN', 48, 136, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-06-08', 'WOMEN', 98, 183, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-09-07', 'WOMEN', 132, 102, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-12-27', 'WOMEN', 74, 150, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1973-11-09', 'WOMEN', 111, 101, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-02-02', 'MEN', 47, 208, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-06-08', 'WOMEN', 102, 152, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-04-22', 'MEN', 54, 141, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-08-17', 'MEN', 47, 209, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-05-22', 'MEN', 135, 125, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-08-09', 'WOMEN', 53, 171, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-06-16', 'WOMEN', 40, 113, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-09-21', 'WOMEN', 77, 180, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-07-25', 'MEN', 40, 202, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-06-13', 'MEN', 137, 137, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-07-28', 'WOMEN', 112, 205, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-11-09', 'WOMEN', 116, 157, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-08-29', 'MEN', 103, 186, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-03-05', 'MEN', 103, 201, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-01-24', 'WOMEN', 65, 195, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-06-19', 'MEN', 51, 191, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-06-07', 'MEN', 55, 183, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-01-08', 'MEN', 114, 134, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-10-18', 'MEN', 112, 142, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-06-30', 'WOMEN', 105, 191, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-02-04', 'WOMEN', 40, 153, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-10-27', 'MEN', 65, 124, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-11-27', 'MEN', 45, 104, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-10-17', 'WOMEN', 146, 114, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-06-16', 'WOMEN', 131, 116, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1998-07-04', 'MEN', 64, 160, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-07-15', 'MEN', 97, 128, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-12-07', 'WOMEN', 112, 157, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-11-25', 'WOMEN', 150, 171, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-04-14', 'WOMEN', 149, 122, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-10-30', 'MEN', 116, 190, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1964-02-13', 'MEN', 83, 195, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-08-19', 'MEN', 70, 208, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-11-22', 'WOMEN', 63, 142, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1996-09-27', 'WOMEN', 130, 122, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-01-22', 'MEN', 67, 180, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-04-01', 'MEN', 139, 122, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1979-01-23', 'WOMEN', 150, 209, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-10-08', 'MEN', 91, 177, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-06-01', 'WOMEN', 48, 169, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-08-11', 'WOMEN', 110, 127, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-09-20', 'MEN', 130, 192, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1992-05-14', 'MEN', 55, 120, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-01-19', 'MEN', 45, 127, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1996-08-02', 'MEN', 103, 189, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-10-07', 'MEN', 127, 169, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-11-16', 'MEN', 45, 140, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-10-30', 'MEN', 47, 169, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-05-28', 'MEN', 74, 169, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-06-26', 'MEN', 54, 126, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-06-04', 'WOMEN', 82, 193, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1998-03-15', 'WOMEN', 43, 130, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-02-19', 'WOMEN', 141, 126, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-01-15', 'WOMEN', 100, 204, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1973-07-13', 'MEN', 118, 103, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1970-10-23', 'WOMEN', 115, 159, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-08-05', 'MEN', 96, 145, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-08-17', 'WOMEN', 86, 108, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-01-28', 'MEN', 98, 181, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2004-04-26', 'WOMEN', 84, 144, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-03-31', 'WOMEN', 125, 141, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-01-10', 'MEN', 119, 115, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-10-05', 'WOMEN', 40, 132, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-10-17', 'MEN', 146, 174, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-02-19', 'MEN', 103, 189, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-09-11', 'WOMEN', 96, 151, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-03-11', 'WOMEN', 99, 182, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-07-07', 'MEN', 109, 176, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-06-19', 'MEN', 50, 109, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1973-01-01', 'WOMEN', 85, 135, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-11-12', 'WOMEN', 119, 179, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-12-09', 'WOMEN', 56, 205, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-05-21', 'MEN', 55, 169, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-03-08', 'MEN', 51, 126, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-09-26', 'MEN', 101, 139, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-12-08', 'MEN', 126, 108, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-01-16', 'WOMEN', 138, 196, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-12-27', 'WOMEN', 114, 101, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-11-16', 'MEN', 79, 183, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1979-11-21', 'WOMEN', 121, 209, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-10-20', 'WOMEN', 89, 200, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1999-06-18', 'MEN', 64, 160, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-01-08', 'WOMEN', 125, 114, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-04-19', 'WOMEN', 61, 188, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-01-30', 'MEN', 79, 166, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-01-05', 'WOMEN', 57, 149, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-09-11', 'MEN', 146, 203, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2004-05-06', 'WOMEN', 141, 160, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-12-27', 'WOMEN', 136, 125, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1980-03-07', 'WOMEN', 86, 174, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-08-16', 'MEN', 49, 210, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1961-12-28', 'MEN', 78, 193, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-11-16', 'WOMEN', 128, 200, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-04-10', 'MEN', 77, 125, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-03-29', 'MEN', 65, 155, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-06-19', 'MEN', 74, 148, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-09-24', 'MEN', 149, 163, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1983-08-15', 'MEN', 89, 203, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-07-14', 'MEN', 96, 136, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-01-31', 'WOMEN', 121, 127, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-07-06', 'WOMEN', 97, 170, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-10-26', 'WOMEN', 44, 199, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-06-14', 'WOMEN', 115, 210, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-07-24', 'MEN', 57, 152, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-06-21', 'MEN', 61, 112, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-09-14', 'MEN', 106, 144, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-05-13', 'WOMEN', 57, 141, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1961-10-11', 'MEN', 88, 116, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-01-24', 'WOMEN', 135, 148, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1999-04-11', 'MEN', 55, 152, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-05-31', 'MEN', 68, 101, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-08-15', 'MEN', 132, 154, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1992-08-03', 'WOMEN', 100, 109, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-12-07', 'MEN', 110, 171, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-05-09', 'MEN', 73, 120, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-10-26', 'MEN', 94, 148, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-03-22', 'MEN', 129, 207, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1980-11-23', 'MEN', 79, 110, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-12-23', 'WOMEN', 150, 173, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-09-14', 'MEN', 91, 145, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-11-29', 'MEN', 92, 184, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-12-13', 'MEN', 42, 106, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1964-11-15', 'MEN', 121, 172, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-06-27', 'WOMEN', 134, 135, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-01-20', 'MEN', 94, 100, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-11-04', 'WOMEN', 62, 142, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-06-21', 'WOMEN', 49, 156, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-03-26', 'MEN', 95, 137, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-06-03', 'MEN', 44, 138, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1994-09-27', 'WOMEN', 150, 116, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-10-07', 'MEN', 96, 139, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-12-27', 'WOMEN', 67, 208, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-08-31', 'MEN', 112, 130, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1964-07-23', 'MEN', 134, 104, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-01-08', 'MEN', 45, 166, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-12-10', 'WOMEN', 85, 117, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1996-07-14', 'WOMEN', 120, 100, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-01-26', 'MEN', 50, 124, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1994-10-12', 'WOMEN', 63, 155, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-02-02', 'WOMEN', 146, 125, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-12-12', 'WOMEN', 101, 202, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-09-29', 'MEN', 150, 187, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-07-13', 'MEN', 94, 175, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1961-03-22', 'WOMEN', 113, 146, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-12-24', 'MEN', 124, 106, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1994-12-16', 'MEN', 47, 163, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-04-19', 'MEN', 146, 138, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1999-04-20', 'WOMEN', 70, 116, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-10-30', 'WOMEN', 77, 105, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-09-21', 'MEN', 106, 152, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-06-21', 'MEN', 147, 209, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1985-06-09', 'MEN', 121, 154, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1985-07-26', 'MEN', 134, 169, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-07-11', 'WOMEN', 137, 129, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-03-08', 'MEN', 103, 173, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-01-03', 'WOMEN', 77, 184, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-08-02', 'WOMEN', 111, 135, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-06-11', 'WOMEN', 64, 190, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-10-26', 'WOMEN', 60, 109, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-06-06', 'WOMEN', 142, 201, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-11-10', 'WOMEN', 51, 106, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-03-06', 'WOMEN', 56, 165, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-11-07', 'MEN', 129, 192, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-05-29', 'MEN', 73, 143, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-07-27', 'MEN', 131, 179, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-10-14', 'WOMEN', 113, 169, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-07-09', 'MEN', 90, 109, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1994-07-13', 'MEN', 145, 135, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-10-01', 'WOMEN', 108, 175, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1985-03-29', 'MEN', 148, 180, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-02-19', 'WOMEN', 118, 131, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-06-30', 'WOMEN', 80, 139, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-03-04', 'WOMEN', 55, 163, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-02-23', 'MEN', 134, 133, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-08-30', 'MEN', 67, 117, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-05-26', 'WOMEN', 146, 101, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-08-27', 'WOMEN', 90, 129, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-11-02', 'MEN', 74, 172, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1999-01-03', 'MEN', 44, 124, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-01-18', 'MEN', 54, 184, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-04-03', 'WOMEN', 99, 104, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-12-21', 'WOMEN', 123, 116, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1994-12-28', 'WOMEN', 40, 198, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-06-05', 'WOMEN', 146, 165, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-06-20', 'WOMEN', 55, 183, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-10-10', 'WOMEN', 119, 205, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-03-09', 'MEN', 123, 124, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-01-30', 'MEN', 60, 204, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-11-17', 'WOMEN', 85, 122, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-11-17', 'MEN', 77, 190, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1992-07-20', 'MEN', 59, 127, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1983-08-14', 'WOMEN', 148, 125, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-05-30', 'WOMEN', 51, 187, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-04-28', 'MEN', 52, 125, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-08-15', 'MEN', 149, 107, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-02-24', 'MEN', 78, 122, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1971-07-14', 'WOMEN', 121, 198, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-07-24', 'MEN', 119, 131, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-06-12', 'MEN', 136, 184, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1962-05-23', 'MEN', 84, 174, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1983-03-30', 'MEN', 111, 123, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-05-27', 'WOMEN', 59, 107, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1973-06-08', 'MEN', 135, 190, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1996-06-29', 'WOMEN', 128, 148, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1979-06-15', 'WOMEN', 142, 117, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-11-11', 'MEN', 147, 116, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-05-26', 'MEN', 125, 116, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-06-23', 'MEN', 122, 184, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-05-27', 'MEN', 70, 109, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1998-08-02', 'MEN', 63, 123, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-10-04', 'WOMEN', 111, 165, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2004-05-02', 'MEN', 88, 108, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-05-11', 'WOMEN', 77, 147, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-08-02', 'WOMEN', 66, 127, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-01-24', 'WOMEN', 45, 124, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-06-20', 'WOMEN', 89, 106, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-06-18', 'MEN', 135, 184, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1983-06-16', 'WOMEN', 125, 183, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-01-23', 'WOMEN', 72, 163, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-04-13', 'WOMEN', 92, 156, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-04-19', 'WOMEN', 145, 115, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-12-29', 'MEN', 107, 141, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-10-30', 'WOMEN', 55, 138, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-06-01', 'WOMEN', 122, 116, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1996-02-08', 'WOMEN', 138, 160, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-09-27', 'MEN', 93, 139, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-10-12', 'MEN', 130, 163, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-11-08', 'MEN', 101, 171, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-04-01', 'MEN', 102, 162, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-04-23', 'WOMEN', 58, 187, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-04-20', 'WOMEN', 134, 205, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-02-05', 'WOMEN', 50, 102, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-06-03', 'WOMEN', 94, 129, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-02-11', 'MEN', 58, 134, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-05-28', 'WOMEN', 87, 207, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-08-06', 'MEN', 97, 205, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-11-21', 'WOMEN', 57, 208, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-05-27', 'WOMEN', 135, 104, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-03-20', 'WOMEN', 126, 137, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-08-10', 'MEN', 139, 153, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-02-03', 'WOMEN', 99, 161, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-11-21', 'WOMEN', 134, 152, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-03-07', 'MEN', 60, 171, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-12-15', 'WOMEN', 120, 153, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1985-08-04', 'WOMEN', 94, 114, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-05-06', 'MEN', 92, 181, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-12-13', 'MEN', 133, 133, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1997-07-02', 'WOMEN', 61, 140, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-10-06', 'WOMEN', 146, 124, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-04-01', 'MEN', 139, 190, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-11-26', 'WOMEN', 145, 209, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1973-02-08', 'WOMEN', 98, 178, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-02-21', 'WOMEN', 55, 208, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-09-15', 'WOMEN', 66, 182, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-10-27', 'WOMEN', 110, 161, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-03-30', 'WOMEN', 101, 118, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-07-19', 'MEN', 81, 152, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-08-17', 'MEN', 54, 178, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1969-04-12', 'MEN', 114, 157, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-07-28', 'WOMEN', 127, 107, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2004-08-03', 'MEN', 118, 186, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-06-22', 'WOMEN', 51, 184, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-03-01', 'MEN', 68, 164, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-02-09', 'WOMEN', 51, 209, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1970-07-19', 'MEN', 72, 138, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-09-10', 'WOMEN', 126, 169, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1993-01-01', 'WOMEN', 71, 135, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-04-23', 'WOMEN', 110, 152, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-12-11', 'WOMEN', 87, 160, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-09-19', 'MEN', 135, 101, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-07-17', 'MEN', 43, 165, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1992-03-18', 'MEN', 133, 184, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-01-09', 'WOMEN', 115, 120, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1970-06-13', 'WOMEN', 119, 161, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-02-18', 'MEN', 94, 196, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-06-30', 'MEN', 93, 125, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-06-03', 'WOMEN', 81, 137, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-02-04', 'WOMEN', 128, 130, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-03-27', 'WOMEN', 142, 154, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-01-25', 'MEN', 61, 146, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1974-04-08', 'MEN', 44, 101, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-12-04', 'WOMEN', 97, 108, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-09-19', 'MEN', 106, 193, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-08-31', 'MEN', 95, 187, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1985-11-09', 'MEN', 68, 193, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-08-25', 'WOMEN', 96, 197, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-06-20', 'WOMEN', 64, 103, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-09-12', 'WOMEN', 57, 179, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-03-18', 'MEN', 138, 117, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-05-25', 'MEN', 51, 151, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1985-08-27', 'WOMEN', 121, 108, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-03-28', 'MEN', 95, 158, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1979-08-11', 'WOMEN', 101, 162, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-04-07', 'WOMEN', 132, 111, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-02-14', 'MEN', 138, 132, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-12-13', 'WOMEN', 117, 166, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-03-24', 'MEN', 100, 167, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-02-13', 'MEN', 52, 136, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-12-04', 'WOMEN', 133, 100, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-12-08', 'WOMEN', 108, 113, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-06-15', 'MEN', 55, 100, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-12-31', 'MEN', 129, 109, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-09-13', 'MEN', 103, 134, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-12-17', 'MEN', 129, 188, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-02-28', 'MEN', 91, 106, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-03-03', 'MEN', 83, 142, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-07-09', 'WOMEN', 45, 194, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-11-24', 'MEN', 112, 102, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-03-14', 'WOMEN', 130, 123, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-09-19', 'WOMEN', 79, 109, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-10-20', 'MEN', 121, 131, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1980-08-06', 'MEN', 91, 182, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-07-17', 'MEN', 58, 151, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-04-09', 'MEN', 53, 171, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-03-02', 'WOMEN', 42, 132, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-04-27', 'WOMEN', 99, 173, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1968-11-22', 'MEN', 62, 129, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1985-10-12', 'WOMEN', 102, 144, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1999-12-09', 'MEN', 71, 103, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1960-08-11', 'WOMEN', 41, 166, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1966-09-11', 'WOMEN', 132, 115, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1998-06-08', 'WOMEN', 143, 185, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-06-27', 'MEN', 109, 159, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-04-16', 'WOMEN', 64, 131, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1970-09-24', 'WOMEN', 145, 106, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1980-02-27', 'WOMEN', 100, 117, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-06-25', 'WOMEN', 86, 129, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-11-16', 'MEN', 110, 207, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-09-04', 'MEN', 65, 207, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1967-06-11', 'MEN', 115, 119, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-02-26', 'MEN', 62, 155, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1978-06-23', 'WOMEN', 113, 172, 'blonde', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-04-28', 'WOMEN', 60, 100, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1994-06-08', 'WOMEN', 68, 209, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1999-05-01', 'MEN', 118, 101, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-08-30', 'WOMEN', 99, 126, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-08-31', 'WOMEN', 91, 162, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1992-12-14', 'MEN', 149, 189, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-10-09', 'WOMEN', 47, 169, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-03-14', 'MEN', 42, 109, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-05-12', 'WOMEN', 96, 151, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1991-04-02', 'WOMEN', 71, 105, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1996-10-19', 'MEN', 140, 100, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1975-05-29', 'WOMEN', 53, 129, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-06-26', 'MEN', 90, 160, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-04-22', 'MEN', 73, 175, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1980-02-02', 'WOMEN', 112, 204, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1990-07-02', 'WOMEN', 106, 183, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-08-11', 'WOMEN', 128, 105, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1988-02-02', 'MEN', 101, 102, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-02-03', 'MEN', 86, 108, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-04-20', 'WOMEN', 99, 195, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1979-11-01', 'MEN', 51, 105, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-11-17', 'MEN', 146, 195, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-02-17', 'MEN', 43, 132, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2000-05-10', 'WOMEN', 125, 118, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-12-20', 'MEN', 45, 137, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2004-02-16', 'WOMEN', 136, 193, 'black', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-06-26', 'WOMEN', 118, 189, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1963-10-01', 'MEN', 118, 132, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2003-05-19', 'MEN', 59, 194, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1977-01-01', 'MEN', 47, 133, 'brown', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1999-07-19', 'MEN', 147, 133, 'white', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-05-11', 'WOMEN', 117, 205, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1973-08-22', 'WOMEN', 100, 192, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2001-09-18', 'WOMEN', 144, 140, 'gray', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1981-11-30', 'MEN', 126, 116, 'gray', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1987-06-22', 'MEN', 147, 192, 'blonde', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1982-11-27', 'MEN', 70, 125, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1972-09-11', 'MEN', 43, 150, 'red', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1989-12-01', 'WOMEN', 46, 152, 'brown', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1976-07-08', 'MEN', 96, 169, 'black', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1965-09-07', 'WOMEN', 120, 119, 'white', 'MARS');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1986-09-22', 'WOMEN', 104, 100, 'red', 'EARTH');
+INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-08-31', 'MEN', 143, 172, 'gray', 'EARTH');

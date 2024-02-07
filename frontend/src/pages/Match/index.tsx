@@ -7,7 +7,7 @@ import {Box, Button, Grid, TextField, Typography} from "@mui/material";
 import axiosApiInstance from "../../utils/tokenHelper";
 import { useNavigate } from "react-router-dom";
 import PersonCard from "../../components/PersonCard";
-
+import blonde_young from '../../images/Mars/women/blonde_young.png';
 const MatchPage: React.FC = () => {
     const navigate = useNavigate();
     const [resultArray, setResultArray] = useState<any[]>([]);
@@ -29,6 +29,13 @@ const MatchPage: React.FC = () => {
     }, []);
 
     return (
+        <Box sx={{width: "100vw", margin: "0px", height: "100vh",
+            // backgroundImage: `url(${bg})`, backgroundRepeat: `no-repeat`, backgroundSize: "cover",
+        }}>
+            <Button sx = {{ margin: "15px", border: "1px solid", borderColor: "#FF69B4"}}
+                    onClick={() => navigate("/gallery")}>
+                Вернуться к просмотру
+            </Button>
         <Box sx={{width: "94.8vw", margin: "100px"}}>
 
         <Box sx={{ flex: "1"}}>
@@ -74,6 +81,7 @@ const MatchPage: React.FC = () => {
                 }
 
             </Grid>
+        </Box>
         </Box>
         </Box>
     //             {resultArray.map((item, index) => (
