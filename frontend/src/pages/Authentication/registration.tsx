@@ -3,6 +3,7 @@ import React from "react";
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import {useNavigate}  from 'react-router-dom';
 import axiosApiInstance from "../../utils/tokenHelper";
+import bg from "../../images/bg/reg.jpg";
 
 export interface IFormInput {
     username: string,
@@ -32,21 +33,42 @@ const Registration: React.FC = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "100vh", // Высота 100% видимой области страницы
+                height: "100vh",
+                backgroundImage: `url(${bg})`, backgroundRepeat: `no-repeat`, backgroundSize: "cover",
+
             }}
         >
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Box
-                    sx={{
-                        width: "300px",
-                        height: "500px",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        display: "flex",
-                        position: "relative",
-                    }}
-                >
-                    <Controller
+            <Box
+                sx={{
+                    width: "400px",
+                    height: "420px",
+                    border: `1px solid #BB7B85`,
+                    borderRadius: "20px",
+                    alignSelf: "center",
+                    zIndex: "2",
+                    display: "flex",
+                    flexDirection: "column",
+                    position: "relative",
+                    backgroundColor: "#fbeffa",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Box
+                        sx={{
+                            width: "300px",
+                            height: "500px",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            display: "flex",
+                            position: "relative",
+
+                        }}
+                    >
+                        <Typography fontSize="30px" sx={{ color: "#b358cb", textAlign: "center", minWidth: "60%", marginBottom: "15px"}}>Registration</Typography>
+
+                        <Controller
                         name="username"
                         control={control}
                         defaultValue=""
@@ -60,24 +82,30 @@ const Registration: React.FC = () => {
                     />
                     <Button
                         style={{
-                            margin: "15px 0",
+                            margin: "30px 0",
                             height: "40px",
                             fontSize: "18px",
-                            color: "#FFFFFF"
+                            color: "#e285ee",
+                            borderRadius: "15px",
+                            width: "240px",
+                            alignSelf: "center",
+                            border: `1px solid #e285ee`,
+
                         }}
                         size="large"
-                        variant="contained"
+                        variant="outlined"
                         type="submit"
 
                     >
                         Зарегистрироваться
                     </Button>
 
-                    <Box sx={{ position: "relative",   width:"60%", height:"7%", margin: "10px auto",
-                        display: "block",  alignItems: "center",}} >
-                        <Typography sx={{ color: "#48A1D3", textAlign: "center", minWidth: "60%"}}>Уже есть учетная запись?</Typography>
+                    <Box sx={{ position: "relative",   width:"80%", height:"7%", margin: "10px auto",
+                        display: "inline-grid",  alignItems: "center",                             justifyContent: "center",
+                    }} >
+                        <Typography sx={{ color: "#e285ee", textAlign: "center", minWidth: "60%"}}>Уже есть учетная запись?</Typography>
 
-                        <Button sx={{left: "3%"}} onClick={() => navigate("/")}
+                        <Button sx={{textAlign: "center",  alignSelf: "center", color: "#e285ee", }} onClick={() => navigate("/")}
                         >
                             Войти.</Button>
 
@@ -88,8 +116,7 @@ const Registration: React.FC = () => {
 
 
             </form>
-
-
+            </Box>
         </Box>
     )
 }

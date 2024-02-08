@@ -1,9 +1,9 @@
-import {Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton} from "@mui/material";
+import {Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography} from "@mui/material";
 import PersonCard from "../../components/PersonCard";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import axiosApiInstance from "../../utils/tokenHelper";
-import bg from '../../images/bg/gallery.png'
+import bg from '../../images/bg/hearts.jpg'
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useNavigate} from "react-router-dom";
 interface UserData {
@@ -24,42 +24,53 @@ const GalleryPage: React.FC = () => {
     const navigate = useNavigate();
 
     const getAllPartners = async () => {
-        await axios.post('http://localhost:8080/api/test/getAllUserData', {}, {headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`}})
-            .then((response => {
-                console.log(response);
-                setPersonArray(response.data);
-            }))
-            .catch((error) => {
-                console.error(error);
-                setPersonArray([]);
-            });
+        if(localStorage.getItem("accessToken") ) {
+
+            await axios.post('http://localhost:8080/api/test/getAllUserData', {}, {headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`}})
+                .then((response => {
+                    console.log(response);
+                    setPersonArray(response.data);
+                }))
+                .catch((error) => {
+                    console.error(error);
+                    setPersonArray([]);
+                });
+        }
     }
     const connectUsers = async (userId: number) => {
-        await axiosApiInstance.post(
-            '/connection/connectUsers',
-            {user2: userId},
-            {headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`}}
-        )
-            .then((response) => {
-                console.log(response);
-                getMatches(userId)
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        if(localStorage.getItem("accessToken") ) {
+            await axiosApiInstance.post(
+                '/connection/connectUsers',
+                {user2: userId},
+                {headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`}}
+            )
+                .then((response) => {
+                    console.log(response);
+                    getMatches(userId)
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+
     }
 
     const getMatches = (userId: number) => {
-        axiosApiInstance.post('/connection/getConnections', {}, {headers: {'Authorization' : `Basic ${localStorage.getItem("accessToken")}`}})
-            .then((response => {
-                console.log(response);
-                console.log(userId);
-                if (response.data.some((item : UserData) => item.id === userId)) {setIsMatchDialogOpen(true),
-                    setMatchedUserId(userId)}
-            }))
-            .catch((error) => {
-                console.error(error);
-            });
+        if(localStorage.getItem("accessToken") ) {
+
+            axiosApiInstance.post('/connection/getConnections', {}, {headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`}})
+                .then((response => {
+                    console.log(response);
+                    console.log(userId);
+                    if (response.data.some((item: UserData) => item.id === userId)) {
+                        setIsMatchDialogOpen(true);
+                        setMatchedUserId(userId)
+                    }
+                }))
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
     }
     const handleCloseMatchDialog = () => {
         setIsMatchDialogOpen(false);
@@ -69,15 +80,67 @@ const GalleryPage: React.FC = () => {
         getAllPartners();
     }, []);
     return (
-        <Box sx={{width: "100vw", margin: "0px", height: "100vh",
+        <Box sx={{width: "100vw", margin: "0px", height: "100vh",overflowX: "hidden",
+            backgroundColor: "#fce8e9"
             // backgroundImage: `url(${bg})`, backgroundRepeat: `no-repeat`, backgroundSize: "cover",
         }}>
-            <Button sx = {{ margin: "15px", border: "1px solid", borderColor: "#FF69B4"}}
-            onClick={() => navigate("/match")}>
-                Посмотреть мэтчи
-            </Button>
+            <Grid container justifyContent="center"
+                  alignItems="center" >
+                <Grid item xs={8} >
+                    <Button style={{
+                        margin: "30px 15px",
+                        height: "40px",
+                        fontSize: "18px",
+                        color: "#90334f",
+                        borderRadius: "15px",
+                        width: "300px",
+                        alignSelf: "center",
+                        border: `1px solid #90334f`,
+                    }}
+                            onClick={() => navigate("/match")}>
+                        Посмотреть мэтчи
+                    </Button>
 
-            <Box sx={{ width: "94.8vw", margin: "100px" }}>
+                </Grid>
+
+                <Grid item xs={2}>
+                    <Button style={{
+                        margin: "30px 15px",
+                        height: "40px",
+                        fontSize: "18px",
+                        color: "#90334f",
+                        width: "150px",
+
+                        borderRadius: "15px",
+                        alignSelf: "center",
+                        border: `1px solid #90334f`,
+                    }}>
+                        Профиль
+                    </Button>
+                </Grid>
+                <Grid item xs={2}>
+                    <Button style={{
+                        margin: "30px 15px",
+                        height: "40px",
+                        fontSize: "18px",
+                        color: "#90334f",
+                        borderRadius: "15px",
+                        width: "150px",
+                        alignSelf: "center",
+                        border: `1px solid #90334f`,
+                    }} onClick={()=>{
+                        localStorage.removeItem("accessToken");
+                        localStorage.removeItem("role");
+                        localStorage.removeItem("username");
+                        navigate("/");
+                    }}>
+                        Выйти
+                    </Button>
+                </Grid>
+
+            </Grid>
+
+            <Box sx={{ width: "94.8vw", margin: "50px 80px",  }}>
                 <Box sx={{ flex: "1" }}>
                     <Grid
                         container
@@ -105,9 +168,9 @@ const GalleryPage: React.FC = () => {
                                     display: 'flex', justifyContent: 'center', marginTop: "5px" }}>
 
                                     <IconButton
-                                        sx={{ '&:hover': { bgcolor: '#FF69B4' } }}
+                                        sx={{ '&:hover': { bgcolor: '#e285ee' }, color: "#90334f", borderRadius: "15px",}}
                                         onClick={() => connectUsers(item.id)}
-                                    ><FavoriteIcon/>LIKE</IconButton>
+                                    ><FavoriteIcon sx={{color: "#90334f"}}/> LIKE</IconButton>
                                 </Box>
                             </Grid>
                         ))}

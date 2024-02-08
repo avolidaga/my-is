@@ -13,7 +13,9 @@ const MatchPage: React.FC = () => {
     const [resultArray, setResultArray] = useState<any[]>([]);
 
     const getMatches = () => {
-        axiosApiInstance.post('/connection/getConnections', {}, {headers: {'Authorization' : `Basic ${localStorage.getItem("accessToken")}`}})
+        if(localStorage.getItem("accessToken") ) {
+
+            axiosApiInstance.post('/connection/getConnections', {}, {headers: {'Authorization' : `Basic ${localStorage.getItem("accessToken")}`}})
             .then((response => {
                 console.log(response);
                 setResultArray(response.data);
@@ -21,7 +23,7 @@ const MatchPage: React.FC = () => {
             .catch((error) => {
                 console.error(error);
                 setResultArray([]);
-            });
+            });}
     }
 
     useEffect(() => {
@@ -31,11 +33,61 @@ const MatchPage: React.FC = () => {
     return (
         <Box sx={{width: "100vw", margin: "0px", height: "100vh",
             // backgroundImage: `url(${bg})`, backgroundRepeat: `no-repeat`, backgroundSize: "cover",
-        }}>
-            <Button sx = {{ margin: "15px", border: "1px solid", borderColor: "#FF69B4"}}
-                    onClick={() => navigate("/gallery")}>
-                Вернуться к просмотру
-            </Button>
+        }}><Grid container justifyContent="center"
+                 alignItems="center" >
+            <Grid item xs={8} >
+                <Button style={{
+                    margin: "30px 15px",
+                    height: "40px",
+                    fontSize: "18px",
+                    color: "#90334f",
+                    borderRadius: "15px",
+                    width: "300px",
+                    alignSelf: "center",
+                    border: `1px solid #90334f`,
+                }}                    onClick={() => navigate("/gallery")}>
+                    Вернуться к просмотру
+                </Button>
+
+            </Grid>
+
+            <Grid item xs={2}>
+                <Button style={{
+                    margin: "30px 15px",
+                    height: "40px",
+                    fontSize: "18px",
+                    color: "#90334f",
+                    width: "150px",
+
+                    borderRadius: "15px",
+                    alignSelf: "center",
+                    border: `1px solid #90334f`,
+                }}>
+                    Профиль
+                </Button>
+            </Grid>
+            <Grid item xs={2}>
+                <Button style={{
+                    margin: "30px 15px",
+                    height: "40px",
+                    fontSize: "18px",
+                    color: "#90334f",
+                    borderRadius: "15px",
+                    width: "150px",
+                    alignSelf: "center",
+                    border: `1px solid #90334f`,
+                }} onClick={()=>{
+                    localStorage.removeItem("accessToken");
+                    localStorage.removeItem("role");
+                    localStorage.removeItem("username");
+                    navigate("/");
+                }}>
+                    Выйти
+                </Button>
+            </Grid>
+
+        </Grid>
+
         <Box sx={{width: "94.8vw", margin: "100px"}}>
 
         <Box sx={{ flex: "1"}}>

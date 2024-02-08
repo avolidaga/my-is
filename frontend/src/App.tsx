@@ -9,6 +9,7 @@ import UserDataForm from "./pages/UserDataForm";
 import SpacesuitForm from "./pages/SpacesuitForm";
 import MatchPage from "./pages/Match";
 import GalleryPage from "./pages/Gallery";
+import ManagerPage from "./pages/Manager";
 
 const App: React.FC = () => {
 
@@ -25,7 +26,13 @@ const App: React.FC = () => {
               <Route path="/spacesuit-form" element={ <SpacesuitForm/>}/>
               <Route path="/match" element={ <MatchPage/>}/>
               <Route path="/gallery" element={ <GalleryPage/>}/>
+              {localStorage.getItem("role") === "manager" ?  <Route path="/requests" element={ <ManagerPage/>}/> : ''}
+
+
           </Routes>
+
+
+
       </BrowserRouter>
   );
 }

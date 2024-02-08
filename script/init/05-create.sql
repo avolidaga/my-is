@@ -1,5 +1,3 @@
-
-
 INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1984-12-19', 'WOMEN', 96, 142, 'white', 'MARS');
 INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('1995-02-16', 'MEN', 84, 206, 'black', 'MARS');
 INSERT INTO user_data (birth_date, sex, weight, height, hair_color, location) VALUES ('2002-06-26', 'WOMEN', 148, 204, 'gray', 'MARS');

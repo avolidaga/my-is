@@ -17,5 +17,5 @@ CREATE TRIGGER update_user_spacesuit_data_status_trigger
     EXECUTE FUNCTION update_user_spacesuit_data_status();
 
 
-UPDATE user_request
-SET status = 'READY' WHERE user_spacesuit_data_id = 1;
+-- UPDATE user_request
+-- SET status = 'READY' WHERE user_spacesuit_data_id = 1;

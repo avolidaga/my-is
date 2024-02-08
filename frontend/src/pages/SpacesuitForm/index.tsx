@@ -22,7 +22,9 @@ const SpacesuitForm: React.FC = () => {
         console.log(data)
 
         //post запрос
-        axiosApiInstance.post('api/formSpacesuit/submitFormSpacesuit',
+        if(localStorage.getItem("accessToken") ) {
+
+            axiosApiInstance.post('/formSpacesuit/submitFormSpacesuit',
             {
             head: data.head,
                 chest: data.chest, waist: data.waist, hips: data.hips, foot_size: data.foot_size,
@@ -34,7 +36,7 @@ const SpacesuitForm: React.FC = () => {
             }))
             .catch((error) => {
                 console.error(error);
-            });
+            });}
 
     }
     const {control, handleSubmit} = useForm<SpacesuitFormInput>();
@@ -102,11 +104,11 @@ const SpacesuitForm: React.FC = () => {
                         defaultValue={0}
                         render={({ field }) => (
                             <RadioGroup {...field} row>
-                                <FormControlLabel value={0} control={<Radio />} label="Шелк" />
-                                <FormControlLabel value={1} control={<Radio />} label="Лен" />
-                                <FormControlLabel value={2} control={<Radio />} label="Хлопок" />
-                                <FormControlLabel value={3} control={<Radio />} label="Шерсть" />
-                                <FormControlLabel value={4} control={<Radio />} label="?" />
+                                <FormControlLabel value={1} control={<Radio />} label="Шелк" />
+                                <FormControlLabel value={2} control={<Radio />} label="Лен" />
+                                <FormControlLabel value={3} control={<Radio />} label="Хлопок" />
+                                <FormControlLabel value={4} control={<Radio />} label="Шерсть" />
+                                <FormControlLabel value={5} control={<Radio />} label="?" />
                             </RadioGroup>
                         )}
                     />

@@ -51,6 +51,7 @@ const PersonCard: React.FC<IPersonCard> = (props) => {
                 boxSizing: "border-box",
                 position: "relative",
                 borderRadius: "15px",
+                backgroundColor: "#FFFFFF",
                 border: `2px solid black`,
                 display: "flex",
                 flexDirection: "column",

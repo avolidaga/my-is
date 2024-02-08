@@ -17,6 +17,9 @@ import axiosApiInstance from "../../utils/tokenHelper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./style.css"
+import bg from "../../images/bg/form-u1.jpg";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 export interface UserDataFormInput {
     firstname: string,
     birth_date: Date,
@@ -40,18 +43,45 @@ const UserDataForm: React.FC = () => {
 
         console.log(formattedDate);
         console.log(data)
+        const parts = formattedDate.split("-");
 
-        //post запрос
-        await axiosApiInstance.post('/form/submitForm', {
-            firstname: data.firstname, birth_date: formattedDate,
-            sex: data.sex,
-            weight: data.weight,
-            height: data.height,
-            hair_color: data.hair_color,
-            location: data.location
-        })
+        const birthYear = parseInt(parts[0], 10);
+        const birthMonth = parseInt(parts[1], 10);
+        const birthDay = parseInt(parts[2], 10);
 
-        navigate("/gallery");
+        const currentDate = new Date();
+
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1;
+        const currentDay = currentDate.getDate();
+
+        let age = currentYear - birthYear;
+
+        if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDay < birthDay)) {
+            age--;
+        }
+        if (age < 18) {
+            toast.error("Вам точно больше 18?)")
+        }
+        else if(data.weight <=0 || data.height <= 0 || data.height > 300){
+            toast.error("Вес и рост должны быть целыми числами больше нуля. Рост не более 300 см)")
+
+        }
+        else{
+            //post запрос
+            if(localStorage.getItem("accessToken") ) {
+
+                await axiosApiInstance.post('/form/submitForm', {
+                firstname: data.firstname, birth_date: formattedDate,
+                sex: data.sex,
+                weight: Math.round(data.weight),
+                height: Math.round(data.height),
+                hair_color: data.hair_color,
+                location: data.location
+            }).then((re) => navigate("/gallery"))
+                .catch((error) => toast.error("Вы точно зашли в аккаунт?)"))
+        }}
+
 
 
     }
@@ -65,60 +95,45 @@ const UserDataForm: React.FC = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 height: "100vh",
+                backgroundImage: `url(${bg})`, backgroundRepeat: `no-repeat`, backgroundSize: "cover",
+
             }}
         >
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Box
-                    sx={{
-                        padding: "25px",
-                        width: "300px",
-                        height: "500px",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        display: "flex",
-                        position: "relative",
-                        border: "1px solid black"
+            <Box
+                sx={{
+                    width: "450px",
+                    height: "650px",
+                    border: `1px solid #BB7B85`,
+                    borderRadius: "20px",
+                    alignSelf: "center",
+                    zIndex: "2",
+                    display: "flex",
+                    flexDirection: "column",
+                    position: "relative",
+                    backgroundColor: "#fbeffa",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Box
+                        sx={{
+                            width: "300px",
+                            height: "500px",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            display: "flex",
+                            position: "relative",
 
-                    }}
-                >
-                    <Controller
+                        }}
+                    >
+                        <Typography fontSize="30px" sx={{ color: "#722961", textAlign: "center", minWidth: "60%", marginBottom: "15px"}}>Анкета</Typography>
+
+                        <Controller
                         name="firstname"
                         control={control}
 
                         render={({ field }) => <TextField variant="standard" required fullWidth type="text" label="имя" {...field}/>}
-                    />
-                    <Typography margin="10px 0">
-                        Дата рождения:
-                    </Typography>
-                    <Controller
-                        name="birth_date"
-                        control={control}
-
-                        render={({field}) => (
-                            // TODO ширину пофиксить
-                            <div className="customDatePickerWidth">
-                                    <DatePicker wrapperClassName="datepicker"
-                                                placeholderText='Выберите дату, начиная с года рождения'
-                                                onChange={(date) => field.onChange(date)}
-                                                selected={field.value}
-
-                                    />
-                            </div>
-                        )}
-                    />
-                    <Typography margin="10px 0">
-                        Пол:
-                    </Typography>
-                    <Controller
-                        name="sex"
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => (
-                            <RadioGroup {...field} row>
-                                <FormControlLabel value="MEN" control={<Radio />} label="Мужчина" />
-                                <FormControlLabel value="WOMEN" control={<Radio />} label="Женщина" />
-                            </RadioGroup>
-                        )}
                     />
                     <Controller
                         name="weight"
@@ -131,7 +146,51 @@ const UserDataForm: React.FC = () => {
                         control={control}
                         render={({ field }) => <TextField variant="standard" required fullWidth type="number" label="рост" {...field}/>}
                     />
-                    <Typography margin="10px 0">
+                        <Typography fontSize="20px" sx={{ color: "#90334f", minWidth: "60%", margin: "10px 0 0"}}>Пол: </Typography>
+
+                        <Controller
+                        name="sex"
+                        control={control}
+                        defaultValue=""
+                        render={({ field }) => (
+                            <RadioGroup {...field} row>
+                                <FormControlLabel value="MEN" control={<Radio />} label="Мужчина" />
+                                <FormControlLabel value="WOMEN" control={<Radio />} label="Женщина" />
+                            </RadioGroup>
+                        )}
+                    />
+                        <Typography fontSize="20px" sx={{ color: "#90334f", minWidth: "60%", margin: "10px 0 0"}}>Местоположение: </Typography>
+
+                        <Controller
+                        name="location"
+                        control={control}
+                        render={({ field }) => (
+                            <RadioGroup {...field} row>
+                                <FormControlLabel value="MARS" control={<Radio />} label="Марс" />
+                                <FormControlLabel value="EARTH" control={<Radio />} label="Земля" />
+                            </RadioGroup>
+                        )} />
+                    <Typography fontSize="20px" sx={{ color: "#90334f", minWidth: "60%", margin: "10px 0 5px"}}>
+                        Дата рождения:
+                    </Typography>
+                    <Controller
+                        name="birth_date"
+                        control={control}
+
+                        render={({field}) => (
+                            // TODO ширину пофиксить
+                            <div className="customDatePickerWidth">
+                                    <DatePicker wrapperClassName="datepicker"
+                                                placeholderText='Введите дату, начиная с года рождения'
+                                                onChange={(date) => field.onChange(date)}
+                                                selected={field.value}
+
+                                    />
+                            </div>
+                        )}
+                    />
+
+                    <Typography fontSize="20px" sx={{ color: "#90334f", minWidth: "60%", margin: "15px 0 5px"}}>
                         Цвет волос:
                     </Typography>
                     <Controller
@@ -140,6 +199,7 @@ const UserDataForm: React.FC = () => {
                         defaultValue=""
                         render={({ field }) => (
                             <Select
+                                sx={{maxHeight: "40px"}}
                                 labelId="hairColorLabel"
                                 {...field}
                             >
@@ -151,24 +211,21 @@ const UserDataForm: React.FC = () => {
                                 <MenuItem value="gray">Седой</MenuItem>
                             </Select> )}
                             />
-                    <Controller
-                        name="location"
-                        control={control}
-                        render={({ field }) => (
-                            <RadioGroup {...field} row>
-                                <FormControlLabel value="MARS" control={<Radio />} label="Марс" />
-                                <FormControlLabel value="EARTH" control={<Radio />} label="Земля" />
-                            </RadioGroup>
-                            )} />
+
                     <Button
                         style={{
                             margin: "15px 0",
                             height: "40px",
+                            width: "130px",
                             fontSize: "18px",
-                            color: "#FFFFFF"
+                            color: "#90334f",
+                            textAlign: "center",  alignSelf: "center",
+                            border: `1px solid #90334f`,
+                            borderRadius: "15px",
+
                         }}
                         size="large"
-                        variant="contained"
+                        variant="outlined"
                         type="submit"
                         // onClick={() => navigate("/gallery")}
                     >
@@ -181,6 +238,9 @@ const UserDataForm: React.FC = () => {
 
             </form>
 
+
+        </Box>
+            <ToastContainer limit={3} position="bottom-right" />
 
         </Box>
     );
