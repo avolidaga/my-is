@@ -43,4 +43,10 @@ public interface UserDataRepository extends JpaRepository<UserData,Integer> {
     @Query(value = "SELECT * FROM user_data WHERE user_data_id IN (SELECT user_data_id FROM users WHERE id IN (:idList))", nativeQuery = true)
     List<UserData> getListAllByUserDataIdInForConnections(List<Integer> idList);
 
+    //getCurrUserData
+
+    @Transactional
+    @Query(value = "SELECT * FROM getCurrUserData(:user_id)", nativeQuery = true)
+    List<Integer> getCurrUserData(Integer user_id);
+
 }

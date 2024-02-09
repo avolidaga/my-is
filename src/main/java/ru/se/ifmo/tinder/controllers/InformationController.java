@@ -59,4 +59,10 @@ public class InformationController {
         List<UserData> list = userDataService.getAllUserData(principal);
         return ResponseEntity.ok(list);
     }
+
+    @PostMapping("getCurrUserData")
+    public  ResponseEntity<List<UserData>> getCurrUserData(Principal principal){
+        List<UserData> list = userDataService.getCurrUserData(principal);
+        return ResponseEntity.ok(list);
+    }
 }

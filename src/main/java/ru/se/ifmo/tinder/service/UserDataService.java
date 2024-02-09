@@ -42,7 +42,16 @@ public class UserDataService {
         List<Integer> idList = userDataRepository.getAllUserData(userId);
         return userDataRepository.getListAllByUserDataIdIn(idList);
     }
+    //getCurrUserData
 
+
+    public List<UserData> getCurrUserData(Principal principal){
+        String username = principal.getName();
+        Optional<User> user = userRepository.findByUsername(username);
+        Integer userId = user.get().getUser_data_id().getId();
+        List<Integer> idList = userDataRepository.getCurrUserData(userId);
+        return userDataRepository.getListAllByUserDataIdIn(idList);
+    }
 }
 
 
