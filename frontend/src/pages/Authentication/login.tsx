@@ -19,15 +19,20 @@ const LoginPage: React.FC = () => {
     const {control, handleSubmit} = useForm<IFormInput>();
     const navigate = useNavigate();
 
-    //тестим post с access токеном
-    const tryPost = () => {
-        axiosApiInstance.post('/test/post').then((response => console.log(response)))
+    const getCurrentUserData = async () => {
+
+        await axiosApiInstance.post('/test/getCurrUserData', {}, {headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`}})
+            .then((response => {
+                console.log(response);
+                navigate("/gallery");
+
+            }))
+            .catch((error) => {
+                navigate("/form");
+                console.error(error);
+            });
 
 
-    }
-
-    const match = () => {
-        axios.post('http://localhost:8080/api/connection/getConnections', {}, {headers: {'Authorization' : `Basic ${localStorage.getItem("accessToken")}`}}).then((response => console.log(response)))
     }
     const onSubmit: SubmitHandler<IFormInput> =  data => {
         localStorage.removeItem("accessToken");
@@ -43,8 +48,7 @@ const LoginPage: React.FC = () => {
 
              }
              else{
-                 navigate("/form");
-             }
+                 getCurrentUserData()             }
          }))
              .catch((error) => toast.error("Неверный логин или пароль"))
         // toast.error("Неверный логин или пароль")

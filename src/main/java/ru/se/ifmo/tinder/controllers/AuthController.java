@@ -18,8 +18,10 @@ public class AuthController {
 
     @PostMapping("register")
     public ResponseEntity<?> registrationUser(@RequestBody UserDto userDto) {
-        userService.createUser(userDto);
-        return ResponseEntity.noContent().build();
+        if (userService.createUser(userDto)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @PostMapping("login")

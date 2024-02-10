@@ -30,13 +30,17 @@ public class UserService {
     private final UserDataRepository userDataRepository;
     private final RoleRepository roleRepository;
 
-    public void createUser(UserDto userDto) {
+    public boolean createUser(UserDto userDto) {
         User user = UserMapper.toEntityUser(userDto);
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            return false;
+        }
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         Roles role = roleRepository.findRolesByRoleName("user");
         user.setUser_data_id(null);
         user.setRole(role);
         userRepository.save(user);
+        return true;
     }
 
     public LoginResponseDto login(UserDto authRequest) {

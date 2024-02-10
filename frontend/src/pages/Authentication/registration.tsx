@@ -4,6 +4,7 @@ import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import {useNavigate}  from 'react-router-dom';
 import axiosApiInstance from "../../utils/tokenHelper";
 import bg from "../../images/bg/reg.jpg";
+import {toast, ToastContainer} from "react-toastify";
 
 export interface IFormInput {
     username: string,
@@ -19,7 +20,10 @@ const Registration: React.FC = () => {
         axiosApiInstance.post('/auth/register', {
             username: data.username,
             password: data.password
+        }).then((response) => {
+            toast.info("Вы успешно зарегистрировались! Выполните вход в аккаунт для продолжения")
         })
+            .catch((error) => toast.error("Пользователь с таким username уже существует!"))
 
     }
     const navigate = useNavigate();
@@ -117,6 +121,8 @@ const Registration: React.FC = () => {
 
             </form>
             </Box>
+            <ToastContainer limit={3} position="bottom-right" />
+
         </Box>
     )
 }

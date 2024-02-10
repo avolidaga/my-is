@@ -41,7 +41,7 @@ const GalleryPage: React.FC = () => {
         if(localStorage.getItem("accessToken") ) {
             await axiosApiInstance.post(
                 '/connection/connectUsers',
-                {user2: userId},
+                {user_data_id_2: userId},
                 {headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`}}
             )
                 .then((response) => {
@@ -114,7 +114,7 @@ const GalleryPage: React.FC = () => {
                         borderRadius: "15px",
                         alignSelf: "center",
                         border: `1px solid #90334f`,
-                    }}>
+                    }} onClick={() => navigate("/profile")}>
                         Профиль
                     </Button>
                 </Grid>

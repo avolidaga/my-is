@@ -8,10 +8,27 @@ import axiosApiInstance from "../../utils/tokenHelper";
 import { useNavigate } from "react-router-dom";
 import PersonCard from "../../components/PersonCard";
 import blonde_young from '../../images/Mars/women/blonde_young.png';
+import {UserData} from "../UserProfile";
 const MatchPage: React.FC = () => {
     const navigate = useNavigate();
     const [resultArray, setResultArray] = useState<any[]>([]);
+    const [myUserData, setMyUserData] = useState<UserData[]>([]);
 
+
+    const getCurrentUserData = async () => {
+
+        await axiosApiInstance.post('/test/getCurrUserData', {}, {headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`}})
+            .then((response => {
+                console.log(response);
+                setMyUserData(response.data);
+            }))
+            .catch((error) => {
+                console.error(error);
+            });
+
+        console.log("user", myUserData)
+
+    }
     const getMatches = () => {
         if(localStorage.getItem("accessToken") ) {
 
@@ -28,10 +45,11 @@ const MatchPage: React.FC = () => {
 
     useEffect(() => {
         getMatches();
+        getCurrentUserData();
     }, []);
 
     return (
-        <Box sx={{width: "100vw", margin: "0px", height: "100vh",
+        <Box sx={{width: "100vw", margin: "0px", height: "100vh",overflowX: "hidden",             backgroundColor: "#fce8e9"
             // backgroundImage: `url(${bg})`, backgroundRepeat: `no-repeat`, backgroundSize: "cover",
         }}><Grid container justifyContent="center"
                  alignItems="center" >
@@ -62,7 +80,7 @@ const MatchPage: React.FC = () => {
                     borderRadius: "15px",
                     alignSelf: "center",
                     border: `1px solid #90334f`,
-                }}>
+                }} onClick={() => navigate("/profile")}>
                     Профиль
                 </Button>
             </Grid>
@@ -87,8 +105,9 @@ const MatchPage: React.FC = () => {
             </Grid>
 
         </Grid>
+        <Typography fontSize="20px" sx={{ color: "#722961", textAlign: "center", minWidth: "60%", marginBottom: "15px"}}>Кто-то из мэтчей живет на другой планете? Не беда! Жми кнопку "создать скафандр" и заполняй данные.</Typography>
 
-        <Box sx={{width: "94.8vw", margin: "100px"}}>
+        <Box sx={{width: "94.8vw", margin: "50px"}}>
 
         <Box sx={{ flex: "1"}}>
             <Grid
@@ -113,21 +132,49 @@ const MatchPage: React.FC = () => {
                                 hair_color={item.hairColor}
                                 location={item.location}
                             />
-                            {
-                                item.location == "MARS" ? <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => navigate("/spacesuit-form")}
-                                >
-                                    Создать скафандр
-                                </Button> :
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                    >
-                                        Организовать встречу
-                                    </Button>
-                            }
+                            <Box sx={{  width: "80%",
+                                display: 'flex', justifyContent: 'center', marginTop: "5px" }}>
+                                {
+                                    myUserData.some((itemX: UserData) => itemX.location != item.location)  ? <Button
+                                            style={{
+                                                margin: "15px 0",
+                                                height: "40px",
+                                                width: "240px",
+                                                fontSize: "18px",
+                                                color: "#90334f",
+                                                textAlign: "center",  alignSelf: "center",
+                                                border: `1px solid #90334f`,
+                                                borderRadius: "15px",
+
+                                            }}
+                                            size="large"
+                                            variant="outlined"
+                                            onClick={() => navigate("/spacesuit-form")}
+                                        >
+                                            Создать скафандр
+                                        </Button> :
+                                        <Button
+                                            style={{
+                                                margin: "15px 0",
+                                                height: "40px",
+                                                width: "240px",
+                                                fontSize: "18px",
+                                                color: "#90334f",
+                                                textAlign: "center",  alignSelf: "center",
+                                                border: `1px solid #90334f`,
+                                                borderRadius: "15px",
+
+                                            }}
+                                            size="large"
+                                            variant="outlined"
+                                        >
+                                            Организовать встречу
+                                        </Button>
+                                }
+
+
+                            </Box>
+
                         </Grid>
                     ))
                 }

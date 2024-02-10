@@ -6,6 +6,7 @@ import axiosApiInstance from "../../utils/tokenHelper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import bg from "../../images/bg/login2.jpg";
 export interface SpacesuitFormInput {
     head: number,
     chest: number,
@@ -49,20 +50,41 @@ const SpacesuitForm: React.FC = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 height: "100vh",
+                backgroundImage: `url(${bg})`, backgroundRepeat: `no-repeat`, backgroundSize: "cover",
+
             }}
         >
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Box
-                    sx={{
-                        width: "300px",
-                        height: "500px",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        display: "flex",
-                        position: "relative",
-                    }}
-                >
-                    <Controller
+            <Box
+                sx={{
+                    width: "450px",
+                    height: "650px",
+                    border: `1px solid #BB7B85`,
+                    borderRadius: "20px",
+                    alignSelf: "center",
+                    zIndex: "2",
+                    display: "flex",
+                    flexDirection: "column",
+                    position: "relative",
+                    backgroundColor: "#fbeffa",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Box
+                        sx={{
+                            width: "300px",
+                            height: "500px",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            display: "flex",
+                            position: "relative",
+
+                        }}
+                    >
+                        <Typography fontSize="26px" sx={{ color: "#722961", textAlign: "center", minWidth: "60%", marginBottom: "15px"}}>Данные для скафандра</Typography>
+
+                        <Controller
                         name="head"
                         defaultValue={0}
                         control={control}
@@ -98,32 +120,39 @@ const SpacesuitForm: React.FC = () => {
                         control={control}
                         render={({ field }) => <TextField variant="standard" required fullWidth type="number" label="размер ноги" {...field}/>}
                     />
-                    <Controller
+                        <Typography fontSize="20px" sx={{ color: "#90334f", minWidth: "60%", margin: "10px 0 0"}}>Любимая текстура ткани: </Typography>
+
+                        <Controller
                         name="fabric_texture_id"
                         control={control}
                         defaultValue={0}
                         render={({ field }) => (
                             <RadioGroup {...field} row>
                                 <FormControlLabel value={1} control={<Radio />} label="Шелк" />
-                                <FormControlLabel value={2} control={<Radio />} label="Лен" />
-                                <FormControlLabel value={3} control={<Radio />} label="Хлопок" />
-                                <FormControlLabel value={4} control={<Radio />} label="Шерсть" />
-                                <FormControlLabel value={5} control={<Radio />} label="?" />
+                                <FormControlLabel value={2} control={<Radio />} label="Хлопок" />
+                                <FormControlLabel value={3} control={<Radio />} label="Шерсть" />
+                                <FormControlLabel value={4} control={<Radio />} label="Полиэстер" />
+                                <FormControlLabel value={5} control={<Radio />} label="Флис" />
                             </RadioGroup>
                         )}
                     />
-                    <Button
-                        style={{
-                            margin: "15px 0",
-                            height: "40px",
-                            fontSize: "18px",
-                            color: "#FFFFFF"
-                        }}
-                        size="large"
-                        variant="contained"
-                        type="submit"
+                        <Button
+                            style={{
+                                margin: "15px 0",
+                                height: "40px",
+                                width: "150px",
+                                fontSize: "18px",
+                                color: "#90334f",
+                                textAlign: "center",  alignSelf: "center",
+                                border: `1px solid #90334f`,
+                                borderRadius: "15px",
 
-                    >
+                            }}
+                            size="large"
+                            variant="outlined"
+                            type="submit"
+                            // onClick={() => navigate("/gallery")}
+                        >
                         Отправить
                     </Button>
 
@@ -134,6 +163,7 @@ const SpacesuitForm: React.FC = () => {
             </form>
 
 
+        </Box>
         </Box>
     );
 }

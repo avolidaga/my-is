@@ -40,13 +40,13 @@ const images: ImageImports = {
     grayWomenEarthOld: require('../../images/Earth/women/gray_old.png'),
 
     blackMenEarthYoung: require('../../images/Earth/men/black_young.png'),
-    brownMenEarthYoung: require('../../images/Earth/men/brown_young.png'),
+    brownMenEarthYoung: require('../../images/Earth/men/brown_old.png'),
     blondeMenEarthYoung: require('../../images/Earth/men/blonde_young.png'),
     redMenEarthYoung: require('../../images/Earth/men/red_young.png'),
     grayMenEarthYoung: require('../../images/Earth/men/gray_young.png'),
 
     blackMenEarthOld: require('../../images/Earth/men/black_old.png'),
-    brownMenEarthOld: require('../../images/Earth/men/brown_old.png'),
+    brownMenEarthOld: require('../../images/Earth/men/brown_young.png'),
     blondeMenEarthOld: require('../../images/Earth/men/blonde_old.png'),
     redMenEarthOld: require('../../images/Earth/men/red_old.png'),
     grayMenEarthOld: require('../../images/Earth/men/gray_old.png'),
