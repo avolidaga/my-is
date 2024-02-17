@@ -18,31 +18,54 @@ export interface UserData {
     height: number,
     hairColor: string,
     location: string,
-}const UserProfilePage: React.FC = () => {
+}
+interface ISpacesuit {
+    status: string
+}
+
+const UserProfilePage: React.FC = () => {
     const navigate = useNavigate();
     const [resultArray, setResultArray] = useState<any[]>([]);
     const [myUserData, setMyUserData] = useState<UserData[]>([]);
+    const [mySpacesuit, setMySpacesuit] = useState<string>("");
+    let status = "j";
+
 
 
     const getCurrentUserData = async () => {
 
             await axiosApiInstance.post('/test/getCurrUserData', {}, {headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`}})
                 .then((response => {
-                    console.log(response);
                     setMyUserData(response.data);
+                    getSpacesuitStatus();
+
                 }))
                 .catch((error) => {
                     console.error(error);
                 });
 
-        console.log("user", myUserData)
+
+    }
+
+    const getSpacesuitStatus = async () => {
+        let response ;
+        try {
+            response = await axiosApiInstance.post('test/getCurrUserSpacesuitData', {});
+            console.log(response);
+            setMySpacesuit(response.data);
+        } catch (error) {
+            console.error(error);
+        }
 
     }
 
 
 
+
+
     useEffect(() => {
         getCurrentUserData();
+        getSpacesuitStatus();
 
     }, []);
 
@@ -120,22 +143,58 @@ export interface UserData {
                         sx={{
                             marginBottom: "40px"
                         }}
+
                     >
-                        {myUserData.map((item, index) => (
-                            <Grid key={item.id} item xl={4} md={6} xs={12} style={{ minWidth: "350px", justifyContent: "center",
+                        <Grid item xs={6}>
+                            {myUserData.map((item, index) => (
+                                <Grid key={item.id} item xs={9} style={{ minWidth: "350px", justifyContent: "center",
+                                    alignItems: "center", }}>
+                                    <PersonCard
+                                        id={item.id}
+                                        firstname={item.firstname}
+                                        birth_date={item.birthdate}
+                                        sex={item.sex}
+                                        weight={item.weight}
+                                        height={item.height}
+                                        hair_color={item.hairColor}
+                                        location={item.location}
+                                    />
+                                    <Box sx={{  width: "80%",
+                                        display: 'flex', justifyContent: 'center', marginTop: "5px" }}>
+
+                                        <Button
+                                            style={{
+                                                margin: "15px 0",
+                                                height: "40px",
+                                                width: "180px",
+                                                fontSize: "18px",
+                                                color: "#90334f",
+                                                textAlign: "center",  alignSelf: "center",
+                                                border: `1px solid #90334f`,
+                                                borderRadius: "15px",
+
+                                            }}
+                                            size="large"
+                                            variant="outlined"
+                                            onClick={() => navigate("/form")}
+                                        >
+                                            Редактировать
+                                        </Button>
+                                    </Box>
+
+                                </Grid>
+                            ))}
+                        </Grid>
+                        {mySpacesuit ?
+                        <Grid item xs={6}>
+                            <Typography fontSize="26px" sx={{ color: "#722961", textAlign: "center", minWidth: "60%", marginBottom: "15px"}}>
+                            Статус готовности вашего скафандра:
+                        </Typography>
+                            <Grid  item xs={12} style={{ minWidth: "350px", justifyContent: "center",
                                 alignItems: "center", }}>
-                                <PersonCard
-                                    id={item.id}
-                                    firstname={item.firstname}
-                                    birth_date={item.birthdate}
-                                    sex={item.sex}
-                                    weight={item.weight}
-                                    height={item.height}
-                                    hair_color={item.hairColor}
-                                    location={item.location}
-                                />
                                 <Box sx={{  width: "80%",
                                     display: 'flex', justifyContent: 'center', marginTop: "5px" }}>
+
 
                                     <Button
                                         style={{
@@ -151,14 +210,33 @@ export interface UserData {
                                         }}
                                         size="large"
                                         variant="outlined"
-                                        onClick={() => navigate("/form")}
                                     >
-                                        Редактировать
+                                        {mySpacesuit}
                                     </Button>
+                                    {mySpacesuit === "DECLINED" ?
+                                        <Button
+                                            style={{
+                                                margin: "15px 0",
+                                                height: "40px",
+                                                width: "180px",
+                                                fontSize: "18px",
+                                                color: "#90334f",
+                                                textAlign: "center",  alignSelf: "center",
+                                                border: `1px solid #90334f`,
+                                                borderRadius: "15px",
+
+                                            }}
+                                            size="large"
+                                            variant="outlined"
+                                            onClick={()=> navigate("/spacesuit-form")}
+                                        >
+                                            Отправить повторно
+                                        </Button> : ""}
                                 </Box>
 
                             </Grid>
-                        ))}
+                        </Grid> : ""}
+
 
                     </Grid>
                 </Box>

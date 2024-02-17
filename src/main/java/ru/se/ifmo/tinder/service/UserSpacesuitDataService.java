@@ -2,6 +2,7 @@ package ru.se.ifmo.tinder.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.se.ifmo.tinder.dto.UserSpacesuitStatusDto;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserData;
 import ru.se.ifmo.tinder.model.UserSpacesuitData;

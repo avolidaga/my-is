@@ -8,17 +8,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.se.ifmo.tinder.dto.ShootingDto;
-import ru.se.ifmo.tinder.dto.UserDataDto;
-import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserData;
 import ru.se.ifmo.tinder.model.UserSpacesuitData;
+import ru.se.ifmo.tinder.model.enums.Status;
 import ru.se.ifmo.tinder.service.ShootingService;
 import ru.se.ifmo.tinder.service.UserDataService;
-import ru.se.ifmo.tinder.service.UserService;
 import ru.se.ifmo.tinder.service.UserSpacesuitDataService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -70,8 +69,11 @@ public class InformationController {
     }
 
     @PostMapping("getCurrUserSpacesuitData")
-    public  ResponseEntity<List<UserSpacesuitData>> getCurrUserSpacesuitData(Principal principal){
+    public ResponseEntity<List<Status>> getCurrUserSpacesuitData(Principal principal){
         List<UserSpacesuitData> list = userSpacesuitDataService.getCurrUserSpacesuitData(principal);
-        return ResponseEntity.ok(list);
+        if (!list.isEmpty()) {
+            return ResponseEntity.ok(list.stream().map(UserSpacesuitData::getStatus).collect(Collectors.toList()));
+        }
+        return ResponseEntity.ok(List.of());
     }
 }

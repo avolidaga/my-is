@@ -1,17 +1,18 @@
-package ru.se.ifmo.tinder.model;
+package ru.se.ifmo.tinder.dto;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.se.ifmo.tinder.model.FabricTexture;
 import ru.se.ifmo.tinder.model.enums.Status;
 
 @Entity
 @Table(name = "user_spacesuit_data")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class UserSpacesuitData {
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserSpacesuitStatusDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_spacesuit_data_id")
@@ -24,7 +25,4 @@ public class UserSpacesuitData {
     private Integer height;
     @Enumerated(EnumType.STRING)
     private Status status;
-    @ManyToOne
-    @JoinColumn(name="fabric_texture_id")
-    private FabricTexture fabricTextureId;
 }

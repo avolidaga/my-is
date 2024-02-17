@@ -1,7 +1,10 @@
 package ru.se.ifmo.tinder.dto;
 
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
+import ru.se.ifmo.tinder.model.FabricTexture;
+import ru.se.ifmo.tinder.model.enums.Status;
 
 
 @Data
@@ -16,3 +19,6 @@ public class UserSpacesuitDataDto {
     private Integer fabric_texture_id;
 
 }
+
+
+
