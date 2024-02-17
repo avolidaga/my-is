@@ -3,10 +3,13 @@ package ru.se.ifmo.tinder.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.se.ifmo.tinder.model.User;
+import ru.se.ifmo.tinder.model.UserData;
+import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.repository.UserRepository;
 import ru.se.ifmo.tinder.repository.UserSpacesuitDataRepository;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -22,5 +25,13 @@ public class UserSpacesuitDataService {
         return userSpacesuitDataRepository.insertUserSpacesuitData(head,chest,waist, hips, foot_size, height,fabric_texture_id,userId);
     }
 
+
+    public List<UserSpacesuitData> getCurrUserSpacesuitData(Principal principal){
+        String username = principal.getName();
+        Optional<User> user = userRepository.findByUsername(username);
+        Integer userId = user.get().getUser_spacesuit_data_id().getId();
+        List<Integer> idList = userSpacesuitDataRepository.getCurrUserSpacesuitData(userId);
+        return userSpacesuitDataRepository.getListAllByUserSpacesuitDataIdIn(idList);
+    }
 }
 

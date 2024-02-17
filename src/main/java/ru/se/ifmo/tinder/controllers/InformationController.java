@@ -11,9 +11,11 @@ import ru.se.ifmo.tinder.dto.ShootingDto;
 import ru.se.ifmo.tinder.dto.UserDataDto;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserData;
+import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.service.ShootingService;
 import ru.se.ifmo.tinder.service.UserDataService;
 import ru.se.ifmo.tinder.service.UserService;
+import ru.se.ifmo.tinder.service.UserSpacesuitDataService;
 
 import java.security.Principal;
 import java.util.List;
@@ -25,6 +27,7 @@ import java.util.List;
 public class InformationController {
     private final ShootingService shootingService;
     private final UserDataService userDataService;
+    private final UserSpacesuitDataService userSpacesuitDataService;
 
 
     @PostMapping("post")
@@ -63,6 +66,12 @@ public class InformationController {
     @PostMapping("getCurrUserData")
     public  ResponseEntity<List<UserData>> getCurrUserData(Principal principal){
         List<UserData> list = userDataService.getCurrUserData(principal);
+        return ResponseEntity.ok(list);
+    }
+
+    @PostMapping("getCurrUserSpacesuitData")
+    public  ResponseEntity<List<UserSpacesuitData>> getCurrUserSpacesuitData(Principal principal){
+        List<UserSpacesuitData> list = userSpacesuitDataService.getCurrUserSpacesuitData(principal);
         return ResponseEntity.ok(list);
     }
 }
