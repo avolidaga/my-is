@@ -24,7 +24,7 @@ export function fetchConnections(){
     return function (dispatch: Dispatch<FetchGetConnectionsRequestAction | FetchGetConnectionsSuccessAction | FetchGetConnectionsFailureAction>) {
         // dispatch<FetchGetConnectionsRequestAction>({ type: FETCH_CONNECTIONS_REQUEST });
         dispatch(fetchConnectionsRequest())
-        axios.post('http://localhost:8080/api/connection/getConnections', {}, {headers: {'Authorization' : `Basic ${localStorage.getItem("accessToken")}`}})
+        axios.post('http://localhost:34000/api/connection/getConnections', {}, {headers: {'Authorization' : `Basic ${localStorage.getItem("accessToken")}`}})
             .then(response => {
                 dispatch(fetchConnectionsSuccess(response.data))
                 // dispatch<FetchGetConnectionsSuccessAction>({

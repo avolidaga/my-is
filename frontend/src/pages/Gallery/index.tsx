@@ -26,7 +26,7 @@ const GalleryPage: React.FC = () => {
     const getAllPartners = async () => {
         if(localStorage.getItem("accessToken") ) {
 
-            await axios.post('http://localhost:8080/api/test/getAllUserData', {}, {headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`}})
+            await axiosApiInstance.post('/test/getAllUserData', {}, {headers: {'Authorization': `Basic ${localStorage.getItem("accessToken")}`}})
                 .then((response => {
                     console.log(response);
                     setPersonArray(response.data);
