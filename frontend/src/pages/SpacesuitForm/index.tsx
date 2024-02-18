@@ -1,12 +1,13 @@
 import {Box, Button, FormControlLabel, Radio, RadioGroup, styled, TextField, Typography} from "@mui/material";
 import React, {useState} from "react";
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
-import useNavigate  from 'react-router-dom';
 import axiosApiInstance from "../../utils/tokenHelper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import bg from "../../images/bg/login2.jpg";
+import {useNavigate}  from 'react-router-dom';
+
 export interface SpacesuitFormInput {
     head: number,
     chest: number,
@@ -18,6 +19,7 @@ export interface SpacesuitFormInput {
 }
 
 const SpacesuitForm: React.FC = () => {
+    const navigate = useNavigate();
 
     const onSubmit: SubmitHandler<SpacesuitFormInput> = data => {
         console.log(data)
@@ -34,6 +36,7 @@ const SpacesuitForm: React.FC = () => {
         }, {headers: {'Authorization' : `Basic ${localStorage.getItem("accessToken")}`}})
             .then((response => {
                 console.log(response);
+                navigate("/profile")
             }))
             .catch((error) => {
                 console.error(error);

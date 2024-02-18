@@ -22,6 +22,8 @@ const GalleryPage: React.FC = () => {
     const [isMatchDialogOpen, setIsMatchDialogOpen] = useState(false);
     const [matchedUserId, setMatchedUserId] = useState<number | null>(null);
     const navigate = useNavigate();
+    const reversedPersonArray = [...personArray].reverse();
+
 
     const getAllPartners = async () => {
         if(localStorage.getItem("accessToken") ) {
@@ -152,7 +154,7 @@ const GalleryPage: React.FC = () => {
                             marginBottom: "40px"
                         }}
                     >
-                        {personArray.map((item, index) => (
+                        {reversedPersonArray.map((item, index) => (
                             <Grid key={item.id} item xl={4} md={6} xs={12} style={{ minWidth: "350px" }}>
                                 <PersonCard
                                     id={item.id}

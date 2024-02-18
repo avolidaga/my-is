@@ -213,25 +213,31 @@ const UserProfilePage: React.FC = () => {
                                     >
                                         {mySpacesuit}
                                     </Button>
-                                    {mySpacesuit === "DECLINED" ?
-                                        <Button
-                                            style={{
-                                                margin: "15px 0",
-                                                height: "40px",
-                                                width: "180px",
-                                                fontSize: "18px",
-                                                color: "#90334f",
-                                                textAlign: "center",  alignSelf: "center",
-                                                border: `1px solid #90334f`,
-                                                borderRadius: "15px",
 
-                                            }}
-                                            size="large"
-                                            variant="outlined"
-                                            onClick={()=> navigate("/spacesuit-form")}
-                                        >
-                                            Отправить повторно
-                                        </Button> : ""}
+                                </Box>
+                                <Box sx={{  width: "80%",
+                                    display: 'flex', justifyContent: 'center', marginTop: "5px" }}>
+                                {mySpacesuit == "DECLINED" ?
+                                    <Button
+                                        style={{
+                                            margin: "15px 0",
+                                            height: "40px",
+                                            width: "330px",
+                                            fontSize: "18px",
+                                            color: "#FFFFFF",
+                                            backgroundColor: "#90334f",
+
+                                            textAlign: "center",  alignSelf: "center",
+                                            border: `1px solid #90334f`,
+                                            borderRadius: "15px",
+
+                                        }}
+                                        size="large"
+                                        variant="outlined"
+                                        onClick={()=> navigate("/spacesuit-form")}
+                                    >
+                                        Отправить повторно
+                                    </Button> : ""}
                                 </Box>
 
                             </Grid>
