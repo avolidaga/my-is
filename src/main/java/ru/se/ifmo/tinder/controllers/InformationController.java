@@ -3,10 +3,7 @@ package ru.se.ifmo.tinder.controllers;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.se.ifmo.tinder.dto.ShootingDto;
 import ru.se.ifmo.tinder.model.UserData;
 import ru.se.ifmo.tinder.model.UserSpacesuitData;
@@ -21,54 +18,38 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/test")
+@RequestMapping("/api/info")
 @SecurityRequirement(name = "basicAuth")
 public class InformationController {
     private final ShootingService shootingService;
     private final UserDataService userDataService;
     private final UserSpacesuitDataService userSpacesuitDataService;
 
-
-    @PostMapping("post")
-    public ResponseEntity<String> post(){
-        return ResponseEntity.ok("sjdh");
-    }
-    @PostMapping("get")
-    public ResponseEntity<String> get(){
-        return ResponseEntity.ok("sjdh");
-    }
-
-    @PostMapping("getId")
-    public ResponseEntity<Long> getId(@RequestBody ShootingDto shootingDto){
-        Long id = shootingService.insertShooting(shootingDto.getUsername(),shootingDto.getIsKronbars());
-        return ResponseEntity.ok(id);
-    }
-
-    @PostMapping("getMars")
-    public ResponseEntity<List<UserData>> getMars(){
+    @GetMapping("users/{planetId}")
+    public ResponseEntity<List<UserData>> getUsersByPlanetId(@PathVariable String planetId){
         List<UserData> list = userDataService.getMars();
         return ResponseEntity.ok(list);
     }
 
-    @PostMapping("getEarth")
-    public ResponseEntity<List<UserData>> getEarth(){
-        List<UserData> list = userDataService.getEarth();
-        return ResponseEntity.ok(list);
-    }
-
-    @PostMapping("getAllUserData")
+    @GetMapping("users")
     public  ResponseEntity<List<UserData>> getAllUserData(Principal principal){
         List<UserData> list = userDataService.getAllUserData(principal);
         return ResponseEntity.ok(list);
     }
 
-    @PostMapping("getCurrUserData")
+    @GetMapping("current-user")
     public  ResponseEntity<List<UserData>> getCurrUserData(Principal principal){
         List<UserData> list = userDataService.getCurrUserData(principal);
         return ResponseEntity.ok(list);
     }
 
-    @PostMapping("getCurrUserSpacesuitData")
+    @GetMapping("current-user/id")
+    public ResponseEntity<Long> getId(@RequestBody ShootingDto shootingDto){
+        Long id = shootingService.insertShooting(shootingDto.getUsername(),shootingDto.getIsKronbars());
+        return ResponseEntity.ok(id);
+    }
+
+    @GetMapping("current-user/spacesuit")
     public ResponseEntity<List<Status>> getCurrUserSpacesuitData(Principal principal){
         List<UserSpacesuitData> list = userSpacesuitDataService.getCurrUserSpacesuitData(principal);
         if (!list.isEmpty()) {

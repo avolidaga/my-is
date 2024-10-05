@@ -12,7 +12,7 @@ import ru.se.ifmo.tinder.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping("/api/auth-management")
 public class AuthController {
     private final UserService userService;
 
@@ -29,6 +29,5 @@ public class AuthController {
         userService.login(userDto);
         LoginResponseDto loginResponseDto = userService.login(userDto);
         return ResponseEntity.ok(loginResponseDto);
-
     }
 }
