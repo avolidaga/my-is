@@ -16,18 +16,18 @@ import static org.aspectj.runtime.internal.Conversions.intValue;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/connection-management")
+@RequestMapping("/api/connection-management/connections")
 @SecurityRequirement(name = "basicAuth")
 public class ConnectionController {
     private final UserService userService;
 
-    @PostMapping("connection")
+    @PostMapping
     public ResponseEntity<Integer> connectUsers(@RequestBody UserConnectionsDto userConnectionsDto, Principal principal) {
         Integer id = userService.addConnection(principal, (intValue(userConnectionsDto.getUser_data_id_2())));
         return ResponseEntity.ok(id);
     }
 
-    @GetMapping("connections")
+    @GetMapping
     public ResponseEntity<List<UserData>> getConnections(Principal principal) {
         List<UserData> list = userService.getConnections(principal);
         return ResponseEntity.ok(list);

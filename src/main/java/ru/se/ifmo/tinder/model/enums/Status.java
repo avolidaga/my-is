@@ -1,6 +1,7 @@
 package ru.se.ifmo.tinder.model.enums;
 
 public enum Status {
+    ALL("ALL"),
     DECLINED("DECLINED"),
     READY("READY"),
     IN_PROGRESS("IN_PROGRESS");
