@@ -7,10 +7,12 @@ public enum Status {
 
     private final String status;
 
-    Status(String status){this.status = status;}
+    Status(String status) {
+        this.status = status;
+    }
 
-    public static void showStatusList(){
-        for ( Status status : values()){
+    public static void showStatusList() {
+        for (Status status : values()) {
             System.out.println(status);
         }
     }

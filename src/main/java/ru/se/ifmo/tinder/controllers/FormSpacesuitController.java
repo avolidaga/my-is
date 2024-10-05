@@ -15,18 +15,15 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/formSpacesuit")
+@RequestMapping("/api/spacesuit-form")
 @SecurityRequirement(name = "basicAuth")
 public class FormSpacesuitController {
 
     private final UserSpacesuitDataService userSpacesuitDataService;
 
-
-    @PostMapping("submitFormSpacesuit")
-    public ResponseEntity<Integer> submitForm(@RequestBody UserSpacesuitDataDto userSpacesuitDataDto, Principal principal){
-        Integer id = userSpacesuitDataService.insertUserSpacesuitData(userSpacesuitDataDto.getHead(),userSpacesuitDataDto.getChest(),userSpacesuitDataDto.getWaist(),userSpacesuitDataDto.getHips(),userSpacesuitDataDto.getFoot_size(), userSpacesuitDataDto.getHeight(),userSpacesuitDataDto.getFabric_texture_id(), principal);
+    @PostMapping()
+    public ResponseEntity<Integer> submitForm(@RequestBody UserSpacesuitDataDto userSpacesuitDataDto, Principal principal) {
+        Integer id = userSpacesuitDataService.insertUserSpacesuitData(userSpacesuitDataDto.getHead(), userSpacesuitDataDto.getChest(), userSpacesuitDataDto.getWaist(), userSpacesuitDataDto.getHips(), userSpacesuitDataDto.getFoot_size(), userSpacesuitDataDto.getHeight(), userSpacesuitDataDto.getFabric_texture_id(), principal);
         return ResponseEntity.ok(id);
     }
-
-
 }
