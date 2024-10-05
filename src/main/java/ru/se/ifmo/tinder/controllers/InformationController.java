@@ -28,19 +28,19 @@ public class InformationController {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("users")
+    @GetMapping("user/data")
     public  ResponseEntity<List<UserData>> getAllUserData(Principal principal){
         List<UserData> list = userDataService.getAllUserData(principal);
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("current-user")
+    @GetMapping("user/current-data")
     public  ResponseEntity<List<UserData>> getCurrUserData(Principal principal){
         List<UserData> list = userDataService.getCurrUserData(principal);
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("current-user/spacesuit")
+    @GetMapping("user/spacesuit")
     public ResponseEntity<List<Status>> getCurrUserSpacesuitData(Principal principal){
         List<UserSpacesuitData> list = userSpacesuitDataService.getCurrUserSpacesuitData(principal);
         if (!list.isEmpty()) {
