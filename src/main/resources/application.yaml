@@ -2,20 +2,20 @@ spring:
   application:
     name: tinder
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://localhost:5436/tinder
+    username: postgres
+    password: root
     driver-class-name: org.postgresql.Driver
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    defer-datasource-initialization: true
-    spring:
-      sql:
-        init:
-          mode=always
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    defer-datasource-initialization: true
+#    spring:
+#      sql:
+#        init:
+#          mode=always
 logging:
   level:
     org.springframework.security.web: DEBUG
