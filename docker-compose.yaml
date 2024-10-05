@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   database:
     image: postgres:alpine
@@ -7,12 +9,43 @@ services:
       - backend
     volumes:
       - postgres:/var/lib/postgresql/data
-      - type: bind
-        source: ./script/init
-        target: /docker-entrypoint-initdb.d
     env_file:
       - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d tinder" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+
+  liquibase:
+    image: liquibase/liquibase:4.9.1
+    container_name: liquibase
+    depends_on:
+       database:
+          condition: service_healthy
+    volumes:
+      - ./src/main/resources/db/changelog/:/liquibase/db/changelog/
+    command: [
+      /liquibase/liquibase,
+      --username=postgres,
+      --password=root,
+      --driver=org.postgresql.Driver,
+      --url=jdbc:postgresql://database:5432/tinder,
+      --changeLogFile=db/changelog/db.changelog-master.yaml,
+      update,
+    ]
+    environment:
+      - LIQUIBASE_SECURE_PARSING=false
+
 volumes:
   postgres:
+
 networks:
   backend:
