@@ -6,6 +6,7 @@ import ru.se.ifmo.tinder.model.enums.Location;
 import ru.se.ifmo.tinder.model.enums.Sex;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_data")
@@ -31,4 +32,8 @@ public class UserData {
     @Enumerated(EnumType.STRING)
     private Location location;
     String firstname;
+
+//    @ManyToMany(mappedBy = "usersLocation")
+//    Set<ru.se.ifmo.tinder.model.Location> locations;
+
 }
