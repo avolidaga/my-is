@@ -5,10 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.se.ifmo.tinder.dto.UserDataDto;
 import ru.se.ifmo.tinder.model.UserData;
-import ru.se.ifmo.tinder.model.enums.Location;
-import ru.se.ifmo.tinder.model.enums.Sex;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +21,7 @@ public interface UserDataRepository extends JpaRepository<UserData,Integer> {
 
     @Transactional
     @Query(value = "SELECT * FROM GetAllUserData(:user_id)", nativeQuery = true)
-    List<Integer> getAllUserData(Integer user_id);
+    List<Integer> getAllUsersData(Integer user_id);
 
 
 

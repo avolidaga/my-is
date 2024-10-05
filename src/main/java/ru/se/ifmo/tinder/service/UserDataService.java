@@ -27,11 +27,11 @@ public class UserDataService {
         return userDataRepository.insertUserData(birthdate, sex.toString(), weight, height, hairColor, firstname, userId);
     }
 
-    public List<UserData> getAllUserData(Principal principal) {
+    public List<UserData> getAllUsersData(Principal principal) {
         String username = principal.getName();
         Optional<User> user = userRepository.findByUsername(username);
         Integer userId = user.get().getUser_data_id().getId();
-        List<Integer> idList = userDataRepository.getAllUserData(userId);
+        List<Integer> idList = userDataRepository.getAllUsersData(userId);
         return userDataRepository.getListAllByUserDataIdIn(idList);
     }
 
