@@ -21,19 +21,12 @@ public class UserDataService {
     private final UserDataRepository userDataRepository;
     private final UserRepository userRepository;
 
-    public List<UserData> getMars(){
-        List<Integer> idList = userDataRepository.getUserDataOnMars();
-        return userDataRepository.getListAllByUserDataIdIn(idList);
-    }
-    public List<UserData> getEarth(){
-        List<Integer> idList = userDataRepository.getUserDataOnEarth();
-        return userDataRepository.getListAllByUserDataIdIn(idList);
-    }
-    public Integer insertUserData(LocalDate birthdate, Sex sex, Integer weight, Integer height, String hairColor, Location location, String firstname, Principal principal){
+
+    public Integer insertUserData(LocalDate birthdate, Sex sex, Integer weight, Integer height, String hairColor, String firstname, Principal principal){
         String username = principal.getName();
         Optional<User> user = userRepository.findByUsername(username);
         Integer userId = user.get().getId();
-        return userDataRepository.insertUserData(birthdate,sex.toString(),weight,height,hairColor, location.toString(),firstname, userId);
+        return userDataRepository.insertUserData(birthdate,sex.toString(),weight,height,hairColor,firstname, userId);
     }
     public List<UserData> getAllUserData(Principal principal){
         String username = principal.getName();

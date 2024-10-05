@@ -1,7 +1,10 @@
 package ru.se.ifmo.tinder.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "user_connections")
@@ -25,5 +28,8 @@ public class UserConnection {
     @JoinColumn(name = "user_id_2")
     private User user2;
 
-    // Другие поля или методы, если необходимо
+    @PastOrPresent
+    @Column(name="date_time")
+    private LocalDate matchDate;
+
 }

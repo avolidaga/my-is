@@ -32,5 +32,4 @@ CMD java -jar /app/app.jar & \
         sleep 1; \
     done && \
     echo "PostgreSQL is ready. Running SQL script." && \
-    PGPASSWORD=$SPRING_DATASOURCE_PASSWORD psql -h "database" -p 5432 -U "$SPRING_DATASOURCE_USERNAME" -d t1 -f /app/insert_tech.sql && \
     wait

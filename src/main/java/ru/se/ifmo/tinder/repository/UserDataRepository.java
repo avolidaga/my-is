@@ -15,13 +15,7 @@ import java.util.List;
 
 @Repository
 public interface UserDataRepository extends JpaRepository<UserData,Integer> {
-    @Transactional
-    @Query(value = "SELECT * FROM GetUserDataOnEarth()", nativeQuery = true)
-    List<Integer> getUserDataOnEarth();
 
-    @Transactional
-    @Query(value = "SELECT * FROM GetUserDataOnMars()", nativeQuery = true)
-    List<Integer> getUserDataOnMars();
 
 
     @Transactional
@@ -35,9 +29,9 @@ public interface UserDataRepository extends JpaRepository<UserData,Integer> {
 
 
     @Transactional
-    @Query(value = "SELECT * FROM insert_user_data(:birth_date, CAST(:sex AS sex_enum), :weight, :height, :hair_color, CAST(:location AS location_enum),:firstname,  :user_id)", nativeQuery = true)
+    @Query(value = "SELECT * FROM insert_user_data(:birth_date, CAST(:sex AS sex_enum), :weight, :height, :hair_color, :firstname,  :user_id)", nativeQuery = true)
     Integer insertUserData(@Param("birth_date") LocalDate birth_date, @Param("sex") String sex, @Param("weight") int weight,
-                           @Param("height") int height, @Param("hair_color") String hair_color, @Param("location") String location,@Param("firstname") String firstname,  @Param("user_id") Integer user_id);
+                           @Param("height") int height, @Param("hair_color") String hair_color,@Param("firstname") String firstname,  @Param("user_id") Integer user_id);
 
     @Transactional
     @Query(value = "SELECT * FROM user_data WHERE user_data_id IN (SELECT user_data_id FROM users WHERE id IN (:idList))", nativeQuery = true)

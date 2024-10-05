@@ -11,7 +11,6 @@ import ru.se.ifmo.tinder.dto.ShootingDto;
 import ru.se.ifmo.tinder.model.UserData;
 import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.model.enums.Status;
-import ru.se.ifmo.tinder.service.ShootingService;
 import ru.se.ifmo.tinder.service.UserDataService;
 import ru.se.ifmo.tinder.service.UserSpacesuitDataService;
 
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/test")
 @SecurityRequirement(name = "basicAuth")
 public class InformationController {
-    private final ShootingService shootingService;
     private final UserDataService userDataService;
     private final UserSpacesuitDataService userSpacesuitDataService;
 
@@ -38,23 +36,18 @@ public class InformationController {
         return ResponseEntity.ok("sjdh");
     }
 
-    @PostMapping("getId")
-    public ResponseEntity<Long> getId(@RequestBody ShootingDto shootingDto){
-        Long id = shootingService.insertShooting(shootingDto.getUsername(),shootingDto.getIsKronbars());
-        return ResponseEntity.ok(id);
-    }
 
-    @PostMapping("getMars")
-    public ResponseEntity<List<UserData>> getMars(){
-        List<UserData> list = userDataService.getMars();
-        return ResponseEntity.ok(list);
-    }
-
-    @PostMapping("getEarth")
-    public ResponseEntity<List<UserData>> getEarth(){
-        List<UserData> list = userDataService.getEarth();
-        return ResponseEntity.ok(list);
-    }
+//    @PostMapping("getMars")
+//    public ResponseEntity<List<UserData>> getMars(){
+//        List<UserData> list = userDataService.getMars();
+//        return ResponseEntity.ok(list);
+//    }
+//
+//    @PostMapping("getEarth")
+//    public ResponseEntity<List<UserData>> getEarth(){
+//        List<UserData> list = userDataService.getEarth();
+//        return ResponseEntity.ok(list);
+//    }
 
     @PostMapping("getAllUserData")
     public  ResponseEntity<List<UserData>> getAllUserData(Principal principal){

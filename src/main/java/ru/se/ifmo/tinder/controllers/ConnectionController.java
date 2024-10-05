@@ -7,12 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.se.ifmo.tinder.dto.ShootingDto;
 import ru.se.ifmo.tinder.dto.UserConnectionsDto;
-import ru.se.ifmo.tinder.model.User;
-import ru.se.ifmo.tinder.model.UserConnection;
 import ru.se.ifmo.tinder.model.UserData;
-import ru.se.ifmo.tinder.service.ShootingService;
 import ru.se.ifmo.tinder.service.UserDataService;
 import ru.se.ifmo.tinder.service.UserService;
 

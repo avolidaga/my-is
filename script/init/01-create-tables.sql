@@ -1,17 +1,6 @@
-CREATE TABLE shooting (
-      id SERIAL PRIMARY KEY,
-      coach VARCHAR,
-      isKronbars BOOLEAN
-);
-
 CREATE TYPE sex_enum AS ENUM (
  'MEN',
  'WOMEN'
-);
-
-CREATE TYPE location_enum AS ENUM (
- 'EARTH',
- 'MARS'
 );
 
 CREATE TYPE request_status_enum  AS ENUM (
@@ -45,7 +34,6 @@ CREATE TABLE IF NOT EXISTS user_data (
     weight INT NOT NULL CHECK (weight > 0),
     height INT NOT NULL CHECK (height > 0 AND height <= 300),
     hair_color VARCHAR(255) NOT NULL,
-    location location_enum NOT NULL CHECK (location IN ('EARTH', 'MARS')),
     firstname VARCHAR(255)
     );
 CREATE TABLE IF NOT EXISTS roles (
@@ -76,5 +64,22 @@ CREATE TABLE IF NOT EXISTS user_request (
 CREATE TABLE user_connections (
       id SERIAL PRIMARY KEY,
       user_id_1 INTEGER REFERENCES users(id),
-      user_id_2 INTEGER REFERENCES users(id)
+      user_id_2 INTEGER REFERENCES users(id),
+      date_time DATE NOT NULL
 );
+
+CREATE TABLE location (
+  location_id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  temperature DOUBLE PRECISION
+);
+
+CREATE TABLE user_data_location (
+    location_id INTEGER NOT NULL,
+    user_data_id INTEGER NOT NULL,
+    PRIMARY KEY (location_id, user_data_id),
+    CONSTRAINT fk_location FOREIGN KEY (location_id) REFERENCES location (location_id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_data FOREIGN KEY (user_data_id) REFERENCES user_data (user_data_id) ON DELETE CASCADE
+);
+
