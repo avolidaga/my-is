@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.se.ifmo.tinder.dto.RequestDto;
 import ru.se.ifmo.tinder.model.UserRequest;
+import ru.se.ifmo.tinder.model.enums.SearchStatus;
 import ru.se.ifmo.tinder.model.enums.Status;
 import ru.se.ifmo.tinder.service.RequestService;
 
@@ -19,8 +20,8 @@ public class RequestController {
     private final RequestService requestService;
 
     //TODO подправить обработку для status
-    @GetMapping("user-request/{status}")
-    public ResponseEntity<List<UserRequest>> getUserRequest(@PathVariable Status status) {
+    @GetMapping("user-request")
+    public ResponseEntity<List<UserRequest>> getUserRequest(@RequestParam SearchStatus status) {
         List<UserRequest> list = switch (status) {
             case ALL -> requestService.getAllUserRequest();
             case DECLINED -> requestService.getDeclinedUserRequest();
