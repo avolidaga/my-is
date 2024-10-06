@@ -2,11 +2,9 @@ version: '3.8'
 
 services:
   database:
-    image: postgres:alpine
+    image: postgres
     ports:
-      - "5436:5432"
-    networks:
-      - backend
+      - "5432:5432"
     volumes:
       - postgres:/var/lib/postgresql/data
     env_file:
@@ -38,14 +36,19 @@ services:
       --password=root,
       --driver=org.postgresql.Driver,
       --url=jdbc:postgresql://database:5432/tinder,
-      --changeLogFile=db/changelog/db.changelog-master.yaml,
+      --changeLogFile=/db/changelog/changelog-master.xml,
       update,
     ]
     environment:
       - LIQUIBASE_SECURE_PARSING=false
-
+  app:
+    image: 'tinder.jar'
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+      - liquibase
+    env_file:
+      - .env
 volumes:
   postgres:
-
-networks:
-  backend:

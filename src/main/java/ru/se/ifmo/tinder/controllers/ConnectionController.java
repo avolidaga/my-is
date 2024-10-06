@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.se.ifmo.tinder.dto.UserConnectionsDto;
+import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserData;
 import ru.se.ifmo.tinder.service.UserService;
 
@@ -28,8 +29,8 @@ public class ConnectionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserData>> getConnections(Principal principal) {
-        List<UserData> list = userService.getConnections(principal);
+    public ResponseEntity<List<User>> getConnections(Principal principal) {
+        List<User> list = userService.getConnections(principal);
         return ResponseEntity.ok(list);
     }
 }
