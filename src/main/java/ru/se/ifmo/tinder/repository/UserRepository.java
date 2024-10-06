@@ -19,19 +19,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
 
 
-    @Transactional
-    @Query(value = "SELECT * FROM insert_user_connection(:user_id_1, :user_id_2)", nativeQuery = true)
-    Integer addUserConnection(@Param("user_id_1") Integer user_id_1, @Param("user_id_2") Integer user_id_2);
-
-
-
-// нам нужно получить List всех людей, у которыч connection с текущим пользователем совпадает
-
-
-    @Transactional
-    @Query(value = "SELECT * FROM GetAllConnectionsForUser(:user_id_1)", nativeQuery = true)
-    List<Integer> getUsersIdConnection(Integer user_id_1);
-
 //    @Transactional
 //    @Query(value = "SELECT user_data_id FROM user_data WHERE user_id IN (:idList)", nativeQuery = true)
 //    List<Integer> getListAllUserById(List<Integer> idList);

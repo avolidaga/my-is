@@ -46,7 +46,6 @@ public class UserService {
     }
 
     public LoginResponseDto login(UserDto authRequest) {
-        // аутентификации
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
         );
@@ -62,7 +61,6 @@ public class UserService {
 
     @Transactional
     public Integer addConnection(Principal principal, Integer user_id_2) {
-        // Получаем id первого пользователя из Principal
         String username = principal.getName();
         Optional<User> user1 = userRepository.findByUsername(username);
         Integer userId1 = user1.get().getId();

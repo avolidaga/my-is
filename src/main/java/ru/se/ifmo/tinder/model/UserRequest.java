@@ -12,6 +12,13 @@ import ru.se.ifmo.tinder.model.enums.Status;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@NamedQueries({
+        @NamedQuery(name = "UserRequest.getAllUserRequestIds", query = "SELECT ur.user_request_id FROM UserRequest ur"),
+        @NamedQuery(name = "UserRequest.getDeclinedUserRequestIds", query = "SELECT ur.user_request_id FROM UserRequest ur WHERE ur.status = 'DECLINED'"),
+        @NamedQuery(name = "UserRequest.getReadyUserRequest", query = "SELECT ur.user_request_id FROM UserRequest ur WHERE ur.status = 'READY'"),
+        @NamedQuery(name = "UserRequest.getInProgressUserRequest", query = "SELECT ur.user_request_id FROM UserRequest ur WHERE ur.status = 'IN PROGRES'"),
+        @NamedQuery(name = "UserRequest.getListAllByUserRequestIdIn", query = "SELECT ur FROM UserRequest ur WHERE ur.user_request_id IN :idList")
+})
 public class UserRequest {
 
     @Id

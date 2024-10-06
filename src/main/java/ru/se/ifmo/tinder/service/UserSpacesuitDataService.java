@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.se.ifmo.tinder.model.FabricTexture;
 import ru.se.ifmo.tinder.model.User;
+import ru.se.ifmo.tinder.model.UserRequest;
 import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.repository.FabricTextureRepository;
+import ru.se.ifmo.tinder.repository.RequestRepository;
 import ru.se.ifmo.tinder.repository.UserRepository;
 import ru.se.ifmo.tinder.repository.UserSpacesuitDataRepository;
 
@@ -18,8 +20,10 @@ import java.util.Optional;
 public class UserSpacesuitDataService {
     private final UserSpacesuitDataRepository userSpacesuitDataRepository;
     private final UserRepository userRepository;
+    private final RequestRepository requestRepository;
 
     private final FabricTextureRepository fabricTextureRepository;
+
     public Integer insertUserSpacesuitData(Integer head, Integer chest, Integer waist, Integer hips, Integer footSize, Integer height, Integer fabricTextureId, Principal principal) {
         String username = principal.getName();
 
@@ -38,13 +42,19 @@ public class UserSpacesuitDataService {
                     .fabricTextureId(fabricTexture)
                     .build();
 
-            UserSpacesuitData insertedId = userSpacesuitDataRepository.save(userSpacesuitData);
+            UserSpacesuitData userSpacesuit = userSpacesuitDataRepository.save(userSpacesuitData);
 
             User user = userOptional.get();
-            user.setUserSpacesuitDataId(insertedId);
+            user.setUserSpacesuitDataId(userSpacesuit);
             userRepository.save(user);
+            UserRequest userRequest = UserRequest.builder()
+                    .userSpacesuitDataId(userSpacesuit)
+                    .build();
 
-            return insertedId.getId();
+            requestRepository.save(userRequest);
+
+
+            return userSpacesuit.getId();
         } else {
             throw new IllegalArgumentException("User not found");
         }

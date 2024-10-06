@@ -5,8 +5,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import ru.se.ifmo.tinder.model.UserData;
 import ru.se.ifmo.tinder.model.UserRequest;
+import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.model.enums.Status;
 import ru.se.ifmo.tinder.repository.RequestRepository;
+import ru.se.ifmo.tinder.repository.UserSpacesuitDataRepository;
 
 
 import java.util.List;
@@ -15,14 +17,15 @@ import java.util.List;
 @Service
 public class RequestService {
     private final RequestRepository requestRepository;
+    private final UserSpacesuitDataRepository spacesuitDataRepository;
 
     public List<UserRequest> getAllUserRequest(){
-        List<Integer> idList = requestRepository.getAllUserRequest();
+        List<Integer> idList = requestRepository.getAllUserRequestIds();
         return requestRepository.getListAllByUserRequestIdIn(idList);
     }
 
     public List<UserRequest> getDeclinedUserRequest(){
-        List<Integer> idList = requestRepository.getDeclinedUserRequest();
+        List<Integer> idList = requestRepository.getDeclinedUserRequestIds();
         return requestRepository.getListAllByUserRequestIdIn(idList);
     }
 
@@ -36,14 +39,34 @@ public class RequestService {
         return requestRepository.getListAllByUserRequestIdIn(idList);
     }
 
-    public void updateStatusReady(Integer user_request_id){
-        requestRepository.updateStatusReady(user_request_id);
+    public void updateStatusReady(Integer userRequestId){
+        UserRequest userRequest = requestRepository.findById(userRequestId)
+                .orElseThrow(() -> new RuntimeException("User request not found with id: " + userRequestId));
+
+        userRequest.setStatus(Status.READY);
+        requestRepository.save(userRequest);
+
+        UserSpacesuitData userSpacesuitData = spacesuitDataRepository.findById(userRequest.getUser_request_id())
+                    .orElseThrow(() -> new RuntimeException("User spacesuit data not found with id: " + userRequest.getUserSpacesuitDataId()));
+
+            userSpacesuitData.setStatus(Status.READY);
+            spacesuitDataRepository.save(userSpacesuitData);
+
     }
 
 
-    public void updateStatusDeclined(Integer user_request_id){
-        requestRepository.updateStatusDeclined(user_request_id);
-    }
+    public void updateStatusDeclined(Integer userRequestId){
+        UserRequest userRequest = requestRepository.findById(userRequestId)
+                .orElseThrow(() -> new RuntimeException("User request not found with id: " + userRequestId));
+
+        userRequest.setStatus(Status.DECLINED);
+        requestRepository.save(userRequest);
+
+        UserSpacesuitData userSpacesuitData = spacesuitDataRepository.findById(userRequest.getUser_request_id())
+                .orElseThrow(() -> new RuntimeException("User spacesuit data not found with id: " + userRequest.getUserSpacesuitDataId()));
+
+        userSpacesuitData.setStatus(Status.DECLINED);
+        spacesuitDataRepository.save(userSpacesuitData);    }
 
     //public Integer insertUserData(LocalDate birthdate, Sex sex, Integer weight, Integer height, String hairColor, Location location, String firstname, Principal principal){
     //        String username = principal.getName();
