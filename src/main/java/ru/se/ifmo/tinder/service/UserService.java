@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.se.ifmo.tinder.dto.LoginResponseDto;
 import ru.se.ifmo.tinder.dto.UserDto;
 import ru.se.ifmo.tinder.mapper.UserMapper;
@@ -59,6 +60,7 @@ public class UserService {
                 .build();
     }
 
+    @Transactional
     public Integer addConnection(Principal principal, Integer user_id_2) {
         // Получаем id первого пользователя из Principal
         String username = principal.getName();
@@ -67,8 +69,8 @@ public class UserService {
 
         Integer userId2 = userRepository.findUserByUserDataId(user_id_2);
 
-        // Вызываем метод репозитория для добавления связи
-        return userRepository.addUserConnection(userId1, userId2);
+        return userConnectionRepository.insertUserConnection(userId1, userId2);
+
     }
 
 
@@ -79,7 +81,6 @@ public class UserService {
         Set<User> userConnections = new HashSet<>();
         Set<User> mutualConnections = new HashSet<>();
 
-        // Найдем всех пользователей, с которыми есть соединения
         for (UserConnection connection : userConnectionRepository.findAll()) {
             if (connection.getUser1().equals(user)) {
                 userConnections.add(connection.getUser2());
@@ -88,7 +89,6 @@ public class UserService {
             }
         }
 
-        // Проверим взаимность соединений
         for (UserConnection connection : userConnectionRepository.findAll()) {
             if (userConnections.contains(connection.getUser1()) && connection.getUser2().equals(user)) {
                 mutualConnections.add(connection.getUser1());

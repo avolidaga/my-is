@@ -23,7 +23,7 @@ services:
 
 
   liquibase:
-    image: liquibase/liquibase:4.9.1
+    image: liquibase/liquibase:4.29.2
     container_name: liquibase
     depends_on:
        database:

@@ -13,7 +13,8 @@ import java.util.List;
 @Repository
 public interface UserDataRepository extends JpaRepository<UserData,Integer> {
 
-
+    @Query("SELECT u FROM UserData u WHERE u.userDataId <> ?1")
+    List<UserData> findAllUserDataExcludingUserId(Integer userId);
 
     @Transactional
     @Query(value = "SELECT * FROM user_data WHERE user_data_id IN (:idList)", nativeQuery = true)

@@ -6,7 +6,9 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
+<!--    <include file="db/changelog/drop.xml"/>-->
     <include file="db/changelog/create-changeset-tinder-tables.xml"/>
     <include file="db/changelog/insert-changeset-fabric-texture.xml"/>
+    <include file="db/changelog/insert-roles.xml"/>
 
 </databaseChangeLog>

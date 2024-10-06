@@ -1,29 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
+    <!-- Conditional inserts to avoid duplicate key violation -->
     <changeSet id="insert-fabric" author="lisache121">
-        <insert tableName="fabric_texture">
-            <column name="fabric_texture_name" value="silk"/>
-        </insert>
 
-        <insert tableName="fabric_texture">
-            <column name="fabric_texture_name" value="cotton"/>
-        </insert>
+        <sql>
+            INSERT INTO fabric_texture (fabric_texture_name)
+            SELECT 'silk'
+                WHERE NOT EXISTS (
+                SELECT 1 FROM fabric_texture WHERE fabric_texture_name = 'silk'
+            );
+        </sql>
 
-        <insert tableName="fabric_texture">
-            <column name="fabric_texture_name" value="wool"/>
-        </insert>
+        <sql>
+            INSERT INTO fabric_texture (fabric_texture_name)
+            SELECT 'cotton'
+                WHERE NOT EXISTS (
+                SELECT 1 FROM fabric_texture WHERE fabric_texture_name = 'cotton'
+            );
+        </sql>
 
-        <insert tableName="fabric_texture">
-            <column name="fabric_texture_name" value="polyester"/>
-        </insert>
+        <sql>
+            INSERT INTO fabric_texture (fabric_texture_name)
+            SELECT 'wool'
+                WHERE NOT EXISTS (
+                SELECT 1 FROM fabric_texture WHERE fabric_texture_name = 'wool'
+            );
+        </sql>
 
-        <insert tableName="fabric_texture">
-            <column name="fabric_texture_name" value="fleece"/>
-        </insert>
+        <sql>
+            INSERT INTO fabric_texture (fabric_texture_name)
+            SELECT 'polyester'
+                WHERE NOT EXISTS (
+                SELECT 1 FROM fabric_texture WHERE fabric_texture_name = 'polyester'
+            );
+        </sql>
+
+        <sql>
+            INSERT INTO fabric_texture (fabric_texture_name)
+            SELECT 'fleece'
+                WHERE NOT EXISTS (
+                SELECT 1 FROM fabric_texture WHERE fabric_texture_name = 'fleece'
+            );
+        </sql>
+
     </changeSet>
 
 </databaseChangeLog>

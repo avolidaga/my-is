@@ -20,7 +20,7 @@ public class UserRequest {
     private Integer user_request_id;
     @ManyToOne
     @JoinColumn(name="user_spacesuit_data_id")
-    private UserSpacesuitData user_spacesuit_data_id;
+    private UserSpacesuitData userSpacesuitDataId;
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
