@@ -1,5 +1,7 @@
 package ru.se.ifmo.tinder.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 @Data
@@ -7,6 +9,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserConnectionsDto {
-    //private Integer user_id_1;
+
+    @NotNull(message = "User data ID 2 must not be null")
+    @Positive(message = "User data ID 2 must be a positive number")
     private Integer user_data_id_2;
 }
+

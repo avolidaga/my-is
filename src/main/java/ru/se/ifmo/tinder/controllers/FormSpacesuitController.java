@@ -1,6 +1,7 @@
 package ru.se.ifmo.tinder.controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,9 +22,19 @@ public class FormSpacesuitController {
 
     private final UserSpacesuitDataService userSpacesuitDataService;
 
+    // Метод для отправки данных о скафандре с валидацией
     @PostMapping()
-    public ResponseEntity<Integer> submitForm(@RequestBody UserSpacesuitDataDto userSpacesuitDataDto, Principal principal) {
-        Integer id = userSpacesuitDataService.insertUserSpacesuitData(userSpacesuitDataDto.getHead(), userSpacesuitDataDto.getChest(), userSpacesuitDataDto.getWaist(), userSpacesuitDataDto.getHips(), userSpacesuitDataDto.getFoot_size(), userSpacesuitDataDto.getHeight(), userSpacesuitDataDto.getFabric_texture_id(), principal);
+    public ResponseEntity<Integer> submitForm(@Valid @RequestBody UserSpacesuitDataDto userSpacesuitDataDto, Principal principal) {
+        Integer id = userSpacesuitDataService.insertUserSpacesuitData(
+                userSpacesuitDataDto.getHead(),
+                userSpacesuitDataDto.getChest(),
+                userSpacesuitDataDto.getWaist(),
+                userSpacesuitDataDto.getHips(),
+                userSpacesuitDataDto.getFoot_size(),
+                userSpacesuitDataDto.getHeight(),
+                userSpacesuitDataDto.getFabric_texture_id(),
+                principal
+        );
         return ResponseEntity.ok(id);
     }
 }
