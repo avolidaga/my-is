@@ -9,15 +9,18 @@ import ru.se.ifmo.tinder.model.FabricTexture;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserRequest;
 import ru.se.ifmo.tinder.model.UserSpacesuitData;
+import ru.se.ifmo.tinder.model.enums.Status;
 import ru.se.ifmo.tinder.repository.FabricTextureRepository;
 import ru.se.ifmo.tinder.repository.RequestRepository;
 import ru.se.ifmo.tinder.repository.UserRepository;
 import ru.se.ifmo.tinder.repository.UserSpacesuitDataRepository;
 import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
+import ru.se.ifmo.tinder.service.exceptions.NoSpacesuitDataException;
 import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -46,6 +49,7 @@ public class UserSpacesuitDataService {
         userRepository.save(user);
         UserRequest userRequest = UserRequest.builder()
                 .userSpacesuitDataId(userSpacesuit)
+                .status(Status.NEW)
                 .build();
 
         requestRepository.save(userRequest);
@@ -57,8 +61,10 @@ public class UserSpacesuitDataService {
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
-        Integer userId = user.getUserSpacesuitDataId().getId();
-        List<Integer> idList = userSpacesuitDataRepository.getCurrUserSpacesuitData(userId);
+        Integer userId = Optional.ofNullable(user.getUserSpacesuitDataId())
+                .orElseThrow(() -> new NoSpacesuitDataException(username))
+                .getId();
+        List<Integer> idList = userRepository.getCurrUserSpacesuitData(userId);
         return userSpacesuitDataRepository.getListAllByUserSpacesuitDataIdIn(idList);
     }
 }

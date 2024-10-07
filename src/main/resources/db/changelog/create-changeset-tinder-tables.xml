@@ -61,7 +61,7 @@
             <column name="head" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(50)" defaultValue="IN_PROGRESS"/>
+            <column name="status" type="VARCHAR(50)" defaultValue="NEW"/>
             <column name="chest" type="INT">
                 <constraints nullable="false"/>
             </column>

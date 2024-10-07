@@ -22,6 +22,7 @@ public class RequestService {
     public List<UserRequest> getUserRequestsByStatus(SearchStatus status) {
         List<Integer> idList = switch (status) {
             case ALL -> requestRepository.getAllUserRequestIds();
+            case NEW -> requestRepository.getNewUserRequestIds();
             case DECLINED -> requestRepository.getDeclinedUserRequestIds();
             case READY -> requestRepository.getReadyUserRequest();
             case IN_PROGRESS -> requestRepository.getInProgressUserRequest();

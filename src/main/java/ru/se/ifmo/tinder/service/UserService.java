@@ -20,6 +20,7 @@ import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
 import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -37,7 +38,7 @@ public class UserService {
             return false;
         }
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        Roles role = roleRepository.findRolesByRoleName(RoleName.USER.name());
+        Roles role = roleRepository.findRolesByRoleName(RoleName.USER);
         user.setUser_data_id(null);
         user.setRole(role);
         userRepository.save(user);
@@ -63,12 +64,17 @@ public class UserService {
         String username = principal.getName();
         User user1 = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
-        Integer userId1 = user1.getId();
 
-        Integer userId2 = userRepository.findUserByUserDataId(user_id_2)
+        User user2 = userRepository.findUserByUserDataId(user_id_2)
                 .orElseThrow(() -> new NoEntityWithSuchIdException("User", "User data", user_id_2));
 
-        return userConnectionRepository.insertUserConnection(userId1, userId2);
+
+        UserConnection userConnection = userConnectionRepository.save(UserConnection.builder()
+                .user1(user1)
+                .user2(user2)
+                .matchDate(LocalDate.now())
+                .build());
+        return userConnection.getId();
     }
 
     public List<User> getConnections(Principal principal) {

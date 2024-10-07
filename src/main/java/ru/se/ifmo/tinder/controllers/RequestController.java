@@ -3,10 +3,10 @@ package ru.se.ifmo.tinder.controllers;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.se.ifmo.tinder.dto.RequestDto;
 import ru.se.ifmo.tinder.model.UserRequest;
 import ru.se.ifmo.tinder.model.enums.SearchStatus;
@@ -43,6 +43,16 @@ public class RequestController {
             }
         }
         return ResponseEntity.noContent().build(); // Успешное обновление статуса — код 204 (без контента)
+    }
+
+    @ExceptionHandler(value = {IllegalStateException.class})
+    public ResponseEntity<?> handleIllegalStateExceptions(RuntimeException ex) {
+        return ResponseEntity.badRequest().body("Incorrect request: " + ex);
+    }
+
+    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<?> handleIncorrectStatusExceptions() {
+        return ResponseEntity.badRequest().body("Incorrect request param 'status'");
     }
 }
 

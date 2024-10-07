@@ -1,5 +1,6 @@
 package ru.se.ifmo.tinder.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.se.ifmo.tinder.dto.UserDataDto;
@@ -11,11 +12,15 @@ import ru.se.ifmo.tinder.repository.LocationRepository;
 import ru.se.ifmo.tinder.repository.UserDataRepository;
 import ru.se.ifmo.tinder.repository.UserRepository;
 import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
+import ru.se.ifmo.tinder.service.exceptions.UserNotCompletedRegistrationException;
 import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -25,13 +30,15 @@ public class UserDataService {
     private final LocationRepository locationRepository;
 
 
-    //TODO потенциальное место для транзакции
+    @Transactional
     public Integer insertUserData(UserDataDto userDataDto, Principal principal) {
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
 
-        UserData userData = UserDataMapper.toEntityUserData(userDataDto);
+        Set<Location> locations = new HashSet<>(locationRepository.findAllById(userDataDto.getLocation()));
+        if (locations.isEmpty()) throw new NoEntityWithSuchIdException("Location", userDataDto.getLocation());
+        UserData userData = UserDataMapper.toEntityUserData(userDataDto, locations);
 
         UserData insertedId = userDataRepository.save(userData);
 
@@ -46,7 +53,9 @@ public class UserDataService {
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
-        Integer userId = user.getUser_data_id().getId();
+        Integer userId = Optional.ofNullable(user.getUser_data_id())
+                .orElseThrow(() -> new UserNotCompletedRegistrationException(username))
+                .getId();
         return userDataRepository.findAllUserDataExcludingUserId(userId);
     }
 
@@ -54,14 +63,11 @@ public class UserDataService {
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
-        Integer userId = user.getUser_data_id().getId();
-        return userDataRepository.findById(userId);
+        return Optional.ofNullable(user.getUser_data_id());
     }
 
     public List<UserData> getUsersByPlanetId(Integer planetId) {
-        Location location = locationRepository.findById(planetId)
-                .orElseThrow(() -> new NoEntityWithSuchIdException("Location", planetId));
-        return userDataRepository.findAllUserDataByPlanetId(location);
+        return userDataRepository.findUserDataByLocationsId(planetId);
     }
 }
 

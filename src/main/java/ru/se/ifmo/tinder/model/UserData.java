@@ -31,7 +31,10 @@ public class UserData {
 
     String firstname; //TODO почему..
 
-    @ManyToMany(mappedBy = "usersLocation")
+    @ManyToMany
+    @JoinTable(
+            name = "user_data_location",
+            joinColumns = @JoinColumn(name = "user_data_id"),
+            inverseJoinColumns = @JoinColumn(name = "location_id"))
     Set<ru.se.ifmo.tinder.model.Location> locations;
-
 }
