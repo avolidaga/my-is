@@ -2,7 +2,6 @@ package ru.se.ifmo.tinder.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.se.ifmo.tinder.model.enums.Location;
 import ru.se.ifmo.tinder.model.enums.Sex;
 
 import java.time.LocalDate;
@@ -29,11 +28,10 @@ public class UserData {
     private Integer height;
     @Column(name = "hair_color")
     private String hairColor;
-    @Enumerated(EnumType.STRING)
-    private Location location;
+
     String firstname;
 
-//    @ManyToMany(mappedBy = "usersLocation")
-//    Set<ru.se.ifmo.tinder.model.Location> locations;
+    @ManyToMany(mappedBy = "usersLocation")
+    Set<ru.se.ifmo.tinder.model.Location> locations;
 
 }

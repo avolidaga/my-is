@@ -3,7 +3,6 @@ package ru.se.ifmo.tinder.dto;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
-import ru.se.ifmo.tinder.model.enums.Location;
 import ru.se.ifmo.tinder.model.enums.Sex;
 
 import java.time.LocalDate;

@@ -12,6 +12,7 @@ import ru.se.ifmo.tinder.service.UserSpacesuitDataService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,8 +39,11 @@ public class InformationController {
     // Получение данных текущего пользователя
     @GetMapping("current-user/data")
     public  ResponseEntity<List<UserData>> getCurrUserData(Principal principal){
-        List<UserData> list = userDataService.getCurrUserData(principal);
-        return ResponseEntity.ok(list);
+        Optional<UserData> list = userDataService.getCurrUserData(principal);
+        if (!list.isEmpty()){
+            ResponseEntity.ok(list);
+        }
+        return ResponseEntity.ok(List.of());
     }
 
     // Получение статусов скафандров текущего пользователя

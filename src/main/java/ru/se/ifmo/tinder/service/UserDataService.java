@@ -22,25 +22,45 @@ public class UserDataService {
 
     public Integer insertUserData(LocalDate birthdate, Sex sex, Integer weight, Integer height, String hairColor, String firstname, Principal principal) {
         String username = principal.getName();
-        Optional<User> user = userRepository.findByUsername(username);
-        Integer userId = user.get().getId();
-        return userDataRepository.insertUserData(birthdate, sex.toString(), weight, height, hairColor, firstname, userId);
+        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        if (userOptional.isPresent()) {
+
+            UserData userData = UserData.builder()
+                    .birthdate(birthdate)
+                    .sex(sex)
+                    .weight(weight)
+                    .height(height)
+                    .hairColor(hairColor)
+                    .firstname(firstname)
+                    .build();
+
+            UserData insertedId = userDataRepository.save(userData);
+
+            User user = userOptional.get();
+            user.setUser_data_id(userData);
+            userRepository.save(user);
+
+            return insertedId.getId();
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
     }
+
+
 
     public List<UserData> getAllUsersData(Principal principal) {
         String username = principal.getName();
         Optional<User> user = userRepository.findByUsername(username);
         Integer userId = user.get().getUser_data_id().getId();
-        List<Integer> idList = userDataRepository.getAllUsersData(userId);
-        return userDataRepository.getListAllByUserDataIdIn(idList);
+        return userDataRepository.findAllUserDataExcludingUserId(userId);
     }
 
-    public List<UserData> getCurrUserData(Principal principal) {
+    public Optional<UserData> getCurrUserData(Principal principal) {
         String username = principal.getName();
         Optional<User> user = userRepository.findByUsername(username);
         Integer userId = user.get().getUser_data_id().getId();
-        List<Integer> idList = userDataRepository.getCurrUserData(userId);
-        return userDataRepository.getListAllByUserDataIdIn(idList);
+        return userDataRepository.findById(userId);
     }
 
     public List<UserData> getUsersByPlanetId(String planetId) {

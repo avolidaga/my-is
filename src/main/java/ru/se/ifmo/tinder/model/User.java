@@ -21,7 +21,7 @@ public class User {
     private String password;
     @ManyToOne
     @JoinColumn(name="user_spacesuit_data_id")
-    private UserSpacesuitData user_spacesuit_data_id;
+    private UserSpacesuitData userSpacesuitDataId;
     @ManyToOne
     @JoinColumn(name="user_data_id")
     private UserData user_data_id;
