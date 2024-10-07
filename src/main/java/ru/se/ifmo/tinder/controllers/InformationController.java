@@ -29,12 +29,14 @@ public class InformationController {
         return ResponseEntity.ok(list);
     }
 
+    // Получение всех данных пользователей
     @GetMapping("users/data")
     public  ResponseEntity<List<UserData>> getAllUsersData(Principal principal){
         List<UserData> list = userDataService.getAllUsersData(principal);
         return ResponseEntity.ok(list);
     }
 
+    // Получение данных текущего пользователя
     @GetMapping("current-user/data")
     public  ResponseEntity<List<UserData>> getCurrUserData(Principal principal){
         Optional<UserData> list = userDataService.getCurrUserData(principal);
@@ -44,12 +46,15 @@ public class InformationController {
         return ResponseEntity.ok(List.of());
     }
 
+    // Получение статусов скафандров текущего пользователя
     @GetMapping("current-user/spacesuit")
     public ResponseEntity<List<Status>> getCurrUserSpacesuitData(Principal principal){
         List<UserSpacesuitData> list = userSpacesuitDataService.getCurrUserSpacesuitData(principal);
         if (!list.isEmpty()) {
+            // Если список не пуст, вернуть статусы скафандров
             return ResponseEntity.ok(list.stream().map(UserSpacesuitData::getStatus).collect(Collectors.toList()));
         }
+        // Если данных нет, возвращаем пустой список
         return ResponseEntity.ok(List.of());
     }
 }

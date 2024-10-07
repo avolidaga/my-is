@@ -1,6 +1,7 @@
 package ru.se.ifmo.tinder.controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +21,18 @@ public class FormController {
 
     private final UserDataService userDataService;
 
-
+    // Метод для отправки формы с валидацией
     @PostMapping
-    public ResponseEntity<Integer> submitForm(@RequestBody UserDataDto userDataDto,  Principal principal){
-        Integer id = userDataService.insertUserData(userDataDto.getBirth_date(),userDataDto.getSex(),userDataDto.getWeight(),userDataDto.getHeight(),userDataDto.getHair_color(),userDataDto.getFirstname(), principal);
+    public ResponseEntity<Integer> submitForm(@Valid @RequestBody UserDataDto userDataDto, Principal principal) {
+        Integer id = userDataService.insertUserData(
+                userDataDto.getBirth_date(),
+                userDataDto.getSex(),
+                userDataDto.getWeight(),
+                userDataDto.getHeight(),
+                userDataDto.getHair_color(),
+                userDataDto.getFirstname(),
+                principal
+        );
         return ResponseEntity.ok(id);
     }
 }
