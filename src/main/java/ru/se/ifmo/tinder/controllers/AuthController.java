@@ -22,7 +22,7 @@ public class AuthController {
         if (userService.createUser(userDto)) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.badRequest().body("User already exists!");
+        return ResponseEntity.badRequest().body("User already exists");
     }
 
     // Логин пользователя с валидацией

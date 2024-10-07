@@ -1,6 +1,9 @@
 package ru.se.ifmo.tinder.controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +15,6 @@ import ru.se.ifmo.tinder.service.RequestService;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,36 +25,23 @@ public class RequestController {
 
     // Получение запросов пользователей по статусу
     @GetMapping("user-request")
-    public ResponseEntity<List<UserRequest>> getUserRequest(@RequestParam Optional<SearchStatus> status) {
-        if (status.isEmpty()) {
-            return ResponseEntity.badRequest().build(); // Если статус не указан, возвращаем ошибку 400
-        }
-
-        List<UserRequest> list = switch (status.get()) {
-            case ALL -> requestService.getAllUserRequest();
-            case DECLINED -> requestService.getDeclinedUserRequest();
-            case READY -> requestService.getReadyUserRequest();
-            case IN_PROGRESS -> requestService.getInProgressUserRequest();
-        };
-
+    public ResponseEntity<List<UserRequest>> getUsersRequests(@NotNull @RequestParam SearchStatus status) {
+        List<UserRequest> list = requestService.getUserRequestsByStatus(status);
         return ResponseEntity.ok(list);
     }
 
     // Обновление статуса запроса
     @PutMapping("user-request")
-    public ResponseEntity<Void> updateRequestStatus(@RequestParam Status status, @RequestBody RequestDto userRequestDto) {
-        if (userRequestDto == null || userRequestDto.getUser_spacesuit_data_id() == null) {
-            return ResponseEntity.badRequest().build(); // Если не переданы данные, возвращаем ошибку 400
-        }
-
+    public ResponseEntity<String> updateRequestStatus(@NotNull @RequestParam Status status, @Valid @RequestBody RequestDto userRequestDto) {
         switch (status) {
-            case READY -> requestService.updateStatusReady(userRequestDto.getUser_spacesuit_data_id());
-            case DECLINED -> requestService.updateStatusDeclined(userRequestDto.getUser_spacesuit_data_id());
+            case IN_PROGRESS ->
+                    requestService.updateStatusStartRequest(userRequestDto.getUser_spacesuit_data_id(), status);
+            case READY, DECLINED ->
+                    requestService.updateStatusFinishRequest(userRequestDto.getUser_spacesuit_data_id(), status);
             default -> {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Неправильный статус — ошибка 400
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect status"); // Неправильный статус — ошибка 400
             }
         }
-
         return ResponseEntity.noContent().build(); // Успешное обновление статуса — код 204 (без контента)
     }
 }

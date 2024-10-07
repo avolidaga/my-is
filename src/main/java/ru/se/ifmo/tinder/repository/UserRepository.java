@@ -9,7 +9,7 @@ import ru.se.ifmo.tinder.model.User;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Integer> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
 
@@ -19,5 +19,5 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     @Transactional
     @Query(value = "SELECT id FROM users WHERE user_data_id=(:userDataId)", nativeQuery = true)
-    Integer findUserByUserDataId(Integer userDataId);
+    Optional<Integer> findUserByUserDataId(Integer userDataId);
 }

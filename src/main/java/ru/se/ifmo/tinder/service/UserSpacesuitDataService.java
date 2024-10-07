@@ -1,7 +1,10 @@
 package ru.se.ifmo.tinder.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.se.ifmo.tinder.dto.UserSpacesuitDataDto;
+import ru.se.ifmo.tinder.mapper.SpacesuitDataMapper;
 import ru.se.ifmo.tinder.model.FabricTexture;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserRequest;
@@ -10,10 +13,11 @@ import ru.se.ifmo.tinder.repository.FabricTextureRepository;
 import ru.se.ifmo.tinder.repository.RequestRepository;
 import ru.se.ifmo.tinder.repository.UserRepository;
 import ru.se.ifmo.tinder.repository.UserSpacesuitDataRepository;
+import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
+import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -24,48 +28,36 @@ public class UserSpacesuitDataService {
 
     private final FabricTextureRepository fabricTextureRepository;
 
-    public Integer insertUserSpacesuitData(Integer head, Integer chest, Integer waist, Integer hips, Integer footSize, Integer height, Integer fabricTextureId, Principal principal) {
+    @Transactional
+    public Integer insertUserSpacesuitData(UserSpacesuitDataDto userSpacesuitDataDto, Principal principal) {
         String username = principal.getName();
 
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+        Integer fabricTextureId = userSpacesuitDataDto.getFabric_texture_id();
+        FabricTexture fabricTexture = fabricTextureRepository.findById(fabricTextureId)
+                .orElseThrow(() -> new NoEntityWithSuchIdException("Fabric texture", fabricTextureId));
+        UserSpacesuitData userSpacesuitData = SpacesuitDataMapper
+                .toEntitySpacesuitData(userSpacesuitDataDto, fabricTexture);
 
-        if (userOptional.isPresent()) {
+        UserSpacesuitData userSpacesuit = userSpacesuitDataRepository.save(userSpacesuitData);
 
-            FabricTexture fabricTexture = fabricTextureRepository.findById(fabricTextureId).get();
-            UserSpacesuitData userSpacesuitData =  UserSpacesuitData.builder()
-                    .head(head)
-                    .chest(chest)
-                    .waist(waist)
-                    .hips(hips)
-                    .foot_size(footSize)
-                    .height(height)
-                    .fabricTextureId(fabricTexture)
-                    .build();
+        user.setUserSpacesuitDataId(userSpacesuit);
+        userRepository.save(user);
+        UserRequest userRequest = UserRequest.builder()
+                .userSpacesuitDataId(userSpacesuit)
+                .build();
 
-            UserSpacesuitData userSpacesuit = userSpacesuitDataRepository.save(userSpacesuitData);
-
-            User user = userOptional.get();
-            user.setUserSpacesuitDataId(userSpacesuit);
-            userRepository.save(user);
-            UserRequest userRequest = UserRequest.builder()
-                    .userSpacesuitDataId(userSpacesuit)
-                    .build();
-
-            requestRepository.save(userRequest);
-
-
-            return userSpacesuit.getId();
-        } else {
-            throw new IllegalArgumentException("User not found");
-        }
+        requestRepository.save(userRequest);
+        return userSpacesuit.getId();
     }
 
 
-
-    public List<UserSpacesuitData> getCurrUserSpacesuitData(Principal principal){
+    public List<UserSpacesuitData> getCurrUserSpacesuitData(Principal principal) {
         String username = principal.getName();
-        Optional<User> user = userRepository.findByUsername(username);
-        Integer userId = user.get().getUserSpacesuitDataId().getId();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+        Integer userId = user.getUserSpacesuitDataId().getId();
         List<Integer> idList = userSpacesuitDataRepository.getCurrUserSpacesuitData(userId);
         return userSpacesuitDataRepository.getListAllByUserSpacesuitDataIdIn(idList);
     }

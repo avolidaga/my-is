@@ -24,7 +24,7 @@ public class InformationController {
     private final UserSpacesuitDataService userSpacesuitDataService;
 
     @GetMapping("users/{planetId}")
-    public ResponseEntity<List<UserData>> getUsersByPlanetId(@PathVariable String planetId){
+    public ResponseEntity<List<UserData>> getUsersByPlanetId(@PathVariable Integer planetId){
         List<UserData> list = userDataService.getUsersByPlanetId(planetId);
         return ResponseEntity.ok(list);
     }

@@ -29,7 +29,7 @@ public class UserData {
     @Column(name = "hair_color")
     private String hairColor;
 
-    String firstname;
+    String firstname; //TODO почему..
 
     @ManyToMany(mappedBy = "usersLocation")
     Set<ru.se.ifmo.tinder.model.Location> locations;

@@ -22,19 +22,10 @@ public class FormSpacesuitController {
 
     private final UserSpacesuitDataService userSpacesuitDataService;
 
-    // Метод для отправки данных о скафандре с валидацией
+    // Отправка данных о скафандре с валидацией
     @PostMapping()
     public ResponseEntity<Integer> submitForm(@Valid @RequestBody UserSpacesuitDataDto userSpacesuitDataDto, Principal principal) {
-        Integer id = userSpacesuitDataService.insertUserSpacesuitData(
-                userSpacesuitDataDto.getHead(),
-                userSpacesuitDataDto.getChest(),
-                userSpacesuitDataDto.getWaist(),
-                userSpacesuitDataDto.getHips(),
-                userSpacesuitDataDto.getFoot_size(),
-                userSpacesuitDataDto.getHeight(),
-                userSpacesuitDataDto.getFabric_texture_id(),
-                principal
-        );
+        Integer id = userSpacesuitDataService.insertUserSpacesuitData(userSpacesuitDataDto, principal);
         return ResponseEntity.ok(id);
     }
 }
