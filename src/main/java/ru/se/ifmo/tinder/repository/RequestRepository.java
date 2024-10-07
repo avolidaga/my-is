@@ -1,5 +1,7 @@
 package ru.se.ifmo.tinder.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,26 +14,22 @@ import java.util.List;
 
 @Repository
 public interface RequestRepository extends JpaRepository<UserRequest,Integer> {
-
-    @Transactional
+    //пагинация
     @Query(name = "UserRequest.getAllUserRequestIds")
-    List<Integer> getAllUserRequestIds();
+    Page<UserRequest> findAll(Pageable pageable);
 
-    @Transactional
     @Query(name = "UserRequest.getDeclinedUserRequestIds")
-    List<Integer> getDeclinedUserRequestIds();
+    Page<UserRequest> findDeclined(Pageable pageable);
 
-    @Transactional
     @Query(name = "UserRequest.getReadyUserRequest")
-    List<Integer> getReadyUserRequest();
+    Page<UserRequest> findReady(Pageable pageable);
 
-    @Transactional
     @Query(name = "UserRequest.getInProgressUserRequest")
-    List<Integer> getInProgressUserRequest();
+    Page<UserRequest> findInProgress(Pageable pageable);
 
     @Transactional
     @Query(name = "UserRequest.getListAllByUserRequestIdIn")
-    List<UserRequest> getListAllByUserRequestIdIn(@Param("idList") List<Integer> idList);
+    Page<UserRequest> getListAllByUserRequestIdIn(@Param("idList") List<Integer> idList, Pageable pageable);
 
 
 }
