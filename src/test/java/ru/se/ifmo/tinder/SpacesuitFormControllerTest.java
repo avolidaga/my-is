@@ -14,15 +14,17 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.se.ifmo.tinder.dto.UserDto;
+import ru.se.ifmo.tinder.dto.UserSpacesuitDataDto;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.repository.UserRepository;
+import ru.se.ifmo.tinder.repository.UserSpacesuitDataRepository;
 import ru.se.ifmo.tinder.service.UserService;
 
 import static io.restassured.RestAssured.given;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthControllerTest {
+public class SpacesuitFormControllerTest {
 
     @LocalServerPort
     private Integer port;
@@ -31,7 +33,12 @@ public class AuthControllerTest {
     UserRepository userRepository;
 
     @Autowired
+    UserSpacesuitDataRepository userSpacesuitDataRepository;
+
+    @Autowired
     UserService userService;
+
+    private UserDto userDto;
 
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
@@ -56,91 +63,39 @@ public class AuthControllerTest {
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
         RestAssured.defaultParser = Parser.JSON;
-    }
-
-    @Test
-    public void registerUserWithCorrectDataTest() {
-        UserDto userDto = UserDto.builder()
-                .username("testUser")
-                .password("testPassword")
-                .build();
-
-        ValidatableResponse response = given()
-                .header("Content-type", "application/json")
-                .and()
-                .body(userDto)
-                .when()
-                .post("/api/auth-management/register")
-                .then();
-
-        response.statusCode(204);
-
-        User savedUser = userRepository.findByUsername(userDto.getUsername()).get();
-        Assertions.assertEquals(savedUser.getUsername(), userDto.getUsername());
-        userRepository.delete(savedUser);
-    }
-
-    @Test
-    public void registerUserWithIncorrectDataTest() {
-        UserDto userDto = UserDto.builder()
-                .username("n")
-                .password("test")
-                .build();
-
-        ValidatableResponse response = given()
-                .header("Content-type", "application/json")
-                .and()
-                .body(userDto)
-                .when()
-                .post("/api/auth-management/register")
-                .then();
-
-        response.statusCode(400)
-                .body("username", Matchers.equalTo("Username must be between 3 and 50 characters"))
-                .body("password", Matchers.equalTo("Password must be at least 8 characters long"));
-    }
-
-    @Test
-    public void loginUserWithCorrectDataTest() {
-        UserDto userDto = UserDto.builder()
+        userDto = UserDto.builder()
                 .username("testUser")
                 .password("testPassword")
                 .build();
         userService.createUser(userDto);
-
-        ValidatableResponse response = given()
-                .header("Content-type", "application/json")
-                .and()
-                .body(userDto)
-                .when()
-                .post("/api/auth-management/login")
-                .then();
-
-        response.statusCode(200)
-                .body("role", Matchers.equalTo("USER"));
-
-        User savedUser = userRepository.findByUsername(userDto.getUsername()).get();
-        userRepository.delete(savedUser);
     }
 
     @Test
-    public void loginUserWithIncorrectDataTest() {
-        UserDto userDto = UserDto.builder()
-                .username("n")
-                .password("test")
+    public void postSpacesuitFormWithCorrectDataTest() {
+        UserSpacesuitDataDto spacesuitDataDto = UserSpacesuitDataDto.builder()
+                .chest(20)
+                .hips(30)
+                .waist(60)
+                .height(150)
+                .head(30)
                 .build();
 
         ValidatableResponse response = given()
+                .auth().basic(userDto.getUsername(), userDto.getPassword())
                 .header("Content-type", "application/json")
                 .and()
-                .body(userDto)
+                .body(spacesuitDataDto)
                 .when()
-                .post("/api/auth-management/login")
+                .post("/api/spacesuit-form")
                 .then();
 
-        response.statusCode(400)
-                .body("username", Matchers.equalTo("Username must be between 3 and 50 characters"))
-                .body("password", Matchers.equalTo("Password must be at least 8 characters long"));
+        response.statusCode(400);
+    }
+
+    @AfterEach
+    void tearDown() {
+        User savedUser = userRepository.findByUsername(userDto.getUsername()).get();
+        userRepository.delete(savedUser);
     }
 
     @AfterAll

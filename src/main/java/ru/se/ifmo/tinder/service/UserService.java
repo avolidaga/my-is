@@ -53,7 +53,7 @@ public class UserService {
         User user = userRepository.findByUsername(authRequest.getUsername())
                 .orElseThrow(() -> new UserNotFoundException(authRequest.getUsername()));
         String credentials = authRequest.getUsername() + ":" + authRequest.getPassword();
-        String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes()); // TODO перенести в utils
+        String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
         return LoginResponseDto.builder()
                 .credentials(base64Credentials)
                 .role(user.getRole().getRoleName().name())
