@@ -3,6 +3,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.se.ifmo.tinder.dto.LoginResponseDto;
 import ru.se.ifmo.tinder.dto.UserDto;
@@ -21,7 +22,7 @@ public class AuthController {
         if (userService.createUser(userDto)) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.badRequest().body("User already exists");
     }
 
     // Логин пользователя с валидацией

@@ -9,6 +9,10 @@ import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.model.enums.Status;
 import ru.se.ifmo.tinder.service.UserDataService;
 import ru.se.ifmo.tinder.service.UserSpacesuitDataService;
+import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
+import ru.se.ifmo.tinder.service.exceptions.NoSpacesuitDataException;
+import ru.se.ifmo.tinder.service.exceptions.UserNotCompletedRegistrationException;
+import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.security.Principal;
 import java.util.List;
@@ -24,7 +28,7 @@ public class InformationController {
     private final UserSpacesuitDataService userSpacesuitDataService;
 
     @GetMapping("users/{planetId}")
-    public ResponseEntity<List<UserData>> getUsersByPlanetId(@PathVariable String planetId){
+    public ResponseEntity<List<UserData>> getUsersByPlanetId(@PathVariable Integer planetId){
         List<UserData> list = userDataService.getUsersByPlanetId(planetId);
         return ResponseEntity.ok(list);
     }
@@ -40,7 +44,7 @@ public class InformationController {
     @GetMapping("current-user/data")
     public  ResponseEntity<List<UserData>> getCurrUserData(Principal principal){
         Optional<UserData> list = userDataService.getCurrUserData(principal);
-        if (!list.isEmpty()){
+        if (list.isPresent()){
             ResponseEntity.ok(list);
         }
         return ResponseEntity.ok(List.of());
@@ -56,5 +60,10 @@ public class InformationController {
         }
         // Если данных нет, возвращаем пустой список
         return ResponseEntity.ok(List.of());
+    }
+
+    @ExceptionHandler(value = {UserNotCompletedRegistrationException.class, NoSpacesuitDataException.class})
+    public ResponseEntity<?> handleIncorrectRequestExceptions(RuntimeException ex) {
+        return ResponseEntity.badRequest().body("Incorrect request: " + ex);
     }
 }

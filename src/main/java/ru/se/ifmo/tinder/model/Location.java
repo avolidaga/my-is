@@ -23,11 +23,7 @@ public class Location {
     private String name;
     private String description;
     private Double temperature;
-    @ManyToMany
-    @JoinTable(
-            name = "user_data_location",
-            joinColumns = @JoinColumn(name = "location_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_data_id"))
+    @ManyToMany(mappedBy = "locations")
     Set<UserData> usersLocation;
 
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import ru.se.ifmo.tinder.model.enums.Sex;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -33,4 +34,8 @@ public class UserDataDto {
     @NotBlank(message = "First name is required")
     @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
     private String firstname;
+
+    @NotNull(message = "Locations is required")
+    @Size(min = 1, message = "Specify at least one location")
+    private List<Integer> location;
 }

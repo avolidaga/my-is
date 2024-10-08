@@ -7,11 +7,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.se.ifmo.tinder.model.UserConnection;
 
+import java.time.LocalDate;
+
 @Repository
 public interface UserConnectionRepository extends JpaRepository<UserConnection, Integer> {
-    @Modifying
-    @Transactional
-    @Query(value = "INSERT INTO user_connections (user_id_1, user_id_2) VALUES (:userId1, :userId2) RETURNING id", nativeQuery = true)
-    Integer insertUserConnection(Integer userId1, Integer userId2);
-}
 
+}
