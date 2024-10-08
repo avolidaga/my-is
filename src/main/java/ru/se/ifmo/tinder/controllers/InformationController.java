@@ -16,10 +16,8 @@ import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.model.enums.Status;
 import ru.se.ifmo.tinder.service.UserDataService;
 import ru.se.ifmo.tinder.service.UserSpacesuitDataService;
-import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
 import ru.se.ifmo.tinder.service.exceptions.NoSpacesuitDataException;
 import ru.se.ifmo.tinder.service.exceptions.UserNotCompletedRegistrationException;
-import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 import ru.se.ifmo.tinder.utils.PaginationUtil;
 
 import java.security.Principal;
@@ -38,7 +36,7 @@ public class InformationController {
     // Получение пользователей по ID планеты с пагинацией
     @GetMapping("users/{planetId}")
     public ResponseEntity<Page<UserData>> getUsersByPlanetId(
-            @PathVariable String planetId,
+            @PathVariable Integer planetId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
 

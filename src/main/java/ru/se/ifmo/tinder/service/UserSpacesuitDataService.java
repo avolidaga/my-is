@@ -21,7 +21,6 @@ import ru.se.ifmo.tinder.service.exceptions.NoSpacesuitDataException;
 import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -59,7 +58,7 @@ public class UserSpacesuitDataService {
     }
 
 
-    public List<UserSpacesuitData> getCurrUserSpacesuitData(Principal principal, Pageable pageable) {
+    public Page<UserSpacesuitData> getCurrUserSpacesuitData(Principal principal, Pageable pageable) {
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
@@ -67,6 +66,6 @@ public class UserSpacesuitDataService {
                 .orElseThrow(() -> new NoSpacesuitDataException(username))
                 .getId();
         Page<Integer> idPage = userRepository.getCurrUserSpacesuitData(userId, pageable);
-        return userSpacesuitDataRepository.getListAllByUserSpacesuitDataIdIn(idPage, pageable);
+        return userSpacesuitDataRepository.getListAllByUserSpacesuitDataIdIn(idPage.getContent(), pageable);
     }
 }

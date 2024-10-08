@@ -26,7 +26,7 @@ public interface RequestRepository extends JpaRepository<UserRequest, Integer> {
     Page<UserRequest> findInProgress(Pageable pageable);
 
     @Query(name = "UserRequest.getNewUserRequest")
-    List<Integer> getNewUserRequestIds(Pageable pageable);
+    Page<UserRequest> findNew(Pageable pageable);
 
     @Query(name = "UserRequest.getListAllByUserRequestIdIn")
     Page<UserRequest> getListAllByUserRequestIdIn(@Param("idList") List<Integer> idList, Pageable pageable);

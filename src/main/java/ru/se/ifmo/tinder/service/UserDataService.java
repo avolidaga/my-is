@@ -19,11 +19,8 @@ import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.security.Principal;
 import java.util.HashSet;
-import java.util.List;
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -50,7 +47,6 @@ public class UserDataService {
 
         return insertedId.getId();
     }
-
 
 
     public Page<UserData> getAllUsersData(Principal principal, Pageable pageable) {

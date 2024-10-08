@@ -21,9 +21,6 @@ import ru.se.ifmo.tinder.model.enums.Status;
 import ru.se.ifmo.tinder.service.RequestService;
 import ru.se.ifmo.tinder.utils.PaginationUtil;
 
-import java.util.Optional;
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user-request-management")
@@ -33,7 +30,9 @@ public class RequestController {
 
     // Получение запросов пользователей по статусу с поддержкой пагинации
     @GetMapping("user-request")
-    public ResponseEntity<List<UserRequest>> getUsersRequests(@NotNull @RequestParam SearchStatus status) {
+    public ResponseEntity<Page<UserRequest>> getUsersRequests(@NotNull @RequestParam SearchStatus status,
+                                                              @RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
         Pageable pageable = PageRequest.of(page, size); // Создаем объект Pageable для пагинации
         Page<UserRequest> requestPage = requestService.getUserRequestsByStatus(status, pageable);
 

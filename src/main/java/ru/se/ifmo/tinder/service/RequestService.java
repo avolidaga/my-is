@@ -1,4 +1,6 @@
 package ru.se.ifmo.tinder.service;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,12 +20,12 @@ public class RequestService {
     private final UserSpacesuitDataRepository spacesuitDataRepository;
 
     public Page<UserRequest> getUserRequestsByStatus(SearchStatus status, Pageable pageable) {
-        switch (status) {
-            case ALL -> return requestRepository.findAll(pageable);
-            case NEW -> return requestRepository.getNewUserRequestIds(pageable);
-            case DECLINED -> return requestRepository.findDeclined(pageable);
-            case READY -> return requestRepository.findReady(pageable);
-            case IN_PROGRESS -> return requestRepository.findInProgress(pageable);
+        return switch (status) {
+            case ALL -> requestRepository.findAll(pageable);
+            case NEW -> requestRepository.findNew(pageable);
+            case DECLINED -> requestRepository.findDeclined(pageable);
+            case READY -> requestRepository.findReady(pageable);
+            case IN_PROGRESS -> requestRepository.findInProgress(pageable);
         };
     }
 
@@ -47,7 +49,7 @@ public class RequestService {
         updateStatus(userRequest, status);
     }
 
-    // TODO потенциальное место для транзакции
+    @Transactional
     private void updateStatus(UserRequest userRequest, Status status) {
         userRequest.setStatus(status);
         requestRepository.save(userRequest);
