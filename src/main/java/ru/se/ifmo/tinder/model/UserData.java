@@ -28,8 +28,7 @@ public class UserData {
     private Integer height;
     @Column(name = "hair_color")
     private String hairColor;
-
-    String firstname; //TODO почему..
+    private String firstname;
 
     @ManyToMany
     @JoinTable(
