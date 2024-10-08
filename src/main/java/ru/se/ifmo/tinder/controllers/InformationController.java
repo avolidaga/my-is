@@ -16,6 +16,10 @@ import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.model.enums.Status;
 import ru.se.ifmo.tinder.service.UserDataService;
 import ru.se.ifmo.tinder.service.UserSpacesuitDataService;
+import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
+import ru.se.ifmo.tinder.service.exceptions.NoSpacesuitDataException;
+import ru.se.ifmo.tinder.service.exceptions.UserNotCompletedRegistrationException;
+import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 import ru.se.ifmo.tinder.utils.PaginationUtil;
 
 import java.security.Principal;
@@ -61,7 +65,6 @@ public class InformationController {
         return new ResponseEntity<>(userDataPage, headers, HttpStatus.OK);
     }
 
-
     // Получение данных текущего пользователя
     @GetMapping("current-user/data")
     public ResponseEntity<UserData> getCurrUserData(Principal principal) {
@@ -84,5 +87,10 @@ public class InformationController {
         }
         // Если данных нет, возвращаем пустой список
         return ResponseEntity.ok(List.of());
+    }
+
+    @ExceptionHandler(value = {UserNotCompletedRegistrationException.class, NoSpacesuitDataException.class})
+    public ResponseEntity<?> handleIncorrectRequestExceptions(RuntimeException ex) {
+        return ResponseEntity.badRequest().body("Incorrect request: " + ex);
     }
 }

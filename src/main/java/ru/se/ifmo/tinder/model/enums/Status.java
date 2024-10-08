@@ -1,26 +1,7 @@
 package ru.se.ifmo.tinder.model.enums;
 
-public enum Status {
-    DECLINED("DECLINED"),
-    READY("READY"),
-    IN_PROGRESS("IN_PROGRESS");
+import java.io.Serializable;
 
-    private final String status;
-
-    Status(String status) {
-        this.status = status;
-    }
-
-    public static void showStatusList() {
-        for (Status status : values()) {
-            System.out.println(status);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return super.toString().toUpperCase();
-    }
-
+public enum Status implements Serializable {
+    NEW, IN_PROGRESS, DECLINED, READY
 }
-

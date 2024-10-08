@@ -6,27 +6,27 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-<!--    <changeSet id="1" author="lisache121">-->
-<!--        <preConditions onFail="MARK_RAN">-->
-<!--            <not>-->
-<!--                <sqlCheck expectedResult="0">-->
-<!--                    SELECT count(*) FROM pg_type WHERE typname = 'sex_enum';-->
-<!--                </sqlCheck>-->
-<!--            </not>-->
-<!--        </preConditions>-->
-<!--        <sql>CREATE TYPE sex_enum AS ENUM ('MEN', 'WOMEN');</sql>-->
-<!--    </changeSet>-->
+    <!--    <changeSet id="1" author="lisache121">-->
+    <!--        <preConditions onFail="MARK_RAN">-->
+    <!--            <not>-->
+    <!--                <sqlCheck expectedResult="0">-->
+    <!--                    SELECT count(*) FROM pg_type WHERE typname = 'sex_enum';-->
+    <!--                </sqlCheck>-->
+    <!--            </not>-->
+    <!--        </preConditions>-->
+    <!--        <sql>CREATE TYPE sex_enum AS ENUM ('MEN', 'WOMEN');</sql>-->
+    <!--    </changeSet>-->
 
-<!--    <changeSet id="2" author="lisache121">-->
-<!--        <preConditions onFail="MARK_RAN">-->
-<!--            <not>-->
-<!--                <sqlCheck expectedResult="0">-->
-<!--                    SELECT count(*) FROM pg_type WHERE typname = 'request_status_enum';-->
-<!--                </sqlCheck>-->
-<!--            </not>-->
-<!--        </preConditions>-->
-<!--        <sql>CREATE TYPE request_status_enum AS ENUM ('DECLINED', 'READY', 'IN_PROGRESS');</sql>-->
-<!--    </changeSet>-->
+    <!--    <changeSet id="2" author="lisache121">-->
+    <!--        <preConditions onFail="MARK_RAN">-->
+    <!--            <not>-->
+    <!--                <sqlCheck expectedResult="0">-->
+    <!--                    SELECT count(*) FROM pg_type WHERE typname = 'request_status_enum';-->
+    <!--                </sqlCheck>-->
+    <!--            </not>-->
+    <!--        </preConditions>-->
+    <!--        <sql>CREATE TYPE request_status_enum AS ENUM ('DECLINED', 'READY', 'IN_PROGRESS');</sql>-->
+    <!--    </changeSet>-->
 
     <!-- Table user_request -->
 
@@ -61,7 +61,7 @@
             <column name="head" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(50)" defaultValue="IN_PROGRESS"/>
+            <column name="status" type="VARCHAR(50)" defaultValue="NEW"/>
             <column name="chest" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -188,7 +188,7 @@
             <column name="user_spacesuit_data_id" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(50)" defaultValue="IN_PROGRESS"/>
+            <column name="status" type="VARCHAR(50)" defaultValue="NEW"/>
         </createTable>
         <addForeignKeyConstraint baseTableName="user_request"
                                  baseColumnNames="user_spacesuit_data_id"
@@ -261,7 +261,8 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addPrimaryKey columnNames="location_id, user_data_id" constraintName="pk_user_data_location" tableName="user_data_location"/>
+        <addPrimaryKey columnNames="location_id, user_data_id" constraintName="pk_user_data_location"
+                       tableName="user_data_location"/>
         <addForeignKeyConstraint baseTableName="user_data_location"
                                  baseColumnNames="location_id"
                                  constraintName="fk_location"
