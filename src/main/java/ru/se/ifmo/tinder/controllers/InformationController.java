@@ -1,6 +1,8 @@
 package ru.se.ifmo.tinder.controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,7 @@ import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.model.enums.Status;
 import ru.se.ifmo.tinder.service.UserDataService;
 import ru.se.ifmo.tinder.service.UserSpacesuitDataService;
+import ru.se.ifmo.tinder.utils.PaginationUtil;
 
 import java.security.Principal;
 import java.util.List;
@@ -33,39 +36,31 @@ public class InformationController {
     public ResponseEntity<Page<UserData>> getUsersByPlanetId(
             @PathVariable String planetId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        if (size > 50) {
-            size = 50; // Ограничение на количество записей за запрос
-        }
+            @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<UserData> userDataPage = userDataService.getUsersByPlanetId(planetId, pageable);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Total-Count", String.valueOf(userDataPage.getTotalElements()));
+        HttpHeaders headers = PaginationUtil.createPaginationHeaders(userDataPage);
 
         return new ResponseEntity<>(userDataPage, headers, HttpStatus.OK);
     }
+
 
     // Получение всех данных пользователей с пагинацией
     @GetMapping("users/data")
     public ResponseEntity<Page<UserData>> getAllUsersData(Principal principal,
                                                           @RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(defaultValue = "10") int size) {
-
-        if (size > 50) {
-            size = 50; // Ограничение на количество записей за запрос
-        }
+                                                          @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<UserData> userDataPage = userDataService.getAllUsersData(principal, pageable);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Total-Count", String.valueOf(userDataPage.getTotalElements()));
+        HttpHeaders headers = PaginationUtil.createPaginationHeaders(userDataPage);
 
         return new ResponseEntity<>(userDataPage, headers, HttpStatus.OK);
     }
+
 
     // Получение данных текущего пользователя
     @GetMapping("current-user/data")
@@ -78,14 +73,11 @@ public class InformationController {
     @GetMapping("current-user/spacesuit")
     public ResponseEntity<List<Status>> getCurrUserSpacesuitData(Principal principal,
                                                                  @RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "10") int size) {
-
-        if (size > 50) {
-            size = 50; // Ограничение на количество записей за запрос
-        }
+                                                                 @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<UserSpacesuitData> list = userSpacesuitDataService.getCurrUserSpacesuitData(principal, pageable);
+
         if (!list.isEmpty()) {
             // Если список не пуст, вернуть статусы скафандров
             return ResponseEntity.ok(list.stream().map(UserSpacesuitData::getStatus).collect(Collectors.toList()));

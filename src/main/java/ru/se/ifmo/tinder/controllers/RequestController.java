@@ -1,10 +1,13 @@
 package ru.se.ifmo.tinder.controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +16,7 @@ import ru.se.ifmo.tinder.model.UserRequest;
 import ru.se.ifmo.tinder.model.enums.SearchStatus;
 import ru.se.ifmo.tinder.model.enums.Status;
 import ru.se.ifmo.tinder.service.RequestService;
+import ru.se.ifmo.tinder.utils.PaginationUtil;
 
 import java.util.Optional;
 
@@ -28,7 +32,7 @@ public class RequestController {
     public ResponseEntity<Page<UserRequest>> getUserRequest(
             @RequestParam Optional<SearchStatus> status,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
 
         if (status.isEmpty()) {
             return ResponseEntity.badRequest().build(); // Если статус не указан, возвращаем ошибку 400
@@ -48,8 +52,13 @@ public class RequestController {
             }
         }
 
-        return ResponseEntity.ok(requestPage); // Возвращаем страницу с результатами
+        // Применяем метод для создания заголовков с информацией о пагинации
+        HttpHeaders headers = PaginationUtil.endlessSwipeHeadersCreate(requestPage);
+
+
+        return ResponseEntity.ok().headers(headers).body(requestPage);
     }
+
 
     // Обновление статуса запроса
     @PutMapping("user-request")
