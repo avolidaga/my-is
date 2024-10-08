@@ -2,6 +2,8 @@ package ru.se.ifmo.tinder.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.se.ifmo.tinder.dto.UserSpacesuitDataDto;
 import ru.se.ifmo.tinder.mapper.SpacesuitDataMapper;
@@ -19,16 +21,15 @@ import ru.se.ifmo.tinder.service.exceptions.NoSpacesuitDataException;
 import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class UserSpacesuitDataService {
+    // Пагинация
     private final UserSpacesuitDataRepository userSpacesuitDataRepository;
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
-
     private final FabricTextureRepository fabricTextureRepository;
 
     @Transactional
@@ -57,15 +58,14 @@ public class UserSpacesuitDataService {
     }
 
 
-    public List<UserSpacesuitData> getCurrUserSpacesuitData(Principal principal) {
+    public Page<UserSpacesuitData> getCurrUserSpacesuitData(Principal principal, Pageable pageable) {
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
         Integer userId = Optional.ofNullable(user.getUserSpacesuitDataId())
                 .orElseThrow(() -> new NoSpacesuitDataException(username))
                 .getId();
-        List<Integer> idList = userRepository.getCurrUserSpacesuitData(userId);
-        return userSpacesuitDataRepository.getListAllByUserSpacesuitDataIdIn(idList);
+        Page<Integer> idPage = userRepository.getCurrUserSpacesuitData(userId, pageable);
+        return userSpacesuitDataRepository.getListAllByUserSpacesuitDataIdIn(idPage.getContent(), pageable);
     }
 }
-

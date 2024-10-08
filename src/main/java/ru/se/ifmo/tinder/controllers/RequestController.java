@@ -3,7 +3,14 @@ package ru.se.ifmo.tinder.controllers;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -12,9 +19,7 @@ import ru.se.ifmo.tinder.model.UserRequest;
 import ru.se.ifmo.tinder.model.enums.SearchStatus;
 import ru.se.ifmo.tinder.model.enums.Status;
 import ru.se.ifmo.tinder.service.RequestService;
-import org.springframework.http.HttpStatus;
-
-import java.util.List;
+import ru.se.ifmo.tinder.utils.PaginationUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,11 +28,18 @@ import java.util.List;
 public class RequestController {
     private final RequestService requestService;
 
-    // Получение запросов пользователей по статусу
+    // Получение запросов пользователей по статусу с поддержкой пагинации
     @GetMapping("user-request")
-    public ResponseEntity<List<UserRequest>> getUsersRequests(@NotNull @RequestParam SearchStatus status) {
-        List<UserRequest> list = requestService.getUserRequestsByStatus(status);
-        return ResponseEntity.ok(list);
+    public ResponseEntity<Page<UserRequest>> getUsersRequests(@NotNull @RequestParam SearchStatus status,
+                                                              @RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
+        Pageable pageable = PageRequest.of(page, size); // Создаем объект Pageable для пагинации
+        Page<UserRequest> requestPage = requestService.getUserRequestsByStatus(status, pageable);
+
+        // Применяем метод для создания заголовков с информацией о пагинации
+        HttpHeaders headers = PaginationUtil.endlessSwipeHeadersCreate(requestPage);
+
+        return ResponseEntity.ok().headers(headers).body(requestPage);
     }
 
     // Обновление статуса запроса
@@ -55,4 +67,3 @@ public class RequestController {
         return ResponseEntity.badRequest().body("Incorrect request param 'status'");
     }
 }
-

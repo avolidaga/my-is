@@ -3,7 +3,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.se.ifmo.tinder.dto.LoginResponseDto;
 import ru.se.ifmo.tinder.dto.UserDto;
