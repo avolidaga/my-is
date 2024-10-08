@@ -2,6 +2,8 @@ package ru.se.ifmo.tinder.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.se.ifmo.tinder.dto.UserDataDto;
 import ru.se.ifmo.tinder.mapper.UserDataMapper;
@@ -17,10 +19,8 @@ import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.security.Principal;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -49,16 +49,17 @@ public class UserDataService {
     }
 
 
-    public List<UserData> getAllUsersData(Principal principal) {
+    public Page<UserData> getAllUsersData(Principal principal, Pageable pageable) {
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
         Integer userId = Optional.ofNullable(user.getUser_data_id())
                 .orElseThrow(() -> new UserNotCompletedRegistrationException(username))
                 .getId();
-        return userDataRepository.findAllUserDataExcludingUserId(userId);
+        return userDataRepository.findAllUserDataExcludingUserId(userId, pageable);
     }
 
+    // Метод для получения текущего пользователя
     public Optional<UserData> getCurrUserData(Principal principal) {
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
@@ -66,14 +67,7 @@ public class UserDataService {
         return Optional.ofNullable(user.getUser_data_id());
     }
 
-    public List<UserData> getUsersByPlanetId(Integer planetId) {
-        return userDataRepository.findUserDataByLocationsId(planetId);
+    public Page<UserData> getUsersByPlanetId(Integer planetId, Pageable pageable) {
+        return userDataRepository.findUserDataByLocationsId(planetId, pageable);
     }
 }
-
-
-
-
-
-
-

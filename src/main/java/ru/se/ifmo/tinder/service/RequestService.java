@@ -1,6 +1,9 @@
 package ru.se.ifmo.tinder.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.se.ifmo.tinder.model.UserRequest;
 import ru.se.ifmo.tinder.model.UserSpacesuitData;
@@ -10,24 +13,20 @@ import ru.se.ifmo.tinder.repository.RequestRepository;
 import ru.se.ifmo.tinder.repository.UserSpacesuitDataRepository;
 import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
 
-
-import java.util.List;
-
 @RequiredArgsConstructor
 @Service
 public class RequestService {
     private final RequestRepository requestRepository;
     private final UserSpacesuitDataRepository spacesuitDataRepository;
 
-    public List<UserRequest> getUserRequestsByStatus(SearchStatus status) {
-        List<Integer> idList = switch (status) {
-            case ALL -> requestRepository.getAllUserRequestIds();
-            case NEW -> requestRepository.getNewUserRequestIds();
-            case DECLINED -> requestRepository.getDeclinedUserRequestIds();
-            case READY -> requestRepository.getReadyUserRequest();
-            case IN_PROGRESS -> requestRepository.getInProgressUserRequest();
+    public Page<UserRequest> getUserRequestsByStatus(SearchStatus status, Pageable pageable) {
+        return switch (status) {
+            case ALL -> requestRepository.findAll(pageable);
+            case NEW -> requestRepository.findNew(pageable);
+            case DECLINED -> requestRepository.findDeclined(pageable);
+            case READY -> requestRepository.findReady(pageable);
+            case IN_PROGRESS -> requestRepository.findInProgress(pageable);
         };
-        return requestRepository.getListAllByUserRequestIdIn(idList);
     }
 
     public void updateStatusStartRequest(Integer userRequestId, Status status) {
@@ -50,7 +49,7 @@ public class RequestService {
         updateStatus(userRequest, status);
     }
 
-    // TODO потенциальное место для транзакции
+    @Transactional
     private void updateStatus(UserRequest userRequest, Status status) {
         userRequest.setStatus(status);
         requestRepository.save(userRequest);
@@ -61,11 +60,4 @@ public class RequestService {
         userSpacesuitData.setStatus(status);
         spacesuitDataRepository.save(userSpacesuitData);
     }
-
-    //public Integer insertUserData(LocalDate birthdate, Sex sex, Integer weight, Integer height, String hairColor, Location location, String firstname, Principal principal){
-    //        String username = principal.getName();
-    //        Optional<User> user = userRepository.findByUsername(username);
-    //        Integer userId = user.get().getId();
-    //        return userDataRepository.insertUserData(birthdate,sex.toString(),weight,height,hairColor, location.toString(),firstname, userId);
-    //    } updateStatusDeclined
 }
