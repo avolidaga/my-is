@@ -10,6 +10,8 @@ import ru.se.ifmo.tinder.mapper.UserDataMapper;
 import ru.se.ifmo.tinder.model.Location;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserData;
+import ru.se.ifmo.tinder.model.UserSpacesuitData;
+import ru.se.ifmo.tinder.repository.FabricTextureRepository;
 import ru.se.ifmo.tinder.repository.LocationRepository;
 import ru.se.ifmo.tinder.repository.UserDataRepository;
 import ru.se.ifmo.tinder.repository.UserRepository;
@@ -28,6 +30,7 @@ public class UserDataService {
     private final UserDataRepository userDataRepository;
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
+    private final FabricTextureRepository fabricTextureRepository;
 
 
     @Transactional
@@ -70,4 +73,5 @@ public class UserDataService {
     public Page<UserData> getUsersByPlanetId(Integer planetId, Pageable pageable) {
         return userDataRepository.findUserDataByLocationsId(planetId, pageable);
     }
+
 }

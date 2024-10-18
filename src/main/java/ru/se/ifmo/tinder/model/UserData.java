@@ -1,5 +1,6 @@
 package ru.se.ifmo.tinder.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.se.ifmo.tinder.model.enums.Sex;
@@ -31,6 +32,7 @@ public class UserData {
     private String firstname;
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "user_data_location",
             joinColumns = @JoinColumn(name = "user_data_id"),
