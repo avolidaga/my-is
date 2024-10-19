@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.se.ifmo.tinder.model.UserRequest;
 import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.model.enums.SearchStatus;
-import ru.se.ifmo.tinder.model.enums.Status;
+import ru.se.ifmo.tinder.model.enums.RequestStatus;
 import ru.se.ifmo.tinder.repository.RequestRepository;
 import ru.se.ifmo.tinder.repository.UserSpacesuitDataRepository;
 import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
@@ -29,28 +29,28 @@ public class RequestService {
         };
     }
 
-    public void updateStatusStartRequest(Integer userRequestId, Status status) {
+    public void updateStatusStartRequest(Integer userRequestId, RequestStatus status) {
         UserRequest userRequest = requestRepository.findById(userRequestId)
                 .orElseThrow(() -> new NoEntityWithSuchIdException("User request", userRequestId));
 
-        if (userRequest.getStatus() != Status.NEW) {
+        if (userRequest.getStatus() != RequestStatus.NEW) {
             throw new IllegalStateException("Incorrect status for request");
         }
         updateStatus(userRequest, status);
     }
 
-    public void updateStatusFinishRequest(Integer userRequestId, Status status) {
+    public void updateStatusFinishRequest(Integer userRequestId, RequestStatus status) {
         UserRequest userRequest = requestRepository.findById(userRequestId)
                 .orElseThrow(() -> new NoEntityWithSuchIdException("User request", userRequestId));
 
-        if (userRequest.getStatus() != Status.IN_PROGRESS) {
+        if (userRequest.getStatus() != RequestStatus.IN_PROGRESS) {
             throw new IllegalStateException("Incorrect status for request");
         }
         updateStatus(userRequest, status);
     }
 
     @Transactional
-    private void updateStatus(UserRequest userRequest, Status status) {
+    private void updateStatus(UserRequest userRequest, RequestStatus status) {
         userRequest.setStatus(status);
         requestRepository.save(userRequest);
 

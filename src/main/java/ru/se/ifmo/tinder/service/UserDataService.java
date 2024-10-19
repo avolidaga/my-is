@@ -5,12 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.se.ifmo.tinder.dto.UserDataDto;
+import ru.se.ifmo.tinder.dto.CreateUserDataDto;
 import ru.se.ifmo.tinder.mapper.UserDataMapper;
 import ru.se.ifmo.tinder.model.Location;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserData;
-import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.repository.FabricTextureRepository;
 import ru.se.ifmo.tinder.repository.LocationRepository;
 import ru.se.ifmo.tinder.repository.UserDataRepository;
@@ -34,14 +33,14 @@ public class UserDataService {
 
 
     @Transactional
-    public Integer insertUserData(UserDataDto userDataDto, Principal principal) {
+    public Integer insertUserData(CreateUserDataDto createUserDataDto, Principal principal) {
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
 
-        Set<Location> locations = new HashSet<>(locationRepository.findAllById(userDataDto.getLocation()));
-        if (locations.isEmpty()) throw new NoEntityWithSuchIdException("Location", userDataDto.getLocation());
-        UserData userData = UserDataMapper.toEntityUserData(userDataDto, locations);
+        Set<Location> locations = new HashSet<>(locationRepository.findAllById(createUserDataDto.getLocation()));
+        if (locations.isEmpty()) throw new NoEntityWithSuchIdException("Location", createUserDataDto.getLocation());
+        UserData userData = UserDataMapper.toEntityUserData(createUserDataDto, locations);
 
         UserData insertedId = userDataRepository.save(userData);
 

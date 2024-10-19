@@ -11,7 +11,7 @@ import ru.se.ifmo.tinder.model.FabricTexture;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserRequest;
 import ru.se.ifmo.tinder.model.UserSpacesuitData;
-import ru.se.ifmo.tinder.model.enums.Status;
+import ru.se.ifmo.tinder.model.enums.RequestStatus;
 import ru.se.ifmo.tinder.repository.FabricTextureRepository;
 import ru.se.ifmo.tinder.repository.RequestRepository;
 import ru.se.ifmo.tinder.repository.UserRepository;
@@ -50,7 +50,7 @@ public class UserSpacesuitDataService {
         userRepository.save(user);
         UserRequest userRequest = UserRequest.builder()
                 .userSpacesuitDataId(userSpacesuit)
-                .status(Status.NEW)
+                .status(RequestStatus.NEW)
                 .build();
 
         requestRepository.save(userRequest);

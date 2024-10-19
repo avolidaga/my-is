@@ -17,7 +17,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import ru.se.ifmo.tinder.dto.RequestDto;
 import ru.se.ifmo.tinder.model.UserRequest;
 import ru.se.ifmo.tinder.model.enums.SearchStatus;
-import ru.se.ifmo.tinder.model.enums.Status;
+import ru.se.ifmo.tinder.model.enums.RequestStatus;
 import ru.se.ifmo.tinder.service.RequestService;
 import ru.se.ifmo.tinder.utils.PaginationUtil;
 
@@ -44,7 +44,7 @@ public class RequestController {
 
     // Обновление статуса запроса
     @PutMapping("user-request")
-    public ResponseEntity<String> updateRequestStatus(@NotNull @RequestParam Status status, @Valid @RequestBody RequestDto userRequestDto) {
+    public ResponseEntity<String> updateRequestStatus(@NotNull @RequestParam RequestStatus status, @Valid @RequestBody RequestDto userRequestDto) {
         switch (status) {
             case IN_PROGRESS ->
                     requestService.updateStatusStartRequest(userRequestDto.getUser_spacesuit_data_id(), status);

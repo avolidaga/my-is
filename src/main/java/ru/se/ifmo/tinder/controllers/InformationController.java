@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.se.ifmo.tinder.model.UserData;
 import ru.se.ifmo.tinder.model.UserSpacesuitData;
-import ru.se.ifmo.tinder.model.enums.Status;
+import ru.se.ifmo.tinder.model.enums.RequestStatus;
 import ru.se.ifmo.tinder.service.UserDataService;
 import ru.se.ifmo.tinder.service.UserSpacesuitDataService;
 import ru.se.ifmo.tinder.service.exceptions.NoSpacesuitDataException;
@@ -72,9 +72,9 @@ public class InformationController {
 
     // Получение статусов скафандров текущего пользователя
     @GetMapping("current-user/spacesuit")
-    public ResponseEntity<List<Status>> getCurrUserSpacesuitData(Principal principal,
-                                                                 @RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
+    public ResponseEntity<List<RequestStatus>> getCurrUserSpacesuitData(Principal principal,
+                                                                        @RequestParam(defaultValue = "0") int page,
+                                                                        @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<UserSpacesuitData> list = userSpacesuitDataService.getCurrUserSpacesuitData(principal, pageable);

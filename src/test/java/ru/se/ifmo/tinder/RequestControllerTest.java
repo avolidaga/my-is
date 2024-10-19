@@ -19,7 +19,7 @@ import ru.se.ifmo.tinder.dto.UserDto;
 import ru.se.ifmo.tinder.dto.UserSpacesuitDataDto;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.enums.SearchStatus;
-import ru.se.ifmo.tinder.model.enums.Status;
+import ru.se.ifmo.tinder.model.enums.RequestStatus;
 import ru.se.ifmo.tinder.repository.UserRepository;
 import ru.se.ifmo.tinder.repository.UserSpacesuitDataRepository;
 import ru.se.ifmo.tinder.service.UserService;
@@ -116,7 +116,7 @@ public class RequestControllerTest {
 
     @ParameterizedTest
     @EnumSource
-    public void putRequestStatusTest(Status status) {
+    public void putRequestStatusTest(RequestStatus status) {
         ValidatableResponse response = given()
                 .auth().basic(userDto.getUsername(), userDto.getPassword())
                 .header("Content-type", "application/json")
@@ -125,7 +125,7 @@ public class RequestControllerTest {
                 .when()
                 .get("/api/user-request-management/user-request")
                 .then();
-        if (status == Status.NEW) {
+        if (status == RequestStatus.NEW) {
             response.statusCode(400);
         } else {
             response.statusCode(200);

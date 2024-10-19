@@ -13,7 +13,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.se.ifmo.tinder.dto.UserDataDto;
+import ru.se.ifmo.tinder.dto.CreateUserDataDto;
 import ru.se.ifmo.tinder.dto.UserDto;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.enums.Sex;
@@ -22,14 +22,13 @@ import ru.se.ifmo.tinder.repository.UserRepository;
 import ru.se.ifmo.tinder.service.UserService;
 
 import java.time.LocalDate;
-import java.util.Base64;
 import java.util.List;
 
 import static io.restassured.RestAssured.*;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class FormControllerTest {
+public class UserDataControllerTest {
 
     @LocalServerPort
     private Integer port;
@@ -77,7 +76,7 @@ public class FormControllerTest {
 
     @Test
     public void postUserFormWithCorrectDataTest() {
-        UserDataDto userDataDto = UserDataDto.builder()
+        CreateUserDataDto createUserDataDto = CreateUserDataDto.builder()
                 .sex(Sex.MEN)
                 .birth_date(LocalDate.now().minusYears(10))
                 .firstname("testUser")
@@ -91,7 +90,7 @@ public class FormControllerTest {
                 .auth().basic(userDto.getUsername(), userDto.getPassword())
                 .header("Content-type", "application/json")
                 .and()
-                .body(userDataDto)
+                .body(createUserDataDto)
                 .when()
                 .post("/api/user-form")
                 .then();
@@ -105,7 +104,7 @@ public class FormControllerTest {
 
     @Test
     public void postUserFormWithInCorrectDataTest() {
-        UserDataDto userDataDto = UserDataDto.builder()
+        CreateUserDataDto createUserDataDto = CreateUserDataDto.builder()
                 .sex(Sex.MEN)
                 .birth_date(LocalDate.now())
                 .firstname("testUser")
@@ -118,7 +117,7 @@ public class FormControllerTest {
                 .auth().basic(userDto.getUsername(), userDto.getPassword())
                 .header("Content-type", "application/json")
                 .and()
-                .body(userDataDto)
+                .body(createUserDataDto)
                 .when()
                 .post("/api/user-form")
                 .then();

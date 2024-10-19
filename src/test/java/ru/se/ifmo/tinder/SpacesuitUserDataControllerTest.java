@@ -24,7 +24,7 @@ import static io.restassured.RestAssured.given;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SpacesuitFormControllerTest {
+public class SpacesuitUserDataControllerTest {
 
     @LocalServerPort
     private Integer port;
