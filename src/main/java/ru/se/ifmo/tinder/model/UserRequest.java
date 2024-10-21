@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @NamedQueries({
-        @NamedQuery(name = "UserRequest.getAllUserRequestIds", query = "SELECT * FROM UserRequest ur"),
-        @NamedQuery(name = "UserRequest.getDeclinedUserRequestIds", query = "SELECT * FROM UserRequest ur WHERE ur.status = 'DECLINED'"),
-        @NamedQuery(name = "UserRequest.getReadyUserRequest", query = "SELECT * FROM UserRequest ur WHERE ur.status = 'READY'"),
-        @NamedQuery(name = "UserRequest.getInProgressUserRequest", query = "SELECT * FROM UserRequest ur WHERE ur.status = 'IN_PROGRESS'"),
-        @NamedQuery(name = "UserRequest.getNewUserRequest", query = "SELECT * FROM UserRequest ur WHERE ur.status = 'NEW'")
+        @NamedQuery(name = "UserRequest.getAllUserRequestIds", query = "SELECT ur FROM UserRequest ur"),
+        @NamedQuery(name = "UserRequest.getDeclinedUserRequestIds", query = "SELECT ur FROM UserRequest ur WHERE ur.status = 'DECLINED'"),
+        @NamedQuery(name = "UserRequest.getReadyUserRequest", query = "SELECT ur FROM UserRequest ur WHERE ur.status = 'READY'"),
+        @NamedQuery(name = "UserRequest.getInProgressUserRequest", query = "SELECT ur FROM UserRequest ur WHERE ur.status = 'IN_PROGRESS'"),
+        @NamedQuery(name = "UserRequest.getNewUserRequest", query = "SELECT ur FROM UserRequest ur WHERE ur.status = 'NEW'")
 })
 public class UserRequest {
     @Id
