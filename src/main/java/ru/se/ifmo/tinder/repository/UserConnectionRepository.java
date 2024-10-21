@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import ru.se.ifmo.tinder.model.UserConnection;
 
 @Repository
-public interface UserConnectionRepository extends JpaRepository<UserConnection, Integer> {
+public interface UserConnectionRepository extends JpaRepository<UserConnection, Long> {
 
 }

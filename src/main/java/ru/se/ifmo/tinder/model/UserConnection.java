@@ -2,11 +2,15 @@ package ru.se.ifmo.tinder.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PastOrPresent;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "user_connections")
+@Builder
+@Getter
 public class UserConnection {
 
     @Id
@@ -22,5 +26,5 @@ public class UserConnection {
     private User user2;
 
     @PastOrPresent
-    private LocalDate dateTime;
+    private LocalDate matchDate;
 }

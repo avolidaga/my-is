@@ -1,9 +1,13 @@
 package ru.se.ifmo.tinder.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
 
 @Entity
 @Table(name = "fabric_texture")
+@Builder
+@Getter
 public class FabricTexture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,4 +16,7 @@ public class FabricTexture {
 
     @Column(name = "fabric_texture_name")
     private String name;
+
+    @Column(name = "fabric_texture_description")
+    private String description;
 }

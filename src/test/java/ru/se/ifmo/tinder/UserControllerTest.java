@@ -13,7 +13,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.se.ifmo.tinder.dto.UserDto;
+import ru.se.ifmo.tinder.dto.user.UserDto;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.repository.UserRepository;
 import ru.se.ifmo.tinder.service.UserService;
@@ -22,7 +22,7 @@ import static io.restassured.RestAssured.given;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthControllerTest {
+public class UserControllerTest {
 
     @LocalServerPort
     private Integer port;
@@ -113,7 +113,7 @@ public class AuthControllerTest {
                 .and()
                 .body(userDto)
                 .when()
-                .post("/api/auth-management/login")
+                .post("/api/auth-management/loginUser")
                 .then();
 
         response.statusCode(200)
@@ -135,7 +135,7 @@ public class AuthControllerTest {
                 .and()
                 .body(userDto)
                 .when()
-                .post("/api/auth-management/login")
+                .post("/api/auth-management/loginUser")
                 .then();
 
         response.statusCode(400)

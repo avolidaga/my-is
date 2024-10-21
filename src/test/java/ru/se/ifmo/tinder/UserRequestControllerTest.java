@@ -14,9 +14,9 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.se.ifmo.tinder.dto.RequestDto;
-import ru.se.ifmo.tinder.dto.UserDto;
-import ru.se.ifmo.tinder.dto.UserSpacesuitDataDto;
+import ru.se.ifmo.tinder.dto.user_request.GetUserRequestDto;
+import ru.se.ifmo.tinder.dto.user.UserDto;
+import ru.se.ifmo.tinder.dto.spacesuit_data.UserSpacesuitDataDto;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.enums.SearchStatus;
 import ru.se.ifmo.tinder.model.enums.RequestStatus;
@@ -31,7 +31,7 @@ import static io.restassured.RestAssured.given;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RequestControllerTest {
+public class UserRequestControllerTest {
 
     @LocalServerPort
     private Integer port;
@@ -49,7 +49,7 @@ public class RequestControllerTest {
     UserSpacesuitDataService userSpacesuitDataService;
 
     private UserDto userDto;
-    private RequestDto requestDto;
+    private GetUserRequestDto getUserRequestDto;
 
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
@@ -93,8 +93,8 @@ public class RequestControllerTest {
                 return userDto.getUsername();
             }
         };
-        Integer id = userSpacesuitDataService.insertUserSpacesuitData(spacesuitDataDto, principal);
-        requestDto = new RequestDto(id);
+        Integer id = userSpacesuitDataService.createUserSpacesuitData(spacesuitDataDto, principal);
+        getUserRequestDto = new GetUserRequestDto(id);
     }
 
     @ParameterizedTest
@@ -121,7 +121,7 @@ public class RequestControllerTest {
                 .auth().basic(userDto.getUsername(), userDto.getPassword())
                 .header("Content-type", "application/json")
                 .queryParam("status", status)
-                .body(requestDto)
+                .body(getUserRequestDto)
                 .when()
                 .get("/api/user-request-management/user-request")
                 .then();

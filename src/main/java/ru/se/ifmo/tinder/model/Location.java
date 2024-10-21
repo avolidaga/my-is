@@ -2,11 +2,13 @@ package ru.se.ifmo.tinder.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "location")
+@Getter
 public class Location {
 
     @Id

@@ -11,7 +11,8 @@ import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import java.util.List;
 
 @Repository
-public interface UserSpacesuitDataRepository extends JpaRepository<UserSpacesuitData, Integer> {
+public interface UserSpacesuitDataRepository extends JpaRepository<UserSpacesuitData, Long> {
     @Query(value = "SELECT * FROM user_spacesuit_data WHERE user_spacesuit_data_id IN (:idList)", nativeQuery = true)
-    Page<UserSpacesuitData> getListAllByUserSpacesuitDataIdIn(@Param("idList") List<Integer> idList, Pageable pageable);
+    Page<UserSpacesuitData> getListAllByUserSpacesuitDataIdIn(@Param("idList") List<Long> idList, Pageable pageable);
+    Page<UserSpacesuitData> findAllUserSpacesuitDataByOwnerUserId(Long userId, Pageable pageable);
 }

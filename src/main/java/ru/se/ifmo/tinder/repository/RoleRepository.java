@@ -6,6 +6,6 @@ import ru.se.ifmo.tinder.model.Roles;
 import ru.se.ifmo.tinder.model.enums.RoleName;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Roles, Integer> {
+public interface RoleRepository extends JpaRepository<Roles, Long> {
     Roles findRolesByRoleName(RoleName roleName);
 }

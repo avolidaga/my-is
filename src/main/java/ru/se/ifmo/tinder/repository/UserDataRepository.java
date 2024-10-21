@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import ru.se.ifmo.tinder.model.UserData;
 
 @Repository
-public interface UserDataRepository extends JpaRepository<UserData, Integer> {
+public interface UserDataRepository extends JpaRepository<UserData, Long> {
     @Query("SELECT u FROM UserData u WHERE u.id <> ?1")
-    Page<UserData> findAllUserDataExcludingUserId(Integer userId, Pageable pageable);
+    Page<UserData> findAllUserDataExcludingUserId(Long userDataId, Pageable pageable);
 
-    Page<UserData> findUserDataByLocationsId(Integer locationId, Pageable pageable);
+    Page<UserData> findUserDataByLocationsId(Long locationId, Pageable pageable);
 }

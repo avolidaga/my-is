@@ -1,4 +1,4 @@
-package ru.se.ifmo.tinder.dto;
+package ru.se.ifmo.tinder.dto.spacesuit_data;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class UserSpacesuitDataDto {
+public class CreateSpacesuitDataDto {
 
     @NotNull(message = "Head measurement must not be null")
     @Positive(message = "Head measurement must be a positive number")
@@ -28,17 +28,15 @@ public class UserSpacesuitDataDto {
 
     @NotNull(message = "Foot size must not be null")
     @Positive(message = "Foot size must be a positive number")
-    private Integer foot_size;
+    private Integer footSize;
 
     @NotNull(message = "Height must not be null")
     @Positive(message = "Height must be a positive number")
     @Max(value = 300, message = "Height must be less than or equal to 300")
     private Integer height;
 
-    @NotNull(message = "Fabric texture ID must not be null")
-    @Positive(message = "Fabric texture ID must be a positive number")
-    private Integer fabric_texture_id;
-
+    @NotNull
+    private Long fabricTextureId;
 }
 
 

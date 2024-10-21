@@ -1,10 +1,17 @@
 package ru.se.ifmo.tinder.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Setter
+@Getter
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

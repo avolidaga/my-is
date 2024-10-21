@@ -1,4 +1,4 @@
-package ru.se.ifmo.tinder.dto;
+package ru.se.ifmo.tinder.dto.user_data;
 
 import jakarta.validation.constraints.*;
 import lombok.Builder;
@@ -10,11 +10,19 @@ import java.util.List;
 
 @Data
 @Builder
-public class UserDataDto {
+public class CreateUserDataDto {
 
     @NotNull(message = "Birth date must not be null")
     @Past(message = "Birth date must be in the past")
-    private LocalDate birth_date;
+    private LocalDate birthDate;
+
+    @NotBlank(message = "Firstname is required")
+    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
+    private String firstname;
+
+    @NotBlank(message = "Lastname is required")
+    @Size(min = 2, max = 50, message = "Lastname name must be between 2 and 50 characters")
+    private String lastname;
 
     @NotNull(message = "Sex is required")
     private Sex sex;
@@ -29,13 +37,9 @@ public class UserDataDto {
     private Integer height;
 
     @NotBlank(message = "Hair color is required")
-    private String hair_color;
-
-    @NotBlank(message = "First name is required")
-    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
-    private String firstname;
+    private String hairColor;
 
     @NotNull(message = "Locations is required")
     @Size(min = 1, message = "Specify at least one location")
-    private List<Integer> location;
+    private List<Long> locations;
 }

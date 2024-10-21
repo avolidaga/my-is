@@ -1,26 +1,23 @@
 package ru.se.ifmo.tinder.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.se.ifmo.tinder.dto.LoginResponseDto;
-import ru.se.ifmo.tinder.dto.UserDto;
+import ru.se.ifmo.tinder.dto.user.AuthUserDto;
+import ru.se.ifmo.tinder.dto.user.CreateUserDto;
+import ru.se.ifmo.tinder.dto.user.LoginUserDto;
+import ru.se.ifmo.tinder.dto.user.UserDto;
 import ru.se.ifmo.tinder.mapper.UserMapper;
 import ru.se.ifmo.tinder.model.Roles;
 import ru.se.ifmo.tinder.model.User;
-import ru.se.ifmo.tinder.model.UserConnection;
 import ru.se.ifmo.tinder.model.enums.RoleName;
 import ru.se.ifmo.tinder.repository.RoleRepository;
-import ru.se.ifmo.tinder.repository.UserConnectionRepository;
 import ru.se.ifmo.tinder.repository.UserRepository;
-import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
 import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
-import java.security.Principal;
-import java.time.LocalDate;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -31,76 +28,29 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
-    private final UserConnectionRepository userConnectionRepository;
-
-    public boolean createUser(UserDto userDto) {
-        User user = UserMapper.toEntityUser(userDto);
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return false;
-        }
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        Roles role = roleRepository.findRolesByRoleName(RoleName.USER);
-        user.setUser_data_id(null);
-        user.setRole(role);
-        userRepository.save(user);
-        return true;
-    }
-
-    public LoginResponseDto login(UserDto authRequest) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-        );
-        User user = userRepository.findByUsername(authRequest.getUsername())
-                .orElseThrow(() -> new UserNotFoundException(authRequest.getUsername()));
-        String credentials = authRequest.getUsername() + ":" + authRequest.getPassword();
-        String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-        return LoginResponseDto.builder()
-                .credentials(base64Credentials)
-                .role(user.getRole().getRoleName().name())
-                .build();
-    }
 
     @Transactional
-    public Integer addConnection(Principal principal, Integer user_id_2) {
-        String username = principal.getName();
-        User user1 = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
-
-        User user2 = userRepository.findUserByUserDataId(user_id_2)
-                .orElseThrow(() -> new NoEntityWithSuchIdException("User", "User data", user_id_2));
-
-
-        UserConnection userConnection = userConnectionRepository.save(UserConnection.builder()
-                .user1(user1)
-                .user2(user2)
-                .matchDate(LocalDate.now())
-                .build());
-        return userConnection.getId();
+    public UserDto createUser(CreateUserDto createUserDto) {
+        User user = UserMapper.toEntityUser(createUserDto);
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new IllegalArgumentException(); // TODO создать кастомную ошибку под занятый юзернэйм
+        }
+        user.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
+        Roles role = roleRepository.findRolesByRoleName(RoleName.USER);
+        user.setUserData(null);
+        user.setRole(role);
+        User savedUser = userRepository.save(user);
+        return UserMapper.toDtoUser(savedUser);
     }
 
-    public List<User> getConnections(Principal principal) {
-        String username = principal.getName();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
-        Set<User> userConnections = new HashSet<>();
-        Set<User> mutualConnections = new HashSet<>();
-
-        for (UserConnection connection : userConnectionRepository.findAll()) {
-            if (connection.getUser1().equals(user)) {
-                userConnections.add(connection.getUser2());
-            } else if (connection.getUser2().equals(user)) {
-                userConnections.add(connection.getUser1());
-            }
-        }
-
-        for (UserConnection connection : userConnectionRepository.findAll()) {
-            if (userConnections.contains(connection.getUser1()) && connection.getUser2().equals(user)) {
-                mutualConnections.add(connection.getUser1());
-            } else if (userConnections.contains(connection.getUser2()) && connection.getUser1().equals(user)) {
-                mutualConnections.add(connection.getUser2());
-            }
-        }
-
-        return new ArrayList<>(mutualConnections);
+    public AuthUserDto loginUser(LoginUserDto loginUserDto) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginUserDto.getUsername(), loginUserDto.getPassword())
+        );
+        User user = userRepository.findByUsername(loginUserDto.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(loginUserDto.getUsername()));
+        String credentials = loginUserDto.getUsername() + ":" + loginUserDto.getPassword();
+        String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
+        return UserMapper.toDtoAuthUser(user, base64Credentials);
     }
 }

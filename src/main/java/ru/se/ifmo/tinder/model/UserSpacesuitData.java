@@ -1,10 +1,18 @@
 package ru.se.ifmo.tinder.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import ru.se.ifmo.tinder.model.enums.RequestStatus;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_spacesuit_data")
+@Builder
+@Getter
+@Setter
 public class UserSpacesuitData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +35,6 @@ public class UserSpacesuitData {
     @ManyToOne
     @JoinColumn(name = "fabric_texture_id")
     private FabricTexture fabricTexture;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

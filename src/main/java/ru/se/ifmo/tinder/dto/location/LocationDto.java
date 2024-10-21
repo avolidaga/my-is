@@ -1,4 +1,4 @@
-package ru.se.ifmo.tinder.dto;
+package ru.se.ifmo.tinder.dto.location;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;

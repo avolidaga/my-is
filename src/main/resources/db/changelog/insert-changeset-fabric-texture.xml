@@ -10,40 +10,40 @@
     <changeSet id="insert-fabric" author="lisache121">
 
         <sql>
-            INSERT INTO fabric_texture (fabric_texture_name)
-            SELECT 'silk'
+            INSERT INTO fabric_texture (fabric_texture_name, fabric_texture_description)
+            SELECT 'silk', 'some description for silk'
                 WHERE NOT EXISTS (
                 SELECT 1 FROM fabric_texture WHERE fabric_texture_name = 'silk'
             );
         </sql>
 
         <sql>
-            INSERT INTO fabric_texture (fabric_texture_name)
-            SELECT 'cotton'
+            INSERT INTO fabric_texture (fabric_texture_name, fabric_texture_description)
+            SELECT 'cotton', 'some description for cotton'
                 WHERE NOT EXISTS (
                 SELECT 1 FROM fabric_texture WHERE fabric_texture_name = 'cotton'
             );
         </sql>
 
         <sql>
-            INSERT INTO fabric_texture (fabric_texture_name)
-            SELECT 'wool'
+            INSERT INTO fabric_texture (fabric_texture_name, fabric_texture_description)
+            SELECT 'wool', 'some description for wool'
                 WHERE NOT EXISTS (
                 SELECT 1 FROM fabric_texture WHERE fabric_texture_name = 'wool'
             );
         </sql>
 
         <sql>
-            INSERT INTO fabric_texture (fabric_texture_name)
-            SELECT 'polyester'
+            INSERT INTO fabric_texture (fabric_texture_name, fabric_texture_description)
+            SELECT 'polyester', 'some description for polyester'
                 WHERE NOT EXISTS (
                 SELECT 1 FROM fabric_texture WHERE fabric_texture_name = 'polyester'
             );
         </sql>
 
         <sql>
-            INSERT INTO fabric_texture (fabric_texture_name)
-            SELECT 'fleece'
+            INSERT INTO fabric_texture (fabric_texture_name, fabric_texture_description)
+            SELECT 'fleece', 'some description for fleece'
                 WHERE NOT EXISTS (
                 SELECT 1 FROM fabric_texture WHERE fabric_texture_name = 'fleece'
             );

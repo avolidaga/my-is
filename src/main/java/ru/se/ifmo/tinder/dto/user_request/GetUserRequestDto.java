@@ -1,4 +1,4 @@
-package ru.se.ifmo.tinder.dto;
+package ru.se.ifmo.tinder.dto.user_request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestDto {
+public class GetUserRequestDto {
 
     @NotNull(message = "User spacesuit data ID must not be null")
     @Positive(message = "User spacesuit data ID must be a positive number")

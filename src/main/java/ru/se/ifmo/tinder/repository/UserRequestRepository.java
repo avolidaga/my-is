@@ -4,15 +4,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.se.ifmo.tinder.model.UserRequest;
 
-import java.util.List;
-
 @Repository
-public interface RequestRepository extends JpaRepository<UserRequest, Integer> {
-    //пагинация
+public interface UserRequestRepository extends JpaRepository<UserRequest, Long> {
     @Query(name = "UserRequest.getAllUserRequestIds")
     Page<UserRequest> findAll(Pageable pageable);
 
@@ -27,8 +23,4 @@ public interface RequestRepository extends JpaRepository<UserRequest, Integer> {
 
     @Query(name = "UserRequest.getNewUserRequest")
     Page<UserRequest> findNew(Pageable pageable);
-
-    @Query(name = "UserRequest.getListAllByUserRequestIdIn")
-    Page<UserRequest> getListAllByUserRequestIdIn(@Param("idList") List<Integer> idList, Pageable pageable);
-
 }

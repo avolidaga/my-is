@@ -5,67 +5,66 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.se.ifmo.tinder.dto.UserSpacesuitDataDto;
+import ru.se.ifmo.tinder.dto.spacesuit_data.CreateSpacesuitDataDto;
+import ru.se.ifmo.tinder.dto.spacesuit_data.UserSpacesuitDataDto;
+import ru.se.ifmo.tinder.dto.user_request.UserRequestDto;
 import ru.se.ifmo.tinder.mapper.SpacesuitDataMapper;
+import ru.se.ifmo.tinder.mapper.UserRequestMapper;
 import ru.se.ifmo.tinder.model.FabricTexture;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserRequest;
 import ru.se.ifmo.tinder.model.UserSpacesuitData;
 import ru.se.ifmo.tinder.model.enums.RequestStatus;
 import ru.se.ifmo.tinder.repository.FabricTextureRepository;
-import ru.se.ifmo.tinder.repository.RequestRepository;
+import ru.se.ifmo.tinder.repository.UserRequestRepository;
 import ru.se.ifmo.tinder.repository.UserRepository;
 import ru.se.ifmo.tinder.repository.UserSpacesuitDataRepository;
 import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
-import ru.se.ifmo.tinder.service.exceptions.NoSpacesuitDataException;
 import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.security.Principal;
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
 public class UserSpacesuitDataService {
-    // Пагинация
     private final UserSpacesuitDataRepository userSpacesuitDataRepository;
     private final UserRepository userRepository;
-    private final RequestRepository requestRepository;
+    private final UserRequestRepository userRequestRepository;
     private final FabricTextureRepository fabricTextureRepository;
 
     @Transactional
-    public Integer insertUserSpacesuitData(UserSpacesuitDataDto userSpacesuitDataDto, Principal principal) {
+    public UserRequestDto createUserSpacesuitData(CreateSpacesuitDataDto createSpacesuitDataDto, Principal principal) {
         String username = principal.getName();
-
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
-        Integer fabricTextureId = userSpacesuitDataDto.getFabric_texture_id();
+
+        Long fabricTextureId = createSpacesuitDataDto.getFabricTextureId();
         FabricTexture fabricTexture = fabricTextureRepository.findById(fabricTextureId)
                 .orElseThrow(() -> new NoEntityWithSuchIdException("Fabric texture", fabricTextureId));
+
         UserSpacesuitData userSpacesuitData = SpacesuitDataMapper
-                .toEntitySpacesuitData(userSpacesuitDataDto, fabricTexture);
+                .toEntitySpacesuitData(createSpacesuitDataDto, fabricTexture);
 
-        UserSpacesuitData userSpacesuit = userSpacesuitDataRepository.save(userSpacesuitData);
+        UserSpacesuitData savedUserSpacesuitData = userSpacesuitDataRepository.save(userSpacesuitData);
 
-        user.setUserSpacesuitDataId(userSpacesuit);
+        user.getUserSpacesuitDataSet().add(savedUserSpacesuitData); // TODO возможно нужно написать отдельный метод добавления в set в самой сущности
         userRepository.save(user);
         UserRequest userRequest = UserRequest.builder()
-                .userSpacesuitDataId(userSpacesuit)
+                .userSpacesuitData(savedUserSpacesuitData)
                 .status(RequestStatus.NEW)
+                .createdAt(LocalDateTime.now())
                 .build();
 
-        requestRepository.save(userRequest);
-        return userSpacesuit.getId();
+        UserRequest savedUserRequest = userRequestRepository.save(userRequest);
+        return UserRequestMapper.toUserRequestDto(savedUserRequest);
     }
 
-
-    public Page<UserSpacesuitData> getCurrUserSpacesuitData(Principal principal, Pageable pageable) {
+    public Page<UserSpacesuitDataDto> getCurrentUserSpacesuitData(Principal principal, Pageable pageable) {
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
-        Integer userId = Optional.ofNullable(user.getUserSpacesuitDataId())
-                .orElseThrow(() -> new NoSpacesuitDataException(username))
-                .getId();
-        Page<Integer> idPage = userRepository.getCurrUserSpacesuitData(userId, pageable);
-        return userSpacesuitDataRepository.getListAllByUserSpacesuitDataIdIn(idPage.getContent(), pageable);
+        Page<UserSpacesuitData> userSpacesuitDataPage = userSpacesuitDataRepository.findAllUserSpacesuitDataByOwnerUserId(user.getId(), pageable);
+        return userSpacesuitDataPage.map(SpacesuitDataMapper::toSpacesuitDataDto);
     }
 }

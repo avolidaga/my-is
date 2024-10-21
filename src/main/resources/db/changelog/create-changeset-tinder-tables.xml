@@ -44,6 +44,9 @@
             <column name="fabric_texture_name" type="VARCHAR(100)">
                 <constraints nullable="false" unique="true"/>
             </column>
+            <column name="fabric_texture_description" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
@@ -80,6 +83,10 @@
             <column name="fabric_texture_id" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="DATETIME"/>
         </createTable>
         <addForeignKeyConstraint baseTableName="user_spacesuit_data"
                                  baseColumnNames="fabric_texture_id"
@@ -116,6 +123,11 @@
                 <constraints nullable="false"/>
             </column>
             <column name="firstname" type="VARCHAR(255)"/>
+            <column name="lastname" type="VARCHAR(255)"/>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="DATETIME"/>
         </createTable>
     </changeSet>
 
@@ -189,6 +201,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="status" type="VARCHAR(50)" defaultValue="NEW"/>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="DATETIME"/>
         </createTable>
         <addForeignKeyConstraint baseTableName="user_request"
                                  baseColumnNames="user_spacesuit_data_id"
@@ -211,7 +227,7 @@
             </column>
             <column name="user_id_1" type="INTEGER"/>
             <column name="user_id_2" type="INTEGER"/>
-            <column name="date_time" type="DATE">
+            <column name="match_date" type="DATE">
                 <constraints nullable="false"/>
             </column>
         </createTable>
