@@ -22,9 +22,6 @@ public class AuthUserDto {
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
     private String username;
 
-    private Set<UserSpacesuitData> userSpacesuitDataSet;
-    private UserData userData;
-
     @NotBlank(message = "Role must not be blank")
     private Roles role;
 }

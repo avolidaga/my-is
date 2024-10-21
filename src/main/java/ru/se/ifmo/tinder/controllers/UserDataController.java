@@ -30,19 +30,21 @@ public class UserDataController {
 
     private final UserDataService userDataService;
 
-    @PostMapping
-    public ResponseEntity<UserDataDto> createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto, Principal principal) {
+    @PostMapping("my")
+    public ResponseEntity<UserDataDto> createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto,
+                                                      Principal principal) {
         UserDataDto userDataDto = userDataService.createUserData(createUserDataDto, principal);
         return new ResponseEntity<>(userDataDto, HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<UserDataDto> updateUserDataById(@Valid UpdateUserDataDto updateUserDataDto, Principal principal) {
+    @PutMapping("my")
+    public ResponseEntity<UserDataDto> updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto,
+                                                          Principal principal) {
         UserDataDto userData = userDataService.updateUserData(updateUserDataDto, principal);
         return ResponseEntity.ok(userData);
     }
 
-    @DeleteMapping
+    @DeleteMapping("my")
     public ResponseEntity<Void> deleteUserDataByUser(Principal principal) {
         userDataService.deleteUserDataByUser(principal);
         return ResponseEntity.ok().build();
@@ -59,7 +61,7 @@ public class UserDataController {
                                                                   @RequestParam int page,
                                                                   @RequestParam @Min(1) @Max(50) int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<UserDataDto> userDataPage = userDataService.getUsersDataByPlanetId(locationId, pageable);
+        Page<UserDataDto> userDataPage = userDataService.getUsersDataByLocationId(locationId, pageable);
 
         HttpHeaders headers = PaginationUtil.createPaginationHeaders(userDataPage);
 

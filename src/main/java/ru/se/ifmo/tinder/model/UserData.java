@@ -2,9 +2,7 @@ package ru.se.ifmo.tinder.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 import ru.se.ifmo.tinder.model.enums.Sex;
 
 import java.time.LocalDate;
@@ -15,6 +13,9 @@ import java.util.Set;
 @Table(name = "user_data")
 @Builder
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -30,7 +30,7 @@ public class UserService {
     private final RoleRepository roleRepository;
 
     @Transactional
-    public UserDto createUser(CreateUserDto createUserDto) {
+    public void createUser(CreateUserDto createUserDto) {
         User user = UserMapper.toEntityUser(createUserDto);
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new IllegalArgumentException(); // TODO создать кастомную ошибку под занятый юзернэйм
@@ -39,8 +39,7 @@ public class UserService {
         Roles role = roleRepository.findRolesByRoleName(RoleName.USER);
         user.setUserData(null);
         user.setRole(role);
-        User savedUser = userRepository.save(user);
-        return UserMapper.toDtoUser(savedUser);
+        userRepository.save(user);
     }
 
     public AuthUserDto loginUser(LoginUserDto loginUserDto) {

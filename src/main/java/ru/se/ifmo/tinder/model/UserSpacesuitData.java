@@ -1,9 +1,7 @@
 package ru.se.ifmo.tinder.model;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ru.se.ifmo.tinder.model.enums.RequestStatus;
 
 import java.time.LocalDateTime;
@@ -13,6 +11,8 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserSpacesuitData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -41,10 +41,12 @@ public class UserDataService {
         Set<Location> locations = new HashSet<>(locationRepository.findAllById(createUserDataDto.getLocations()));
         if (locations.isEmpty()) throw new NoEntityWithSuchIdException("Location", createUserDataDto.getLocations());
         UserData userData = UserDataMapper.toEntityUserData(createUserDataDto, locations);
-
+        userData.setOwnerUser(user);
         UserData savedUserData = userDataRepository.save(userData);
+
         user.setUserData(savedUserData);
         userRepository.save(user);
+
         return UserDataMapper.toUserDataDto(savedUserData);
     }
 
@@ -59,8 +61,8 @@ public class UserDataService {
                 .map(UserDataMapper::toUserDataDto);
     }
 
-    public Page<UserDataDto> getUsersDataByPlanetId(Long locationId, Pageable pageable) {
-        return userDataRepository.findUserDataByLocationsId(locationId, pageable)
+    public Page<UserDataDto> getUsersDataByLocationId(Long locationId, Pageable pageable) {
+        return userDataRepository.findAllUserDataByLocationsId(locationId, pageable)
                 .map(UserDataMapper::toUserDataDto);
     }
 
@@ -78,6 +80,7 @@ public class UserDataService {
             // TODO здесь должно быть исключение кастомное + дописать его обработчик
         }
         UserData newUserData = UserDataMapper.toEntityUserData(updateUserDataDto, locations, oldUserData.getCreatedAt());
+        newUserData.setOwnerUser(oldUserData.getOwnerUser());
         UserData savedUserData = userDataRepository.save(newUserData);
         return UserDataMapper.toUserDataDto(savedUserData);
     }

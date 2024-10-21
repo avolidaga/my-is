@@ -12,5 +12,5 @@ public interface UserDataRepository extends JpaRepository<UserData, Long> {
     @Query("SELECT u FROM UserData u WHERE u.id <> ?1")
     Page<UserData> findAllUserDataExcludingUserId(Long userDataId, Pageable pageable);
 
-    Page<UserData> findUserDataByLocationsId(Long locationId, Pageable pageable);
+    Page<UserData> findAllUserDataByLocationsId(Long locationId, Pageable pageable);
 }

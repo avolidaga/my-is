@@ -45,11 +45,9 @@ public class UserSpacesuitDataService {
 
         UserSpacesuitData userSpacesuitData = SpacesuitDataMapper
                 .toEntitySpacesuitData(createSpacesuitDataDto, fabricTexture);
-
+        userSpacesuitData.setOwnerUser(user);
         UserSpacesuitData savedUserSpacesuitData = userSpacesuitDataRepository.save(userSpacesuitData);
 
-        user.getUserSpacesuitDataSet().add(savedUserSpacesuitData); // TODO возможно нужно написать отдельный метод добавления в set в самой сущности
-        userRepository.save(user);
         UserRequest userRequest = UserRequest.builder()
                 .userSpacesuitData(savedUserSpacesuitData)
                 .status(RequestStatus.NEW)

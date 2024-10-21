@@ -25,10 +25,8 @@ public class UserMapper {
     public static AuthUserDto toDtoAuthUser(User user, String credentials) {
         return AuthUserDto.builder()
                 .username(user.getUsername())
-                .userData(user.getUserData())
                 .id(user.getId())
                 .role(user.getRole())
-                .userSpacesuitDataSet(user.getUserSpacesuitDataSet())
                 .credentials(credentials)
                 .build();
     }

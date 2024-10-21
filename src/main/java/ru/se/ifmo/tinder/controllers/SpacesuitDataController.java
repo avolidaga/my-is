@@ -30,7 +30,7 @@ public class SpacesuitDataController {
     private final UserSpacesuitDataService userSpacesuitDataService;
 
     // TODO дописать возможность обновить/удалить spacesuit data
-    @PostMapping
+    @PostMapping("my")
     public ResponseEntity<UserRequestDto> createSpacesuitData(@Valid @RequestBody CreateSpacesuitDataDto spacesuitDataDto,
                                                               Principal principal) {
         UserRequestDto userRequestDto = userSpacesuitDataService.createUserSpacesuitData(spacesuitDataDto, principal);
