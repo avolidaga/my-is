@@ -35,5 +35,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id_1"),
             inverseJoinColumns = @JoinColumn(name = "user_id_2")
     )
+    @EqualsAndHashCode.Exclude
     private Set<User> matchedUsers;
 }

@@ -36,5 +36,6 @@ public class SpacesuitData {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "spacesuitData")
+    @EqualsAndHashCode.Exclude
     private Set<UserRequest> userRequestSet;
 }

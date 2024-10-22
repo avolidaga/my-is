@@ -24,6 +24,7 @@ public class Location {
     private String description;
     private Double temperature;
 
+    @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "locations")
     Set<UserData> userData;
 }

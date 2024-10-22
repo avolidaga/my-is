@@ -21,6 +21,7 @@ public class UserData {
     private Long id;
 
     @OneToOne(mappedBy = "userData")
+    @EqualsAndHashCode.Exclude
     private User ownerUser;
     private String firstname;
     private String lastname;
