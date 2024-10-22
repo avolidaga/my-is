@@ -1,6 +1,5 @@
 package ru.se.ifmo.tinder.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.se.ifmo.tinder.model.enums.Sex;
@@ -11,11 +10,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user_data")
-@Builder
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +33,6 @@ public class UserData {
     private String hairColor;
 
     @ManyToMany
-    @JsonIgnore
     @JoinTable(
             name = "user_data_location",
             joinColumns = @JoinColumn(name = "user_data_id"),

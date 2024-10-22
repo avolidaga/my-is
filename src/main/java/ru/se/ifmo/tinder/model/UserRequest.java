@@ -8,11 +8,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_request")
-@Getter
-@Setter
-@Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @NamedQueries({
         @NamedQuery(name = "UserRequest.getAllUserRequestIds", query = "SELECT ur FROM UserRequest ur"),
         @NamedQuery(name = "UserRequest.getDeclinedUserRequestIds", query = "SELECT ur FROM UserRequest ur WHERE ur.status = 'DECLINED'"),

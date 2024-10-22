@@ -20,7 +20,7 @@ import java.util.List;
 public class UserConnectionController {
     private final UserConnectionService userConnectionService;
 
-    @PostMapping
+    @PostMapping("new")
     public ResponseEntity<UserConnectionDto> createConnection(@Valid @RequestBody CreateUserConnectionDto createUserConnectionDto,
                                                     Principal principal) {
         UserConnectionDto userConnectionDto = userConnectionService.createConnection(principal, createUserConnectionDto.getUserDataId());

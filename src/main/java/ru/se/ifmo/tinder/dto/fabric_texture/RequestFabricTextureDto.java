@@ -1,5 +1,7 @@
 package ru.se.ifmo.tinder.dto.fabric_texture;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -7,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Data
 @Builder
-@Getter
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class RequestFabricTextureDto {
     @NotBlank
     private String name;

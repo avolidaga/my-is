@@ -21,7 +21,7 @@ import java.security.Principal;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("users")
+    @PostMapping("users/new")
     public ResponseEntity<Void> createUser(@Valid @RequestBody RequestUserDto requestUserDto) {
         userService.createUser(requestUserDto);
         return new ResponseEntity<>(HttpStatus.CREATED);

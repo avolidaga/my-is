@@ -24,7 +24,7 @@ public class LocationController {
 
     private final LocationService locationService;
 
-    @PostMapping
+    @PostMapping("new")
     public ResponseEntity<LocationDto> createLocation(@Valid @RequestBody RequestLocationDto dto) {
         LocationDto locationDto = locationService.createLocation(dto);
         return new ResponseEntity<>(locationDto, HttpStatus.CREATED);

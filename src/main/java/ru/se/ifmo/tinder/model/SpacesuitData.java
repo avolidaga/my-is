@@ -9,11 +9,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user_spacesuit_data")
-@Builder
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class SpacesuitData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

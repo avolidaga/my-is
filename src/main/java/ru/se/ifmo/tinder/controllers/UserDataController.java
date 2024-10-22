@@ -26,7 +26,7 @@ public class UserDataController {
 
     private final UserDataService userDataService;
 
-    @PostMapping
+    @PostMapping("new")
     public ResponseEntity<UserDataDto> createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto,
                                                       Principal principal) {
         UserDataDto userDataDto = userDataService.createUserData(createUserDataDto, principal);

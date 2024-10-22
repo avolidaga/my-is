@@ -1,17 +1,14 @@
 package ru.se.ifmo.tinder.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "fabric_texture")
-@Builder
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class FabricTexture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -24,7 +24,7 @@ public class FabricTextureController {
 
     private final FabricTextureService fabricTextureService;
 
-    @PostMapping
+    @PostMapping("new")
     public ResponseEntity<FabricTextureDto> createFabricTexture(@Valid @RequestBody RequestFabricTextureDto dto) {
         FabricTextureDto fabricTextureDto = fabricTextureService.createFabricTexture(dto);
         return new ResponseEntity<>(fabricTextureDto, HttpStatus.CREATED);

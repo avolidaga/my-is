@@ -2,19 +2,16 @@ package ru.se.ifmo.tinder.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PastOrPresent;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "user_connections")
-@Builder
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserConnection {
 
     @Id

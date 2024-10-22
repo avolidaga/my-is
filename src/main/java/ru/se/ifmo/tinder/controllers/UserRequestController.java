@@ -18,7 +18,7 @@ import ru.se.ifmo.tinder.service.UserRequestService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/user-request")
+@RequestMapping("/api/v1/user-requests")
 @SecurityRequirement(name = "basicAuth")
 public class UserRequestController {
     private final UserRequestService userRequestService;

@@ -7,10 +7,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
 @Builder
 public class User {
     @Id

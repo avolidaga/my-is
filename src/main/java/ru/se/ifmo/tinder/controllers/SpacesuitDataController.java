@@ -28,7 +28,7 @@ public class SpacesuitDataController {
 
     private final SpacesuitDataService spacesuitDataService;
 
-    @PostMapping
+    @PostMapping("new")
     public ResponseEntity<UserRequestDto> createUserSpacesuitData(@Valid @RequestBody CreateSpacesuitDataDto dto,
                                                                   Principal principal) {
         UserRequestDto userRequestDto = spacesuitDataService.createSpacesuitData(dto, principal);

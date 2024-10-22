@@ -1,5 +1,7 @@
 package ru.se.ifmo.tinder.dto.spacesuit_data;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SpacesuitDataDto {
 
     @NotNull
