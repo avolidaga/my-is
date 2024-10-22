@@ -1,22 +1,22 @@
 package ru.se.ifmo.tinder.mapper;
 
-import ru.se.ifmo.tinder.dto.fabric_texture.CreateFabricTextureDto;
+import ru.se.ifmo.tinder.dto.fabric_texture.RequestFabricTextureDto;
 import ru.se.ifmo.tinder.dto.fabric_texture.FabricTextureDto;
 import ru.se.ifmo.tinder.model.FabricTexture;
 
 public class FabricTextureMapper {
-    public static FabricTexture toEntityFabricTexture(CreateFabricTextureDto createFabricTextureDto) {
+    public static FabricTexture toEntityFabricTexture(RequestFabricTextureDto requestFabricTextureDto) {
         return FabricTexture.builder()
-                .name(createFabricTextureDto.getName())
-                .description(createFabricTextureDto.getDescription())
+                .name(requestFabricTextureDto.getName())
+                .description(requestFabricTextureDto.getDescription())
                 .build();
     }
 
-    public static FabricTexture toEntityFabricTexture(FabricTextureDto dto) {
+    public static FabricTexture toEntityFabricTexture(Long id, RequestFabricTextureDto requestFabricTextureDto) {
         return FabricTexture.builder()
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .id(dto.getId())
+                .name(requestFabricTextureDto.getName())
+                .description(requestFabricTextureDto.getDescription())
+                .id(id)
                 .build();
     }
 

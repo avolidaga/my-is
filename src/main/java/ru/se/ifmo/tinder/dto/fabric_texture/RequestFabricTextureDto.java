@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 @Builder
 @Getter
-public class CreateFabricTextureDto {
+public class RequestFabricTextureDto {
     @NotBlank
     private String name;
     @NotBlank

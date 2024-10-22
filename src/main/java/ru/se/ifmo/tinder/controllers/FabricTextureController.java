@@ -12,30 +12,28 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.se.ifmo.tinder.dto.fabric_texture.CreateFabricTextureDto;
+import ru.se.ifmo.tinder.dto.fabric_texture.RequestFabricTextureDto;
 import ru.se.ifmo.tinder.dto.fabric_texture.FabricTextureDto;
-import ru.se.ifmo.tinder.dto.location.CreateLocationDto;
-import ru.se.ifmo.tinder.dto.location.LocationDto;
 import ru.se.ifmo.tinder.service.FabricTextureService;
-import ru.se.ifmo.tinder.service.LocationService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/fabric-texture")
+@RequestMapping("/api/v1/fabric-textures")
 @SecurityRequirement(name = "basicAuth")
 public class FabricTextureController {
 
     private final FabricTextureService fabricTextureService;
 
     @PostMapping
-    public ResponseEntity<FabricTextureDto> createFabricTexture(@Valid @RequestBody CreateFabricTextureDto dto) {
+    public ResponseEntity<FabricTextureDto> createFabricTexture(@Valid @RequestBody RequestFabricTextureDto dto) {
         FabricTextureDto fabricTextureDto = fabricTextureService.createFabricTexture(dto);
         return new ResponseEntity<>(fabricTextureDto, HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<FabricTextureDto> updateFabricTexture(@Valid @RequestBody FabricTextureDto dto) {
-        FabricTextureDto fabricTextureDto = fabricTextureService.updateFabricTexture(dto);
+    @PutMapping("{fabricTextureId}")
+    public ResponseEntity<FabricTextureDto> updateFabricTexture(@NotNull @PathVariable Long fabricTextureId,
+                                                                @Valid @RequestBody RequestFabricTextureDto dto) {
+        FabricTextureDto fabricTextureDto = fabricTextureService.updateFabricTextureById(fabricTextureId, dto);
         return ResponseEntity.ok(fabricTextureDto);
     }
 

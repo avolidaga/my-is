@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CreateLocationDto {
+public class RequestLocationDto {
     @NotBlank
     private String name;
     private String description;

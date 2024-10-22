@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.se.ifmo.tinder.dto.location.CreateLocationDto;
+import ru.se.ifmo.tinder.dto.location.RequestLocationDto;
 import ru.se.ifmo.tinder.dto.location.LocationDto;
 import ru.se.ifmo.tinder.service.LocationService;
 
@@ -25,14 +25,15 @@ public class LocationController {
     private final LocationService locationService;
 
     @PostMapping
-    public ResponseEntity<LocationDto> createLocation(@Valid @RequestBody CreateLocationDto dto) {
+    public ResponseEntity<LocationDto> createLocation(@Valid @RequestBody RequestLocationDto dto) {
         LocationDto locationDto = locationService.createLocation(dto);
         return new ResponseEntity<>(locationDto, HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<LocationDto> updateLocation(@Valid @RequestBody LocationDto dto) {
-        LocationDto locationDto = locationService.updateLocation(dto);
+    @PutMapping("{locationId}")
+    public ResponseEntity<LocationDto> updateLocation(@NotNull @PathVariable Long locationId,
+                                                      @Valid @RequestBody RequestLocationDto dto) {
+        LocationDto locationDto = locationService.updateLocationById(locationId, dto);
         return ResponseEntity.ok(locationDto);
     }
 
@@ -50,7 +51,7 @@ public class LocationController {
 
     @GetMapping
     public ResponseEntity<Page<LocationDto>> getAllLocations(@RequestParam int page,
-                                                          @RequestParam @Min(1) @Max(50) int size) {
+                                                             @RequestParam @Min(1) @Max(50) int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<LocationDto> locationDtoPage = locationService.getAllLocations(pageable);
         return ResponseEntity.ok(locationDtoPage);

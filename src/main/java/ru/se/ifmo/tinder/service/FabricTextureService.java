@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.se.ifmo.tinder.dto.fabric_texture.CreateFabricTextureDto;
+import ru.se.ifmo.tinder.dto.fabric_texture.RequestFabricTextureDto;
 import ru.se.ifmo.tinder.dto.fabric_texture.FabricTextureDto;
 import ru.se.ifmo.tinder.mapper.FabricTextureMapper;
 import ru.se.ifmo.tinder.model.FabricTexture;
@@ -17,7 +17,7 @@ public class FabricTextureService {
 
     private final FabricTextureRepository fabricTextureRepository;
 
-    public FabricTextureDto createFabricTexture(CreateFabricTextureDto dto) {
+    public FabricTextureDto createFabricTexture(RequestFabricTextureDto dto) {
         FabricTexture fabricTexture = fabricTextureRepository.save(FabricTextureMapper.toEntityFabricTexture(dto));
         return FabricTextureMapper.toDtoFabricTexture(fabricTexture);
     }
@@ -30,10 +30,10 @@ public class FabricTextureService {
         fabricTextureRepository.deleteById(fabricTextureId);
     }
 
-    public FabricTextureDto updateFabricTexture(FabricTextureDto dto) {
-        fabricTextureRepository.findById(dto.getId())
-                .orElseThrow(() -> new NoEntityWithSuchIdException("Fabric texture", dto.getId()));
-        FabricTexture newFabricTexture = FabricTextureMapper.toEntityFabricTexture(dto);
+    public FabricTextureDto updateFabricTextureById(Long fabricTextureId, RequestFabricTextureDto dto) {
+        fabricTextureRepository.findById(fabricTextureId)
+                .orElseThrow(() -> new NoEntityWithSuchIdException("Fabric texture", fabricTextureId));
+        FabricTexture newFabricTexture = FabricTextureMapper.toEntityFabricTexture(fabricTextureId, dto);
         fabricTextureRepository.save(newFabricTexture);
         return FabricTextureMapper.toDtoFabricTexture(newFabricTexture);
     }

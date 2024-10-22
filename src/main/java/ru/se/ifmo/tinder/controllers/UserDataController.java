@@ -33,14 +33,14 @@ public class UserDataController {
         return new ResponseEntity<>(userDataDto, HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("my")
     public ResponseEntity<UserDataDto> updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto,
                                                             Principal principal) {
         UserDataDto userData = userDataService.updateUserData(updateUserDataDto, principal);
         return ResponseEntity.ok(userData);
     }
 
-    @DeleteMapping
+    @DeleteMapping("my")
     public ResponseEntity<Void> deleteUserDataByUser(Principal principal) {
         userDataService.deleteUserDataByUser(principal);
         return ResponseEntity.ok().build();
