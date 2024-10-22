@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 import ru.se.ifmo.tinder.model.enums.Sex;
+import ru.se.ifmo.tinder.validation.Age;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +18,7 @@ public class UpdateUserDataDto {
 
     @NotNull(message = "Birth date must not be null")
     @Past(message = "Birth date must be in the past")
+    @Age(min = 18, message = "User must be at least 18 years old")
     private LocalDate birthDate;
 
     @NotBlank(message = "Firstname is required")
