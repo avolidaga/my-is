@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,6 @@ import ru.se.ifmo.tinder.dto.user_data.CreateUserDataDto;
 import ru.se.ifmo.tinder.dto.user_data.UpdateUserDataDto;
 import ru.se.ifmo.tinder.dto.user_data.UserDataDto;
 import ru.se.ifmo.tinder.service.UserDataService;
-import ru.se.ifmo.tinder.utils.PaginationUtil;
 
 import java.security.Principal;
 
@@ -61,9 +59,7 @@ public class UserDataController {
         Pageable pageable = PageRequest.of(page, size);
         Page<UserDataDto> userDataPage = userDataService.getUsersDataByLocationId(locationId, pageable);
 
-        HttpHeaders headers = PaginationUtil.createPaginationHeaders(userDataPage);
-
-        return new ResponseEntity<>(userDataPage, headers, HttpStatus.OK);
+        return new ResponseEntity<>(userDataPage, HttpStatus.OK);
     }
 
     @GetMapping
@@ -73,8 +69,6 @@ public class UserDataController {
         Pageable pageable = PageRequest.of(page, size);
         Page<UserDataDto> userDataPage = userDataService.getAllUsersData(principal, pageable);
 
-        HttpHeaders headers = PaginationUtil.createPaginationHeaders(userDataPage);
-
-        return new ResponseEntity<>(userDataPage, headers, HttpStatus.OK);
+        return new ResponseEntity<>(userDataPage, HttpStatus.OK);
     }
 }

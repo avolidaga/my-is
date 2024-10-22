@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -16,7 +15,6 @@ import ru.se.ifmo.tinder.dto.user_request.UserRequestDto;
 import ru.se.ifmo.tinder.model.enums.SearchStatus;
 import ru.se.ifmo.tinder.model.enums.UpdateRequestStatus;
 import ru.se.ifmo.tinder.service.UserRequestService;
-import ru.se.ifmo.tinder.utils.PaginationUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,9 +35,8 @@ public class UserRequestController {
                                                                  @NotNull @RequestParam @Min(1) @Max(50) int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<UserRequestDto> requestPage = userRequestService.getUsersRequestsByStatus(status, pageable);
-        HttpHeaders headers = PaginationUtil.endlessSwipeHeadersCreate(requestPage);
 
-        return ResponseEntity.ok().headers(headers).body(requestPage);
+        return ResponseEntity.ok().body(requestPage);
     }
 
     @ExceptionHandler(value = {IllegalStateException.class})
