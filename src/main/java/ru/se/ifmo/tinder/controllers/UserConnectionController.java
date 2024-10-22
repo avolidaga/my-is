@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.se.ifmo.tinder.dto.user_connection.CreateUserConnectionDto;
 import ru.se.ifmo.tinder.dto.user_connection.UserConnectionDto;
 import ru.se.ifmo.tinder.service.UserConnectionService;
 
@@ -21,9 +20,9 @@ public class UserConnectionController {
     private final UserConnectionService userConnectionService;
 
     @PostMapping("new")
-    public ResponseEntity<UserConnectionDto> createConnection(@Valid @RequestBody CreateUserConnectionDto createUserConnectionDto,
-                                                    Principal principal) {
-        UserConnectionDto userConnectionDto = userConnectionService.createConnection(principal, createUserConnectionDto.getUserDataId());
+    public ResponseEntity<UserConnectionDto> createConnection(@Valid @RequestParam Long userDataId,
+                                                              Principal principal) {
+        UserConnectionDto userConnectionDto = userConnectionService.createConnection(principal, userDataId);
         return ResponseEntity.ok(userConnectionDto);
     }
 

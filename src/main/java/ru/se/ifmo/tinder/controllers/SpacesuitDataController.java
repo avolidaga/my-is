@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/spacesuit-data")
 @SecurityRequirement(name = "basicAuth")
+@Slf4j
 public class SpacesuitDataController {
 
     private final SpacesuitDataService spacesuitDataService;
@@ -67,6 +69,7 @@ public class SpacesuitDataController {
 
     @ExceptionHandler(value = {NoSpacesuitDataException.class})
     public ResponseEntity<?> handleIncorrectRequestExceptions(RuntimeException ex) {
+        log.error("Incorrect request: {}", ex.getMessage());
         return ResponseEntity.badRequest().body("Incorrect request: " + ex.getMessage());
     }
 }

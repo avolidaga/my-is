@@ -26,7 +26,7 @@ public class UserDataMapper {
 
     public static UserData toEntityUserData(UpdateUserDataDto updateUserDataDto, Set<Location> locations, UserData userData) {
         return UserData.builder()
-                .id(updateUserDataDto.getId())
+                .id(userData.getId())
                 .birthDate(updateUserDataDto.getBirthDate())
                 .sex(updateUserDataDto.getSex())
                 .weight(updateUserDataDto.getWeight())

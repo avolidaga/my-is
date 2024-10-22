@@ -71,7 +71,7 @@ public class UserControllerTest {
                 .and()
                 .body(userDto)
                 .when()
-                .post("/api/v1/user-management/users")
+                .post("/api/v1/user-management/users/new")
                 .then();
 
         response.log().all().statusCode(201);
@@ -93,7 +93,7 @@ public class UserControllerTest {
                 .and()
                 .body(userDto)
                 .when()
-                .post("/api/v1/user-management/users")
+                .post("/api/v1/user-management/users/new")
                 .then();
 
         response.statusCode(400)

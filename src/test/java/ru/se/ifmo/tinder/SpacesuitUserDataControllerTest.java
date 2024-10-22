@@ -81,7 +81,7 @@ public class SpacesuitUserDataControllerTest {
                 .and()
                 .body(spacesuitDataDto)
                 .when()
-                .post("/api/v1/spacesuit-data")
+                .post("/api/v1/spacesuit-data/new")
                 .then();
 
         response.statusCode(400);
