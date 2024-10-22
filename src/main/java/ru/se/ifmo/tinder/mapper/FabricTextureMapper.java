@@ -12,6 +12,14 @@ public class FabricTextureMapper {
                 .build();
     }
 
+    public static FabricTexture toEntityFabricTexture(FabricTextureDto dto) {
+        return FabricTexture.builder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .id(dto.getId())
+                .build();
+    }
+
     public static FabricTextureDto toDtoFabricTexture(FabricTexture fabricTexture) {
         return FabricTextureDto.builder()
                 .id(fabricTexture.getId())

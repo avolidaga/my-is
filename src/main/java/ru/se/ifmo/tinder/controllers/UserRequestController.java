@@ -9,14 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import ru.se.ifmo.tinder.dto.user_request.GetUserRequestDto;
 import ru.se.ifmo.tinder.dto.user_request.UserRequestDto;
 import ru.se.ifmo.tinder.model.enums.SearchStatus;
-import ru.se.ifmo.tinder.model.enums.RequestStatus;
+import ru.se.ifmo.tinder.model.enums.UpdateRequestStatus;
 import ru.se.ifmo.tinder.service.UserRequestService;
 import ru.se.ifmo.tinder.utils.PaginationUtil;
 
@@ -28,19 +26,9 @@ public class UserRequestController {
     private final UserRequestService userRequestService;
 
     @PatchMapping("{userRequestId}")
-    public ResponseEntity<?> updateUserRequestStatus(@NotNull @RequestParam RequestStatus status,
+    public ResponseEntity<?> updateUserRequestStatus(@NotNull @RequestParam UpdateRequestStatus status,
                                                      @NotNull @PathVariable Long userRequestId) {
-        switch (status) {
-            case IN_PROGRESS -> {
-                return ResponseEntity.ok(userRequestService.updateStatusStartRequest(userRequestId, status));
-            }
-            case READY, DECLINED -> {
-                return ResponseEntity.ok(userRequestService.updateStatusFinishRequest(userRequestId, status));
-            }
-            default -> {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect status");
-            }
-        }
+        return ResponseEntity.ok(userRequestService.updateUserRequestStatus(userRequestId, status));
     }
 
     @GetMapping
@@ -56,7 +44,7 @@ public class UserRequestController {
 
     @ExceptionHandler(value = {IllegalStateException.class})
     public ResponseEntity<?> handleIllegalStateExceptions(RuntimeException ex) {
-        return ResponseEntity.badRequest().body("Incorrect request: " + ex);
+        return ResponseEntity.badRequest().body("Incorrect request: " + ex.getMessage());
     }
 
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})

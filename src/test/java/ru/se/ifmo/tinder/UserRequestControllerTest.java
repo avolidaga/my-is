@@ -1,31 +1,7 @@
 package ru.se.ifmo.tinder;
 
-import io.restassured.RestAssured;
-import io.restassured.parsing.Parser;
-import io.restassured.response.ValidatableResponse;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.se.ifmo.tinder.dto.user_request.GetUserRequestDto;
-import ru.se.ifmo.tinder.dto.user.UserDto;
-import ru.se.ifmo.tinder.dto.spacesuit_data.UserSpacesuitDataDto;
-import ru.se.ifmo.tinder.model.User;
-import ru.se.ifmo.tinder.model.enums.SearchStatus;
-import ru.se.ifmo.tinder.model.enums.RequestStatus;
-import ru.se.ifmo.tinder.repository.UserRepository;
-import ru.se.ifmo.tinder.repository.UserSpacesuitDataRepository;
-import ru.se.ifmo.tinder.service.UserService;
-import ru.se.ifmo.tinder.service.UserSpacesuitDataService;
-
-import java.security.Principal;
 
 import static io.restassured.RestAssured.given;
 

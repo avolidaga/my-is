@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import ru.se.ifmo.tinder.dto.user.AuthUserDto;
 import ru.se.ifmo.tinder.dto.user.CreateUserDto;
 import ru.se.ifmo.tinder.dto.user.LoginUserDto;
-import ru.se.ifmo.tinder.dto.user.UserDto;
 import ru.se.ifmo.tinder.mapper.UserMapper;
 import ru.se.ifmo.tinder.model.Roles;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.enums.RoleName;
 import ru.se.ifmo.tinder.repository.RoleRepository;
 import ru.se.ifmo.tinder.repository.UserRepository;
+import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
 import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.util.*;
@@ -33,7 +33,7 @@ public class UserService {
     public void createUser(CreateUserDto createUserDto) {
         User user = UserMapper.toEntityUser(createUserDto);
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new IllegalArgumentException(); // TODO создать кастомную ошибку под занятый юзернэйм
+            throw new IllegalArgumentException("User with such username already exist");
         }
         user.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
         Roles role = roleRepository.findRolesByRoleName(RoleName.USER);
@@ -51,5 +51,19 @@ public class UserService {
         String credentials = loginUserDto.getUsername() + ":" + loginUserDto.getPassword();
         String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
         return UserMapper.toDtoAuthUser(user, base64Credentials);
+    }
+
+    protected User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+    }
+
+    protected User getUserByUserDataId(Long id) {
+        return userRepository.findUserByUserDataId(id)
+                .orElseThrow(() -> new NoEntityWithSuchIdException("User", "User data", id));
+    }
+
+    protected User saveUser(User user) {
+        return userRepository.save(user);
     }
 }

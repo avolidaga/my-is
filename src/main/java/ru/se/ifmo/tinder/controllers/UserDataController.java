@@ -16,8 +16,6 @@ import ru.se.ifmo.tinder.dto.user_data.CreateUserDataDto;
 import ru.se.ifmo.tinder.dto.user_data.UpdateUserDataDto;
 import ru.se.ifmo.tinder.dto.user_data.UserDataDto;
 import ru.se.ifmo.tinder.service.UserDataService;
-import ru.se.ifmo.tinder.service.exceptions.NoSpacesuitDataException;
-import ru.se.ifmo.tinder.service.exceptions.UserNotCompletedRegistrationException;
 import ru.se.ifmo.tinder.utils.PaginationUtil;
 
 import java.security.Principal;
@@ -30,28 +28,28 @@ public class UserDataController {
 
     private final UserDataService userDataService;
 
-    @PostMapping("my")
+    @PostMapping
     public ResponseEntity<UserDataDto> createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto,
                                                       Principal principal) {
         UserDataDto userDataDto = userDataService.createUserData(createUserDataDto, principal);
         return new ResponseEntity<>(userDataDto, HttpStatus.CREATED);
     }
 
-    @PutMapping("my")
+    @PutMapping
     public ResponseEntity<UserDataDto> updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto,
-                                                          Principal principal) {
+                                                            Principal principal) {
         UserDataDto userData = userDataService.updateUserData(updateUserDataDto, principal);
         return ResponseEntity.ok(userData);
     }
 
-    @DeleteMapping("my")
+    @DeleteMapping
     public ResponseEntity<Void> deleteUserDataByUser(Principal principal) {
         userDataService.deleteUserDataByUser(principal);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("my")
-    public ResponseEntity<UserDataDto> getUserDataByUserId(Principal principal) {
+    public ResponseEntity<UserDataDto> getUserDataByUser(Principal principal) {
         UserDataDto userData = userDataService.getUserDataByUser(principal);
         return ResponseEntity.ok(userData);
     }
@@ -78,10 +76,5 @@ public class UserDataController {
         HttpHeaders headers = PaginationUtil.createPaginationHeaders(userDataPage);
 
         return new ResponseEntity<>(userDataPage, headers, HttpStatus.OK);
-    }
-
-    @ExceptionHandler(value = {UserNotCompletedRegistrationException.class, NoSpacesuitDataException.class})
-    public ResponseEntity<?> handleIncorrectRequestExceptions(RuntimeException ex) {
-        return ResponseEntity.badRequest().body("Incorrect request: " + ex);
     }
 }

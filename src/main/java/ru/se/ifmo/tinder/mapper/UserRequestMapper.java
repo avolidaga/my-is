@@ -7,7 +7,7 @@ public class UserRequestMapper {
 
     public static UserRequestDto toUserRequestDto(UserRequest userRequest) {
         return UserRequestDto.builder()
-                .userSpacesuitData(SpacesuitDataMapper.toSpacesuitDataDto(userRequest.getUserSpacesuitData()))
+                .userSpacesuitData(SpacesuitDataMapper.toSpacesuitDataDto(userRequest.getSpacesuitData()))
                 .userRequestId(userRequest.getUserRequestId())
                 .status(userRequest.getStatus())
                 .createdAt(userRequest.getCreatedAt())

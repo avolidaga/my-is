@@ -1,16 +1,16 @@
 package ru.se.ifmo.tinder.mapper;
 
 import ru.se.ifmo.tinder.dto.spacesuit_data.CreateSpacesuitDataDto;
-import ru.se.ifmo.tinder.dto.spacesuit_data.UserSpacesuitDataDto;
+import ru.se.ifmo.tinder.dto.spacesuit_data.UpdateSpacesuitDataDto;
+import ru.se.ifmo.tinder.dto.spacesuit_data.SpacesuitDataDto;
 import ru.se.ifmo.tinder.model.FabricTexture;
-import ru.se.ifmo.tinder.model.UserSpacesuitData;
-import ru.se.ifmo.tinder.model.enums.RequestStatus;
+import ru.se.ifmo.tinder.model.SpacesuitData;
 
 import java.time.LocalDateTime;
 
 public class SpacesuitDataMapper {
-    public static UserSpacesuitData toEntitySpacesuitData(CreateSpacesuitDataDto dto, FabricTexture fabricTexture) {
-        return UserSpacesuitData.builder()
+    public static SpacesuitData toEntitySpacesuitData(CreateSpacesuitDataDto dto, FabricTexture fabricTexture) {
+        return SpacesuitData.builder()
                 .head(dto.getHead())
                 .chest(dto.getChest())
                 .waist(dto.getWaist())
@@ -18,13 +18,27 @@ public class SpacesuitDataMapper {
                 .footSize(dto.getFootSize())
                 .height(dto.getHeight())
                 .fabricTexture(fabricTexture)
-                .status(RequestStatus.NEW)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
 
-    public static UserSpacesuitDataDto toSpacesuitDataDto(UserSpacesuitData entity) {
-        return UserSpacesuitDataDto.builder()
+    public static SpacesuitData toEntitySpacesuitData(UpdateSpacesuitDataDto dto, SpacesuitData spacesuitData, FabricTexture fabricTexture) {
+        return SpacesuitData.builder()
+                .id(spacesuitData.getId())
+                .head(dto.getHead())
+                .chest(dto.getChest())
+                .waist(dto.getWaist())
+                .hips(dto.getHips())
+                .footSize(dto.getFootSize())
+                .height(dto.getHeight())
+                .fabricTexture(fabricTexture)
+                .createdAt(spacesuitData.getCreatedAt())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static SpacesuitDataDto toSpacesuitDataDto(SpacesuitData entity) {
+        return SpacesuitDataDto.builder()
                 .head(entity.getHead())
                 .chest(entity.getChest())
                 .waist(entity.getWaist())
@@ -32,7 +46,6 @@ public class SpacesuitDataMapper {
                 .footSize(entity.getFootSize())
                 .height(entity.getHeight())
                 .fabricTextureDto(FabricTextureMapper.toDtoFabricTexture(entity.getFabricTexture()))
-                .status(entity.getStatus())
                 .id(entity.getId())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())

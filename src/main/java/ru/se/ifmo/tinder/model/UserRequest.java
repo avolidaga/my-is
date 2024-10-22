@@ -27,7 +27,7 @@ public class UserRequest {
 
     @ManyToOne
     @JoinColumn(name = "user_spacesuit_data_id")
-    private UserSpacesuitData userSpacesuitData;
+    private SpacesuitData spacesuitData;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

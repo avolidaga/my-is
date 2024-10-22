@@ -10,8 +10,7 @@ import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 @RequiredArgsConstructor
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
-    private final
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) {

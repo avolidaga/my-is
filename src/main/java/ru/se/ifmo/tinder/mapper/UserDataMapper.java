@@ -24,7 +24,7 @@ public class UserDataMapper {
                 .build();
     }
 
-    public static UserData toEntityUserData(UpdateUserDataDto updateUserDataDto, Set<Location> locations, LocalDateTime createdAt) {
+    public static UserData toEntityUserData(UpdateUserDataDto updateUserDataDto, Set<Location> locations, UserData userData) {
         return UserData.builder()
                 .id(updateUserDataDto.getId())
                 .birthDate(updateUserDataDto.getBirthDate())
@@ -35,8 +35,9 @@ public class UserDataMapper {
                 .firstname(updateUserDataDto.getFirstname())
                 .lastname(updateUserDataDto.getLastname())
                 .locations(locations)
-                .createdAt(createdAt)
+                .createdAt(userData.getCreatedAt())
                 .updatedAt(LocalDateTime.now())
+                .ownerUser(userData.getOwnerUser())
                 .build();
     }
 

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class UserSpacesuitDataDto {
+public class SpacesuitDataDto {
 
     @NotNull
     private Long id;

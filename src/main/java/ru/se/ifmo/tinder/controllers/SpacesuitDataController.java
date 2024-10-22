@@ -12,14 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.se.ifmo.tinder.dto.spacesuit_data.CreateSpacesuitDataDto;
-import ru.se.ifmo.tinder.dto.spacesuit_data.UserSpacesuitDataDto;
+import ru.se.ifmo.tinder.dto.spacesuit_data.UpdateSpacesuitDataDto;
+import ru.se.ifmo.tinder.dto.spacesuit_data.SpacesuitDataDto;
 import ru.se.ifmo.tinder.dto.user_request.UserRequestDto;
-import ru.se.ifmo.tinder.service.UserSpacesuitDataService;
+import ru.se.ifmo.tinder.service.SpacesuitDataService;
 import ru.se.ifmo.tinder.service.exceptions.NoSpacesuitDataException;
-import ru.se.ifmo.tinder.service.exceptions.UserNotCompletedRegistrationException;
 
 import java.security.Principal;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -27,27 +26,47 @@ import java.security.Principal;
 @SecurityRequirement(name = "basicAuth")
 public class SpacesuitDataController {
 
-    private final UserSpacesuitDataService userSpacesuitDataService;
+    private final SpacesuitDataService spacesuitDataService;
 
-    // TODO дописать возможность обновить/удалить spacesuit data
-    @PostMapping("my")
-    public ResponseEntity<UserRequestDto> createSpacesuitData(@Valid @RequestBody CreateSpacesuitDataDto spacesuitDataDto,
-                                                              Principal principal) {
-        UserRequestDto userRequestDto = userSpacesuitDataService.createUserSpacesuitData(spacesuitDataDto, principal);
+    @PostMapping
+    public ResponseEntity<UserRequestDto> createUserSpacesuitData(@Valid @RequestBody CreateSpacesuitDataDto dto,
+                                                                  Principal principal) {
+        UserRequestDto userRequestDto = spacesuitDataService.createSpacesuitData(dto, principal);
         return new ResponseEntity<>(userRequestDto, HttpStatus.CREATED);
     }
 
+    @PutMapping("{spacesuitDataId}")
+    public ResponseEntity<SpacesuitDataDto> updateSpacesuitDataById(@Valid @RequestBody UpdateSpacesuitDataDto dto,
+                                                                    Principal principal) {
+        SpacesuitDataDto spacesuitDataDto = spacesuitDataService.updateSpacesuitData(dto, principal);
+        return ResponseEntity.ok(spacesuitDataDto);
+    }
+
+    @DeleteMapping("{spacesuitDataId}")
+    public ResponseEntity<Void> deleteSpacesuitDataById(@PathVariable Long spacesuitDataId,
+                                                        Principal principal) {
+        spacesuitDataService.deleteSpacesuitData(spacesuitDataId, principal);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("{spacesuitDataId}")
+    public ResponseEntity<SpacesuitDataDto> getSpacesuitDataById(@PathVariable Long spacesuitDataId,
+                                                                 Principal principal) {
+        SpacesuitDataDto spacesuitDataDto = spacesuitDataService.getSpacesuitData(spacesuitDataId, principal);
+        return ResponseEntity.ok(spacesuitDataDto);
+    }
+
     @GetMapping("my")
-    public ResponseEntity<Page<UserSpacesuitDataDto>> getCurrentUserSpacesuitData(Principal principal,
-                                                                                  @RequestParam int page,
-                                                                                  @RequestParam @Min(1) @Max(50) int size) {
+    public ResponseEntity<Page<SpacesuitDataDto>> getCurrUserSpacesuitData(Principal principal,
+                                                                           @RequestParam int page,
+                                                                           @RequestParam @Min(1) @Max(50) int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<UserSpacesuitDataDto> spacesuitDataPage = userSpacesuitDataService.getCurrentUserSpacesuitData(principal, pageable);
+        Page<SpacesuitDataDto> spacesuitDataPage = spacesuitDataService.getCurrentUserSpacesuitData(principal, pageable);
         return ResponseEntity.ok(spacesuitDataPage);
     }
 
-    @ExceptionHandler(value = {UserNotCompletedRegistrationException.class, NoSpacesuitDataException.class})
+    @ExceptionHandler(value = {NoSpacesuitDataException.class})
     public ResponseEntity<?> handleIncorrectRequestExceptions(RuntimeException ex) {
-        return ResponseEntity.badRequest().body("Incorrect request: " + ex);
+        return ResponseEntity.badRequest().body("Incorrect request: " + ex.getMessage());
     }
 }

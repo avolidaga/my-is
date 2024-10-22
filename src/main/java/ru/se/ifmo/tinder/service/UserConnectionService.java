@@ -8,9 +8,7 @@ import ru.se.ifmo.tinder.mapper.UserConnectionMapper;
 import ru.se.ifmo.tinder.model.User;
 import ru.se.ifmo.tinder.model.UserConnection;
 import ru.se.ifmo.tinder.repository.UserConnectionRepository;
-import ru.se.ifmo.tinder.repository.UserRepository;
 import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
-import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -20,18 +18,13 @@ import java.util.*;
 @Service
 public class UserConnectionService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final UserConnectionRepository userConnectionRepository;
 
     @Transactional
     public UserConnectionDto createConnection(Principal principal, Long userDataId) {
-        String username = principal.getName();
-        User user1 = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
-
-        User user2 = userRepository.findUserByUserDataId(userDataId)
-                .orElseThrow(() -> new NoEntityWithSuchIdException("User", "User data", userDataId));
-
+        User user1 = userService.getUserByUsername(principal.getName());
+        User user2 = userService.getUserByUserDataId(userDataId);
 
         UserConnection userConnection = userConnectionRepository.save(UserConnection.builder()
                 .user1(user1)
@@ -42,9 +35,7 @@ public class UserConnectionService {
     }
 
     public List<UserConnectionDto> getConnections(Principal principal) {
-        String username = principal.getName();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
+        User user = userService.getUserByUsername(principal.getName());
         Set<UserConnectionDto> userConnections = new HashSet<>();
 
         for (UserConnection connection : userConnectionRepository.findAll()) {
@@ -58,14 +49,12 @@ public class UserConnectionService {
     }
 
     public UserConnectionDto getUserConnectionById(Long connectionId, Principal principal) {
-        String username = principal.getName();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
+        User user = userService.getUserByUsername(principal.getName());
         UserConnection userConnection = userConnectionRepository.findById(connectionId)
                 .orElseThrow(() -> new NoEntityWithSuchIdException("Connection", connectionId));
 
         if (!userConnection.getUser1().getId().equals(user.getId()) && !userConnection.getUser2().getId().equals(user.getId())) {
-            throw new IllegalArgumentException(); // TODO кастомную ошибку или сообщение подробное
+            throw new IllegalArgumentException("User don't have enough rights for connection getting");
         }
         return UserConnectionMapper.toDtoUserConnection(userConnection);
     }

@@ -5,10 +5,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 import ru.se.ifmo.tinder.model.Roles;
-import ru.se.ifmo.tinder.model.UserData;
-import ru.se.ifmo.tinder.model.UserSpacesuitData;
-
-import java.util.Set;
 
 @Data
 @Builder

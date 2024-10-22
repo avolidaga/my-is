@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.se.ifmo.tinder.dto.spacesuit_data.UserSpacesuitDataDto;
+import ru.se.ifmo.tinder.dto.spacesuit_data.SpacesuitDataDto;
 import ru.se.ifmo.tinder.model.enums.RequestStatus;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class UserRequestDto {
     private Long userRequestId;
 
     @NotNull
-    private UserSpacesuitDataDto userSpacesuitData;
+    private SpacesuitDataDto userSpacesuitData;
 
     @NotNull
     private RequestStatus status;
