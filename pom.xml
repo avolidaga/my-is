@@ -11,8 +11,16 @@
     <groupId>ru.se.ifmo</groupId>
     <artifactId>tinder</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>tinder</name>
     <description>Spring Boot Tinder project</description>
+    <modules>
+        <module>auth-service</module>
+        <module>user-data-service</module>
+        <module>spacesuit-service</module>
+        <module>location-service</module>
+        <module>fabric-texture-service</module>
+    </modules>
     <properties>
         <java.version>17</java.version>
     </properties>
