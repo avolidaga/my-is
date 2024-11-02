@@ -12,7 +12,5 @@ import java.util.List;
 
 @Repository
 public interface SpacesuitDataRepository extends JpaRepository<SpacesuitData, Long> {
-    @Query(value = "SELECT * FROM user_spacesuit_data WHERE user_spacesuit_data_id IN (:idList)", nativeQuery = true)
-    Page<SpacesuitData> getListAllByUserSpacesuitDataIdIn(@Param("idList") List<Long> idList, Pageable pageable);
     Page<SpacesuitData> findAllUserSpacesuitDataByOwnerUserId(Long userId, Pageable pageable);
 }

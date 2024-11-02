@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.se.ifmo.tinder.dto.user_data.CreateUserDataDto;
 import ru.se.ifmo.tinder.dto.user_data.UpdateUserDataDto;
@@ -34,7 +35,7 @@ public class UserDataController {
     }
 
     @PutMapping("my")
-    public ResponseEntity<UserDataDto> updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto,
+    public ResponseEntity updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto,
                                                             Principal principal) {
         UserDataDto userData = userDataService.updateUserData(updateUserDataDto, principal);
         return ResponseEntity.ok(userData);
