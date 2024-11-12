@@ -1,8 +1,9 @@
 package ru.se.info.tinder.mapper;
 
-import ru.se.ifmo.tinder.dto.fabric_texture.RequestFabricTextureDto;
-import ru.se.ifmo.tinder.dto.fabric_texture.FabricTextureDto;
-import ru.se.ifmo.tinder.model.FabricTexture;
+
+import ru.se.info.tinder.dto.FabricTextureDto;
+import ru.se.info.tinder.dto.RequestFabricTextureDto;
+import ru.se.info.tinder.model.FabricTexture;
 
 public class FabricTextureMapper {
     public static FabricTexture toEntityFabricTexture(RequestFabricTextureDto requestFabricTextureDto) {

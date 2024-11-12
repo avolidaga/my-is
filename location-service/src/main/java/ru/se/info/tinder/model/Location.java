@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.Set;
-
 @Entity
 @Table(name = "location")
 @Data
@@ -23,8 +21,4 @@ public class Location {
     private String name;
     private String description;
     private Double temperature;
-
-    @EqualsAndHashCode.Exclude
-    @ManyToMany(mappedBy = "locations")
-    Set<UserData> userData;
 }

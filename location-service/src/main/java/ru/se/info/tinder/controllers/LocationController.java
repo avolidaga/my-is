@@ -1,6 +1,5 @@
 package ru.se.info.tinder.controllers;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -12,14 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.se.ifmo.tinder.dto.location.RequestLocationDto;
-import ru.se.ifmo.tinder.dto.location.LocationDto;
-import ru.se.ifmo.tinder.service.LocationService;
+import ru.se.info.tinder.dto.LocationDto;
+import ru.se.info.tinder.dto.RequestLocationDto;
+import ru.se.info.tinder.service.LocationService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/locations")
-@SecurityRequirement(name = "basicAuth")
 public class LocationController {
 
     private final LocationService locationService;

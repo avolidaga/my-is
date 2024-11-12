@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.se.ifmo.tinder.dto.location.RequestLocationDto;
-import ru.se.ifmo.tinder.dto.location.LocationDto;
-import ru.se.ifmo.tinder.mapper.LocationMapper;
-import ru.se.ifmo.tinder.model.Location;
-import ru.se.ifmo.tinder.repository.LocationRepository;
-import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
+import ru.se.info.tinder.dto.LocationDto;
+import ru.se.info.tinder.dto.RequestLocationDto;
+import ru.se.info.tinder.mapper.LocationMapper;
+import ru.se.info.tinder.model.Location;
+import ru.se.info.tinder.repository.LocationRepository;
+import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 
 import java.util.List;
 import java.util.stream.Collectors;

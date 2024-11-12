@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.se.ifmo.tinder.dto.fabric_texture.RequestFabricTextureDto;
-import ru.se.ifmo.tinder.dto.fabric_texture.FabricTextureDto;
-import ru.se.ifmo.tinder.mapper.FabricTextureMapper;
-import ru.se.ifmo.tinder.model.FabricTexture;
-import ru.se.ifmo.tinder.repository.FabricTextureRepository;
-import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
+import ru.se.info.tinder.dto.FabricTextureDto;
+import ru.se.info.tinder.dto.RequestFabricTextureDto;
+import ru.se.info.tinder.mapper.FabricTextureMapper;
+import ru.se.info.tinder.model.FabricTexture;
+import ru.se.info.tinder.repository.FabricTextureRepository;
+import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 
 @RequiredArgsConstructor
 @Service

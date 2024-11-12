@@ -1,6 +1,5 @@
 package ru.se.info.tinder.controllers;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -12,14 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.se.ifmo.tinder.dto.fabric_texture.RequestFabricTextureDto;
-import ru.se.ifmo.tinder.dto.fabric_texture.FabricTextureDto;
-import ru.se.ifmo.tinder.service.FabricTextureService;
+import ru.se.info.tinder.dto.FabricTextureDto;
+import ru.se.info.tinder.dto.RequestFabricTextureDto;
+import ru.se.info.tinder.service.FabricTextureService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/fabric-textures")
-@SecurityRequirement(name = "basicAuth")
 public class FabricTextureController {
 
     private final FabricTextureService fabricTextureService;
@@ -51,7 +49,7 @@ public class FabricTextureController {
 
     @GetMapping
     public ResponseEntity<Page<FabricTextureDto>> getAllFabricTexture(@RequestParam int page,
-                                                                 @RequestParam @Min(1) @Max(50) int size) {
+                                                                      @RequestParam @Min(1) @Max(50) int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<FabricTextureDto> fabricTexturePage = fabricTextureService.getAllFabricTexture(pageable);
         return ResponseEntity.ok(fabricTexturePage);

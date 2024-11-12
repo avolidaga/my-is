@@ -26,10 +26,10 @@ services:
     image: liquibase/liquibase:4.29.2
     container_name: liquibase
     depends_on:
-       database:
-          condition: service_healthy
+      database:
+        condition: service_healthy
     volumes:
-      - ./src/main/resources/db/changelog/:/liquibase/db/changelog/
+      - ./db/changelog/:/liquibase/db/changelog/
     command: [
       /liquibase/liquibase,
       --username=postgres,
@@ -41,14 +41,54 @@ services:
     ]
     environment:
       - LIQUIBASE_SECURE_PARSING=false
-  app:
-    image: 'tinder.jar'
+
+  config-service:
+    image: config-service:latest
+    container_name: config-service
+    build:
+      context: ./config-service
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8888:8888"
     depends_on:
       - database
       - liquibase
-    env_file:
-      - .env
+    restart: on-failure
+
+  eureka-service:
+    image: eureka-service:latest
+    container_name: eureka-service
+    build:
+      context: ./eureka-service
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    depends_on:
+      - config-service
+    restart: on-failure
+
+  location-service:
+    image: location-service:latest
+    container_name: location-service
+    build:
+      context: ./location-service
+      dockerfile: Dockerfile
+    ports:
+      - "8180:8180"
+    depends_on:
+      - eureka-service
+    restart: on-failure
+
+  fabric-texture-service:
+    image: fabric-texture-service:latest
+    container_name: fabric-texture-service
+    build:
+      context: ./fabric-texture-service
+      dockerfile: Dockerfile
+    ports:
+      - "8181:8181"
+    depends_on:
+      - eureka-service
+    restart: on-failure
 volumes:
   postgres:
