@@ -1,7 +1,7 @@
 package ru.se.info.tinder.mapper;
 
-import ru.se.ifmo.tinder.dto.user_connection.UserConnectionDto;
-import ru.se.ifmo.tinder.model.UserConnection;
+import ru.se.info.tinder.dto.UserConnectionDto;
+import ru.se.info.tinder.model.UserConnection;
 
 public class UserConnectionMapper {
     public static UserConnectionDto toDtoUserConnection(UserConnection userConnection) {

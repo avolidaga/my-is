@@ -8,9 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
-import ru.se.ifmo.tinder.service.exceptions.UserNotCompletedRegistrationException;
-import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
+import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
+import ru.se.info.tinder.service.exception.UserNotCompletedRegistrationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +27,7 @@ public class ExceptionHandlerController {
         return errors;
     }
 
-    @ExceptionHandler(value = {NoEntityWithSuchIdException.class, UserNotFoundException.class, UserNotCompletedRegistrationException.class})
+    @ExceptionHandler(value = {NoEntityWithSuchIdException.class, UserNotCompletedRegistrationException.class})
     public ResponseEntity<?> handleNoSuchEntityExceptions(RuntimeException ex) {
         log.error("Incorrect request: {}", ex.getMessage());
         return ResponseEntity.badRequest().body("Incorrect request: " + ex.getMessage());

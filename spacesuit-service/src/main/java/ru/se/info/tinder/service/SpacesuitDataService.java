@@ -31,7 +31,8 @@ public class SpacesuitDataService {
 
     @Transactional
     public UserRequestDto createSpacesuitData(CreateSpacesuitDataDto createSpacesuitDataDto) {
-        // User user = userService.getUserByUsername(principal.getName()); TODO брать из токена username или еще как-то - продумать аутентификацию
+        // User user = userService.getUserByUsername(principal.getName());
+        // TODO брать из токена username или еще как-то - продумать аутентификацию + настроить feign client на получение User
         User user = null; // пока как заглушка
 
         Long fabricTextureId = createSpacesuitDataDto.getFabricTextureId();
@@ -50,7 +51,8 @@ public class SpacesuitDataService {
     }
 
     public Page<SpacesuitDataDto> getCurrentUserSpacesuitData(Pageable pageable) {
-        //User user = userService.getUserByUsername(principal.getName()); TODO брать из токена username или еще как-то - продумать аутентификацию
+        //User user = userService.getUserByUsername(principal.getName());
+        // TODO брать из токена username или еще как-то - продумать аутентификацию + настроить feign client на получение User
         User user = null; // пока как заглушка
         Page<SpacesuitData> userSpacesuitDataPage = spacesuitDataRepository
                 .findAllUserSpacesuitDataByOwnerUserId(user.getId(), pageable);
@@ -58,7 +60,8 @@ public class SpacesuitDataService {
     }
 
     public void deleteSpacesuitData(Long spacesuitDataId) {
-        // User user = userService.getUserByUsername(principal.getName()); TODO брать из токена username или еще как-то - продумать аутентификацию
+        // User user = userService.getUserByUsername(principal.getName());
+        // TODO брать из токена username или еще как-то - продумать аутентификацию + настроить feign client на получение User
         User user = null; // пока как заглушка
         SpacesuitData spacesuitData = spacesuitDataRepository.findById(spacesuitDataId)
                 .orElseThrow(() -> new NoEntityWithSuchIdException("Spacesuit data", spacesuitDataId));
@@ -69,7 +72,8 @@ public class SpacesuitDataService {
     }
 
     public SpacesuitDataDto updateSpacesuitData(UpdateSpacesuitDataDto spacesuitDataDto) {
-        // User user = userService.getUserByUsername(principal.getName()); TODO брать из токена username или еще как-то - продумать аутентификацию
+        // User user = userService.getUserByUsername(principal.getName());
+        // TODO брать из токена username или еще как-то - продумать аутентификацию + настроить feign client на получение User
         User user = null; // пока как заглушка
         SpacesuitData oldSpacesuitData = spacesuitDataRepository.findById(spacesuitDataDto.getId())
                 .orElseThrow(() -> new NoEntityWithSuchIdException("User spacesuit data", spacesuitDataDto.getId()));
@@ -88,7 +92,8 @@ public class SpacesuitDataService {
     }
 
     public SpacesuitDataDto getSpacesuitData(Long spacesuitDataId) {
-        //User user = userService.getUserByUsername(principal.getName()); TODO брать из токена username или еще как-то - продумать аутентификацию
+        //User user = userService.getUserByUsername(principal.getName());
+        // TODO брать из токена username или еще как-то - продумать аутентификацию + настроить feign client на получение User
         User user = null; // пока как заглушка
         SpacesuitData spacesuitData = spacesuitDataRepository.findById(spacesuitDataId)
                 .orElseThrow(() -> new NoEntityWithSuchIdException("User spacesuit data", spacesuitDataId));

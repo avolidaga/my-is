@@ -15,6 +15,8 @@ import ru.se.info.tinder.dto.LocationDto;
 import ru.se.info.tinder.dto.RequestLocationDto;
 import ru.se.info.tinder.service.LocationService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/locations")
@@ -45,6 +47,12 @@ public class LocationController {
     public ResponseEntity<LocationDto> getLocationById(@NotNull @PathVariable Long locationId) {
         LocationDto locationDto = locationService.getLocationDtoById(locationId);
         return ResponseEntity.ok(locationDto);
+    }
+
+    @GetMapping("list")
+    public ResponseEntity<List<LocationDto>> getLocationsByIds(@NotNull @RequestBody List<Long> locationIds) {
+        List<LocationDto> locationDtoList = locationService.getLocationsListByIds(locationIds);
+        return ResponseEntity.ok(locationDtoList);
     }
 
     @GetMapping

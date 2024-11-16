@@ -115,5 +115,17 @@ services:
       - eureka-service
     restart: on-failure
 
+  user-data-service:
+      image: user-data-service:latest
+      container_name: user-data-service
+      build:
+        context: ./user-data-service
+        dockerfile: Dockerfile
+      ports:
+        - "8184:8184"
+      depends_on:
+        - eureka-service
+      restart: on-failure
+
 volumes:
   postgres:

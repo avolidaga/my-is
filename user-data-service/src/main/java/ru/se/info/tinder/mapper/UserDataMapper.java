@@ -1,10 +1,10 @@
 package ru.se.info.tinder.mapper;
 
-import ru.se.ifmo.tinder.dto.user_data.CreateUserDataDto;
-import ru.se.ifmo.tinder.dto.user_data.UpdateUserDataDto;
-import ru.se.ifmo.tinder.dto.user_data.UserDataDto;
-import ru.se.ifmo.tinder.model.Location;
-import ru.se.ifmo.tinder.model.UserData;
+import ru.se.info.tinder.dto.CreateUserDataDto;
+import ru.se.info.tinder.dto.UpdateUserDataDto;
+import ru.se.info.tinder.dto.UserDataDto;
+import ru.se.info.tinder.model.Location;
+import ru.se.info.tinder.model.UserData;
 
 import java.time.LocalDateTime;
 import java.util.Set;

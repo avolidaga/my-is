@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.se.ifmo.tinder.dto.user_connection.UserConnectionDto;
-import ru.se.ifmo.tinder.service.UserConnectionService;
+import ru.se.info.tinder.dto.UserConnectionDto;
+import ru.se.info.tinder.service.UserConnectionService;
 
 import java.security.Principal;
 import java.util.List;
@@ -20,22 +20,20 @@ public class UserConnectionController {
     private final UserConnectionService userConnectionService;
 
     @PostMapping("new")
-    public ResponseEntity<UserConnectionDto> createConnection(@Valid @RequestParam Long userDataId,
-                                                              Principal principal) {
-        UserConnectionDto userConnectionDto = userConnectionService.createConnection(principal, userDataId);
+    public ResponseEntity<UserConnectionDto> createConnection(@Valid @RequestParam Long userDataId) {
+        UserConnectionDto userConnectionDto = userConnectionService.createConnection(userDataId);
         return ResponseEntity.ok(userConnectionDto);
     }
 
     @GetMapping("my")
-    public ResponseEntity<List<UserConnectionDto>> getUserConnections(Principal principal) {
-        List<UserConnectionDto> list = userConnectionService.getConnections(principal);
+    public ResponseEntity<List<UserConnectionDto>> getUserConnections() {
+        List<UserConnectionDto> list = userConnectionService.getConnections();
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("my/{connectionId}")
-    public ResponseEntity<UserConnectionDto> getUserConnectionById(@NotNull @PathVariable Long connectionId,
-                                                                   Principal principal) {
-        UserConnectionDto userConnectionById = userConnectionService.getUserConnectionById(connectionId, principal);
+    public ResponseEntity<UserConnectionDto> getUserConnectionById(@NotNull @PathVariable Long connectionId) {
+        UserConnectionDto userConnectionById = userConnectionService.getUserConnectionById(connectionId);
         return ResponseEntity.ok(userConnectionById);
     }
 }

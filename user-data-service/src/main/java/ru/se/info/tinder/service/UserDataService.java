@@ -5,50 +5,57 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.se.ifmo.tinder.dto.user_data.CreateUserDataDto;
-import ru.se.ifmo.tinder.dto.user_data.UpdateUserDataDto;
-import ru.se.ifmo.tinder.dto.user_data.UserDataDto;
-import ru.se.ifmo.tinder.mapper.UserDataMapper;
-import ru.se.ifmo.tinder.model.Location;
-import ru.se.ifmo.tinder.model.User;
-import ru.se.ifmo.tinder.model.UserData;
-import ru.se.ifmo.tinder.repository.UserDataRepository;
-import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
-import ru.se.ifmo.tinder.service.exceptions.UserNotCompletedRegistrationException;
+import ru.se.info.tinder.dto.CreateUserDataDto;
+import ru.se.info.tinder.dto.UpdateUserDataDto;
+import ru.se.info.tinder.dto.UserDataDto;
+import ru.se.info.tinder.feign.LocationClient;
+import ru.se.info.tinder.mapper.LocationMapper;
+import ru.se.info.tinder.mapper.UserDataMapper;
+import ru.se.info.tinder.model.Location;
+import ru.se.info.tinder.model.User;
+import ru.se.info.tinder.model.UserData;
+import ru.se.info.tinder.repository.UserDataRepository;
+import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
+import ru.se.info.tinder.service.exception.UserNotCompletedRegistrationException;
 
-import java.security.Principal;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class UserDataService {
     private final UserDataRepository userDataRepository;
-    private final UserService userService;
-    private final LocationService locationService;
-
+    private final LocationClient locationService;
 
     @Transactional
-    public UserDataDto createUserData(CreateUserDataDto createUserDataDto, Principal principal) {
-        User user = userService.getUserByUsername(principal.getName());
+    public UserDataDto createUserData(CreateUserDataDto createUserDataDto) {
+        //User user = userService.getUserByUsername(principal.getName());
+        //       TODO как-то брать из токена юзернэйм + настроить feign client на получение User
+        User user = null; // заглушка
 
-        Set<Location> locations = new HashSet<>(locationService.getLocationsByIds(createUserDataDto.getLocations()));
+        Set<Location> locations = new HashSet<>(locationService.getLocationsByIds(createUserDataDto.getLocations())
+                .getBody().stream()
+                .map(LocationMapper::toEntityLocation)
+                .collect(Collectors.toList()));
 
         UserData userData = UserDataMapper.toEntityUserData(createUserDataDto, locations);
         userData.setOwnerUser(user);
         UserData savedUserData = userDataRepository.save(userData);
 
         user.setUserData(savedUserData);
-        userService.saveUser(user);
+        // userService.saveUser(user);
 
         return UserDataMapper.toUserDataDto(savedUserData);
     }
 
-    public Page<UserDataDto> getAllUsersData(Principal principal, Pageable pageable) {
-        User user = userService.getUserByUsername(principal.getName());
+    public Page<UserDataDto> getAllUsersData(Pageable pageable) {
+        //User user = userService.getUserByUsername(principal.getName());
+        //       TODO как-то брать из токена юзернэйм + настроить feign client на получение User
+        User user = null; // заглушка
         Long userDataId = Optional.ofNullable(user.getUserData())
-                .orElseThrow(() -> new UserNotCompletedRegistrationException(principal.getName()))
+                .orElseThrow(() -> new UserNotCompletedRegistrationException(user.getUsername()))
                 .getId();
         return userDataRepository.findAllUserDataExcludingUserId(userDataId, pageable)
                 .map(UserDataMapper::toUserDataDto);
@@ -60,10 +67,15 @@ public class UserDataService {
     }
 
     @Transactional
-    public UserDataDto updateUserData(UpdateUserDataDto updateUserDataDto, Principal principal) {
-        User user = userService.getUserByUsername(principal.getName());
+    public UserDataDto updateUserData(UpdateUserDataDto updateUserDataDto) {
+        //User user = userService.getUserByUsername(principal.getName());
+        //       TODO как-то брать из токена юзернэйм + настроить feign client на получение User
+        User user = null; // заглушка
 
-        Set<Location> locations = new HashSet<>(locationService.getLocationsByIds(updateUserDataDto.getLocations()));
+        Set<Location> locations = new HashSet<>(locationService.getLocationsByIds(updateUserDataDto.getLocations())
+                .getBody().stream()
+                .map(LocationMapper::toEntityLocation)
+                .collect(Collectors.toList()));
         UserData oldUserData = userDataRepository.findById(updateUserDataDto.getId())
                 .orElseThrow(() -> new NoEntityWithSuchIdException("UserData", updateUserDataDto.getId()));
         if (!oldUserData.getOwnerUser().getId().equals(user.getId())) {
@@ -74,18 +86,24 @@ public class UserDataService {
         return UserDataMapper.toUserDataDto(savedUserData);
     }
 
-    public UserDataDto getUserDataByUser(Principal principal) {
-        User user = userService.getUserByUsername(principal.getName());
+    public UserDataDto getUserDataByUser() {
+        //User user = userService.getUserByUsername(principal.getName());
+        //       TODO как-то брать из токена юзернэйм + настроить feign client на получение User
+        User user = null; // заглушка
+
         UserData userData = Optional.ofNullable(user.getUserData())
-                .orElseThrow(() -> new UserNotCompletedRegistrationException(principal.getName()));
+                .orElseThrow(() -> new UserNotCompletedRegistrationException(user.getUsername()));
         return UserDataMapper.toUserDataDto(userData);
     }
 
     @Transactional
-    public void deleteUserDataByUser(Principal principal) {
-        User user = userService.getUserByUsername(principal.getName());
+    public void deleteUserDataByUser() {
+        //User user = userService.getUserByUsername(principal.getName());
+        //       TODO как-то брать из токена юзернэйм + настроить feign client на получение User
+        User user = null; // заглушка
+
         UserData userData = Optional.ofNullable(user.getUserData())
-                .orElseThrow(() -> new UserNotCompletedRegistrationException(principal.getName()));
+                .orElseThrow(() -> new UserNotCompletedRegistrationException(user.getUsername()));
         userDataRepository.delete(userData);
     }
 }

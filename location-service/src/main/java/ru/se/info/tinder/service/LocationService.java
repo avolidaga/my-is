@@ -21,7 +21,7 @@ public class LocationService {
     private final LocationRepository locationRepository;
 
     public LocationDto createLocation(RequestLocationDto dto) {
-        Location savedLocation = locationRepository.save( LocationMapper.toEntityLocation(dto));
+        Location savedLocation = locationRepository.save(LocationMapper.toEntityLocation(dto));
         return LocationMapper.toDtoLocation(savedLocation);
     }
 
@@ -52,6 +52,12 @@ public class LocationService {
 
     protected List<Location> getLocationsByIds(List<Long> ids) {
         return ids.stream().map(this::getLocationById)
+                .collect(Collectors.toList());
+    }
+
+    public List<LocationDto> getLocationsListByIds(List<Long> locationIds) {
+        return getLocationsByIds(locationIds).stream()
+                .map(LocationMapper::toDtoLocation)
                 .collect(Collectors.toList());
     }
 }

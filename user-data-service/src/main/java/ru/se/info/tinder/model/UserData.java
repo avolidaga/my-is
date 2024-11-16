@@ -2,7 +2,7 @@ package ru.se.info.tinder.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.se.ifmo.tinder.model.enums.Sex;
+import ru.se.info.tinder.model.enums.Sex;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,7 +38,7 @@ public class UserData {
             name = "user_data_location",
             joinColumns = @JoinColumn(name = "user_data_id"),
             inverseJoinColumns = @JoinColumn(name = "location_id"))
-    Set<ru.se.ifmo.tinder.model.Location> locations;
+    Set<Location> locations;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

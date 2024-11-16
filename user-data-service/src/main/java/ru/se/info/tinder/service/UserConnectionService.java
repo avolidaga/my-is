@@ -3,14 +3,13 @@ package ru.se.info.tinder.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.se.ifmo.tinder.dto.user_connection.UserConnectionDto;
-import ru.se.ifmo.tinder.mapper.UserConnectionMapper;
-import ru.se.ifmo.tinder.model.User;
-import ru.se.ifmo.tinder.model.UserConnection;
-import ru.se.ifmo.tinder.repository.UserConnectionRepository;
-import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
+import ru.se.info.tinder.dto.UserConnectionDto;
+import ru.se.info.tinder.mapper.UserConnectionMapper;
+import ru.se.info.tinder.model.User;
+import ru.se.info.tinder.model.UserConnection;
+import ru.se.info.tinder.repository.UserConnectionRepository;
+import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 
-import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -18,13 +17,15 @@ import java.util.*;
 @Service
 public class UserConnectionService {
 
-    private final UserService userService;
     private final UserConnectionRepository userConnectionRepository;
 
     @Transactional
-    public UserConnectionDto createConnection(Principal principal, Long userDataId) {
-        User user1 = userService.getUserByUsername(principal.getName());
-        User user2 = userService.getUserByUserDataId(userDataId);
+    public UserConnectionDto createConnection(Long userDataId) {
+//        User user1 = userService.getUserByUsername(principal.getName());
+//        User user2 = userService.getUserByUserDataId(userDataId);
+//        TODO как-то брать из токена юзернэйм + настроить feign client на получение User
+        User user1 = null;
+        User user2 = null; // ленивые заглушки
 
         UserConnection userConnection = userConnectionRepository.save(UserConnection.builder()
                 .user1(user1)
@@ -34,8 +35,10 @@ public class UserConnectionService {
         return UserConnectionMapper.toDtoUserConnection(userConnection);
     }
 
-    public List<UserConnectionDto> getConnections(Principal principal) {
-        User user = userService.getUserByUsername(principal.getName());
+    public List<UserConnectionDto> getConnections() {
+        // User user = userService.getUserByUsername(principal.getName());
+        //       TODO как-то брать из токена юзернэйм + настроить feign client на получение User
+        User user = null; // заглушка
         Set<UserConnectionDto> userConnections = new HashSet<>();
 
         for (UserConnection connection : userConnectionRepository.findAll()) {
@@ -48,8 +51,11 @@ public class UserConnectionService {
         return new ArrayList<>(userConnections);
     }
 
-    public UserConnectionDto getUserConnectionById(Long connectionId, Principal principal) {
-        User user = userService.getUserByUsername(principal.getName());
+    public UserConnectionDto getUserConnectionById(Long connectionId) {
+        //User user = userService.getUserByUsername(principal.getName());
+        //       TODO как-то брать из токена юзернэйм + настроить feign client на получение User
+        User user = null; // заглушка
+
         UserConnection userConnection = userConnectionRepository.findById(connectionId)
                 .orElseThrow(() -> new NoEntityWithSuchIdException("Connection", connectionId));
 
