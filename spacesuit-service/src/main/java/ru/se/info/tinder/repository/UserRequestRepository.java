@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import ru.se.ifmo.tinder.model.UserRequest;
+import ru.se.info.tinder.model.UserRequest;
 
 @Repository
 public interface UserRequestRepository extends JpaRepository<UserRequest, Long> {

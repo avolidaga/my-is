@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
-import ru.se.info.tinder.model.Sex;
+import ru.se.info.tinder.model.enums.Sex;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

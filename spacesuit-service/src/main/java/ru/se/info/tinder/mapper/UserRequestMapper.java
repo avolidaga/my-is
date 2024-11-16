@@ -1,7 +1,7 @@
 package ru.se.info.tinder.mapper;
 
-import ru.se.ifmo.tinder.dto.user_request.UserRequestDto;
-import ru.se.ifmo.tinder.model.UserRequest;
+import ru.se.info.tinder.dto.UserRequestDto;
+import ru.se.info.tinder.model.UserRequest;
 
 public class UserRequestMapper {
 

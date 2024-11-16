@@ -1,10 +1,10 @@
 package ru.se.info.tinder.mapper;
 
-import ru.se.ifmo.tinder.dto.spacesuit_data.CreateSpacesuitDataDto;
-import ru.se.ifmo.tinder.dto.spacesuit_data.UpdateSpacesuitDataDto;
-import ru.se.ifmo.tinder.dto.spacesuit_data.SpacesuitDataDto;
-import ru.se.ifmo.tinder.model.FabricTexture;
-import ru.se.ifmo.tinder.model.SpacesuitData;
+import ru.se.info.tinder.dto.CreateSpacesuitDataDto;
+import ru.se.info.tinder.dto.UpdateSpacesuitDataDto;
+import ru.se.info.tinder.dto.SpacesuitDataDto;
+import ru.se.info.tinder.model.FabricTexture;
+import ru.se.info.tinder.model.SpacesuitData;
 
 import java.time.LocalDateTime;
 

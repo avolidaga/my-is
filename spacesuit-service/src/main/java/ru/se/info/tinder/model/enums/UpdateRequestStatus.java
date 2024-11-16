@@ -1,4 +1,4 @@
-package ru.se.info.tinder.model;
+package ru.se.info.tinder.model.enums;
 
 import java.io.Serializable;
 

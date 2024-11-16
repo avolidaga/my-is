@@ -1,6 +1,5 @@
 package ru.se.info.tinder.controllers;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -12,15 +11,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import ru.se.ifmo.tinder.dto.user_request.UserRequestDto;
-import ru.se.ifmo.tinder.model.enums.SearchStatus;
-import ru.se.ifmo.tinder.model.enums.UpdateRequestStatus;
-import ru.se.ifmo.tinder.service.UserRequestService;
+import ru.se.info.tinder.dto.UserRequestDto;
+import ru.se.info.tinder.model.enums.SearchStatus;
+import ru.se.info.tinder.model.enums.UpdateRequestStatus;
+import ru.se.info.tinder.service.UserRequestService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user-requests")
-@SecurityRequirement(name = "basicAuth")
 @Slf4j
 public class UserRequestController {
     private final UserRequestService userRequestService;

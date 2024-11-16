@@ -5,15 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.se.ifmo.tinder.dto.user_request.UserRequestDto;
-import ru.se.ifmo.tinder.mapper.UserRequestMapper;
-import ru.se.ifmo.tinder.model.UserRequest;
-import ru.se.ifmo.tinder.model.SpacesuitData;
-import ru.se.ifmo.tinder.model.enums.SearchStatus;
-import ru.se.ifmo.tinder.model.enums.RequestStatus;
-import ru.se.ifmo.tinder.model.enums.UpdateRequestStatus;
-import ru.se.ifmo.tinder.repository.UserRequestRepository;
-import ru.se.ifmo.tinder.service.exceptions.NoEntityWithSuchIdException;
+import ru.se.info.tinder.dto.UserRequestDto;
+import ru.se.info.tinder.mapper.UserRequestMapper;
+import ru.se.info.tinder.model.UserRequest;
+import ru.se.info.tinder.model.SpacesuitData;
+import ru.se.info.tinder.model.enums.SearchStatus;
+import ru.se.info.tinder.model.enums.RequestStatus;
+import ru.se.info.tinder.model.enums.UpdateRequestStatus;
+import ru.se.info.tinder.repository.UserRequestRepository;
+import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 
 import java.time.LocalDateTime;
 

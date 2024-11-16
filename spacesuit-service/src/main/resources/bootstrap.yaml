@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: spacesuit-service
+  cloud:
+    config:
+      fail-fast: true
+      uri: http://config-service:8888 # config server

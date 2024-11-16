@@ -7,8 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
-import ru.se.ifmo.tinder.dto.fabric_texture.FabricTextureDto;
-import ru.se.ifmo.tinder.model.enums.RequestStatus;
+import ru.se.info.tinder.model.enums.RequestStatus;
 
 import java.time.LocalDateTime;
 

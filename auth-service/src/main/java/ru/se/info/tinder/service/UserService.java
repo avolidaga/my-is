@@ -12,7 +12,7 @@ import ru.se.info.tinder.dto.UserDto;
 import ru.se.info.tinder.mapper.UserMapper;
 import ru.se.info.tinder.model.Roles;
 import ru.se.info.tinder.model.User;
-import ru.se.info.tinder.model.RoleName;
+import ru.se.info.tinder.model.enums.RoleName;
 import ru.se.info.tinder.repository.RoleRepository;
 import ru.se.info.tinder.repository.UserRepository;
 import ru.se.info.tinder.service.exceptions.NoEntityWithSuchIdException;

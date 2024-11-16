@@ -12,58 +12,51 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.se.ifmo.tinder.dto.spacesuit_data.CreateSpacesuitDataDto;
-import ru.se.ifmo.tinder.dto.spacesuit_data.UpdateSpacesuitDataDto;
-import ru.se.ifmo.tinder.dto.spacesuit_data.SpacesuitDataDto;
-import ru.se.ifmo.tinder.dto.user_request.UserRequestDto;
-import ru.se.ifmo.tinder.service.SpacesuitDataService;
-import ru.se.ifmo.tinder.service.exceptions.NoSpacesuitDataException;
+import ru.se.info.tinder.dto.CreateSpacesuitDataDto;
+import ru.se.info.tinder.dto.UpdateSpacesuitDataDto;
+import ru.se.info.tinder.dto.SpacesuitDataDto;
+import ru.se.info.tinder.dto.UserRequestDto;
+import ru.se.info.tinder.service.SpacesuitDataService;
+import ru.se.info.tinder.service.exception.NoSpacesuitDataException;
 
-import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/spacesuit-data")
-@SecurityRequirement(name = "basicAuth")
 @Slf4j
 public class SpacesuitDataController {
 
     private final SpacesuitDataService spacesuitDataService;
 
     @PostMapping("new")
-    public ResponseEntity<UserRequestDto> createUserSpacesuitData(@Valid @RequestBody CreateSpacesuitDataDto dto,
-                                                                  Principal principal) {
-        UserRequestDto userRequestDto = spacesuitDataService.createSpacesuitData(dto, principal);
+    public ResponseEntity<UserRequestDto> createUserSpacesuitData(@Valid @RequestBody CreateSpacesuitDataDto dto) {
+        UserRequestDto userRequestDto = spacesuitDataService.createSpacesuitData(dto);
         return new ResponseEntity<>(userRequestDto, HttpStatus.CREATED);
     }
 
     @PutMapping("{spacesuitDataId}")
-    public ResponseEntity<SpacesuitDataDto> updateSpacesuitDataById(@Valid @RequestBody UpdateSpacesuitDataDto dto,
-                                                                    Principal principal) {
-        SpacesuitDataDto spacesuitDataDto = spacesuitDataService.updateSpacesuitData(dto, principal);
+    public ResponseEntity<SpacesuitDataDto> updateSpacesuitDataById(@Valid @RequestBody UpdateSpacesuitDataDto dto) {
+        SpacesuitDataDto spacesuitDataDto = spacesuitDataService.updateSpacesuitData(dto);
         return ResponseEntity.ok(spacesuitDataDto);
     }
 
     @DeleteMapping("{spacesuitDataId}")
-    public ResponseEntity<Void> deleteSpacesuitDataById(@PathVariable Long spacesuitDataId,
-                                                        Principal principal) {
-        spacesuitDataService.deleteSpacesuitData(spacesuitDataId, principal);
+    public ResponseEntity<Void> deleteSpacesuitDataById(@PathVariable Long spacesuitDataId) {
+        spacesuitDataService.deleteSpacesuitData(spacesuitDataId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("{spacesuitDataId}")
-    public ResponseEntity<SpacesuitDataDto> getSpacesuitDataById(@PathVariable Long spacesuitDataId,
-                                                                 Principal principal) {
-        SpacesuitDataDto spacesuitDataDto = spacesuitDataService.getSpacesuitData(spacesuitDataId, principal);
+    public ResponseEntity<SpacesuitDataDto> getSpacesuitDataById(@PathVariable Long spacesuitDataId) {
+        SpacesuitDataDto spacesuitDataDto = spacesuitDataService.getSpacesuitData(spacesuitDataId);
         return ResponseEntity.ok(spacesuitDataDto);
     }
 
     @GetMapping("my")
-    public ResponseEntity<Page<SpacesuitDataDto>> getCurrUserSpacesuitData(Principal principal,
-                                                                           @RequestParam int page,
+    public ResponseEntity<Page<SpacesuitDataDto>> getCurrUserSpacesuitData(@RequestParam int page,
                                                                            @RequestParam @Min(1) @Max(50) int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<SpacesuitDataDto> spacesuitDataPage = spacesuitDataService.getCurrentUserSpacesuitData(principal, pageable);
+        Page<SpacesuitDataDto> spacesuitDataPage = spacesuitDataService.getCurrentUserSpacesuitData(pageable);
         return ResponseEntity.ok(spacesuitDataPage);
     }
 
