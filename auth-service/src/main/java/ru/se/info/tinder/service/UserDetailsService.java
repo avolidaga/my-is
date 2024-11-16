@@ -3,9 +3,9 @@ package ru.se.info.tinder.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import ru.se.ifmo.tinder.model.User;
-import ru.se.ifmo.tinder.repository.UserRepository;
-import ru.se.ifmo.tinder.service.exceptions.UserNotFoundException;
+import ru.se.info.tinder.model.User;
+import ru.se.info.tinder.repository.UserRepository;
+import ru.se.info.tinder.service.exceptions.UserNotFoundException;
 
 @RequiredArgsConstructor
 @Service

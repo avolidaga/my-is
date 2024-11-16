@@ -18,9 +18,6 @@ public class User {
     private String username;
     private String password;
 
-    @OneToMany(mappedBy = "ownerUser")
-    private Set<SpacesuitData> spacesuitDataSet;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_data_id", referencedColumnName = "user_data_id")
     private UserData userData;

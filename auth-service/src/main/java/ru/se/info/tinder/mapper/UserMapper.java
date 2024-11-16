@@ -1,9 +1,9 @@
 package ru.se.info.tinder.mapper;
 
-import ru.se.ifmo.tinder.dto.user.AuthUserDto;
-import ru.se.ifmo.tinder.dto.user.RequestUserDto;
-import ru.se.ifmo.tinder.dto.user.UserDto;
-import ru.se.ifmo.tinder.model.User;
+import ru.se.info.tinder.dto.AuthUserDto;
+import ru.se.info.tinder.dto.RequestUserDto;
+import ru.se.info.tinder.dto.UserDto;
+import ru.se.info.tinder.model.User;
 
 public class UserMapper {
     public static User toEntityUser(RequestUserDto requestUserDto) {
@@ -28,7 +28,6 @@ public class UserMapper {
                 .password(requestUserDto.getPassword())
                 .id(oldUser.getId())
                 .matchedUsers(oldUser.getMatchedUsers())
-                .spacesuitDataSet(oldUser.getSpacesuitDataSet())
                 .role(oldUser.getRole())
                 .userData(oldUser.getUserData())
                 .build();

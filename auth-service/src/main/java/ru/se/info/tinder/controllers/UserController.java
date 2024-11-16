@@ -7,10 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.se.ifmo.tinder.dto.user.AuthUserDto;
-import ru.se.ifmo.tinder.dto.user.RequestUserDto;
-import ru.se.ifmo.tinder.dto.user.UserDto;
-import ru.se.ifmo.tinder.service.UserService;
+import ru.se.info.tinder.dto.AuthUserDto;
+import ru.se.info.tinder.dto.RequestUserDto;
+import ru.se.info.tinder.dto.UserDto;
+import ru.se.info.tinder.service.UserService;
 
 import java.security.Principal;
 

@@ -90,5 +90,17 @@ services:
     depends_on:
       - eureka-service
     restart: on-failure
+
+  auth-service:
+    image: auth-service:latest
+    container_name: auth-service
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "8182:8182"
+    depends_on:
+      - eureka-service
+    restart: on-failure
 volumes:
   postgres:

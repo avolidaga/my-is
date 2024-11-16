@@ -2,7 +2,6 @@ package ru.se.info.tinder.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.se.ifmo.tinder.model.enums.RoleName;
 
 @Entity
 @Table(name = "roles")
