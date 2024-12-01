@@ -5,12 +5,9 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.se.info.tinder.dto.LocationDto;
 import ru.se.info.tinder.dto.RequestLocationDto;
 import ru.se.info.tinder.service.LocationService;
@@ -25,41 +22,36 @@ public class LocationController {
     private final LocationService locationService;
 
     @PostMapping("new")
-    public ResponseEntity<LocationDto> createLocation(@Valid @RequestBody RequestLocationDto dto) {
-        LocationDto locationDto = locationService.createLocation(dto);
-        return new ResponseEntity<>(locationDto, HttpStatus.CREATED);
+    public Mono<LocationDto> createLocation(@Valid @RequestBody RequestLocationDto dto) {
+        return locationService.createLocation(dto);
     }
 
     @PutMapping("{locationId}")
-    public ResponseEntity<LocationDto> updateLocation(@NotNull @PathVariable Long locationId,
-                                                      @Valid @RequestBody RequestLocationDto dto) {
-        LocationDto locationDto = locationService.updateLocationById(locationId, dto);
-        return ResponseEntity.ok(locationDto);
+    public Mono<LocationDto> updateLocation(@NotNull @PathVariable Long locationId,
+                                            @Valid @RequestBody RequestLocationDto dto) {
+        return locationService.updateLocationById(locationId, dto);
     }
 
     @DeleteMapping("{locationId}")
-    public ResponseEntity<Void> deleteLocationById(@NotNull @PathVariable Long locationId) {
-        locationService.deleteLocationById(locationId);
-        return ResponseEntity.ok().build();
+    public Mono<Void> deleteLocationById(@NotNull @PathVariable Long locationId) {
+        return locationService.deleteLocationById(locationId);
     }
 
     @GetMapping("{locationId}")
-    public ResponseEntity<LocationDto> getLocationById(@NotNull @PathVariable Long locationId) {
-        LocationDto locationDto = locationService.getLocationDtoById(locationId);
-        return ResponseEntity.ok(locationDto);
+    public Mono<LocationDto> getLocationById(@NotNull @PathVariable Long locationId) {
+        return locationService.getLocationDtoById(locationId);
     }
 
     @GetMapping("list")
-    public ResponseEntity<List<LocationDto>> getLocationsByIds(@NotNull @RequestBody List<Long> locationIds) {
-        List<LocationDto> locationDtoList = locationService.getLocationsListByIds(locationIds);
-        return ResponseEntity.ok(locationDtoList);
+    public Flux<LocationDto> getLocationsByIds(@NotNull @RequestBody List<Long> locationIds) {
+        return locationService.getLocationsListByIds(Flux.fromIterable(locationIds));
     }
 
     @GetMapping
-    public ResponseEntity<Page<LocationDto>> getAllLocations(@RequestParam int page,
-                                                             @RequestParam @Min(1) @Max(50) int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<LocationDto> locationDtoPage = locationService.getAllLocations(pageable);
-        return ResponseEntity.ok(locationDtoPage);
+    public Flux<LocationDto> getAllLocations(@RequestParam @Min(0) int page,
+                                             @RequestParam @Min(1) @Max(50) int size) {
+        return locationService.getAllLocations()
+                .skip((long) page * size)  // Пропускаем элементы для заданной страницы
+                .take(size);              // Ограничиваем количество возвращаемых элементов
     }
 }
