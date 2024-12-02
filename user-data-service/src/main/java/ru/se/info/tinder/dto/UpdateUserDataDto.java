@@ -15,10 +15,6 @@ import java.util.List;
 @Builder
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class UpdateUserDataDto {
-
-    @NotNull
-    private Long id;
-
     @NotNull(message = "Birth date must not be null")
     @Past(message = "Birth date must be in the past")
     @Age(min = 18, message = "User must be at least 18 years old")

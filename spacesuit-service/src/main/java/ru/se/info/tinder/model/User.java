@@ -18,10 +18,6 @@ public class User {
     private String username;
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_data_id", referencedColumnName = "user_data_id")
-    private UserData userData;
-
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Roles role;

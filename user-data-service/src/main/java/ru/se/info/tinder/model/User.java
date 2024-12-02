@@ -18,9 +18,9 @@ public class User {
     private String username;
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_data_id", referencedColumnName = "user_data_id")
-    private UserData userData;
+    @OneToOne(mappedBy = "ownerUser")
+    @EqualsAndHashCode.Exclude
+    private UserData userData; //TODO добавить сохранение пользователя + изменить бд
 
     @ManyToOne
     @JoinColumn(name = "role_id")

@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface SpacesuitDataRepository extends JpaRepository<SpacesuitData, Long> {
-    Page<SpacesuitData> findAllUserSpacesuitDataByOwnerUserId(Long userId, Pageable pageable);
+    Page<SpacesuitData> findAllUserSpacesuitDataByOwnerUserUsername(String username, Pageable pageable);
 }

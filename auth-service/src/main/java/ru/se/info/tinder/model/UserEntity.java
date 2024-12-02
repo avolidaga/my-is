@@ -11,15 +11,15 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_data_id", referencedColumnName = "user_data_id")
+    @OneToOne(mappedBy = "ownerUser")
+    @EqualsAndHashCode.Exclude
     private UserData userData;
 
     @ManyToOne
@@ -33,5 +33,5 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "user_id_2")
     )
     @EqualsAndHashCode.Exclude
-    private Set<User> matchedUsers;
+    private Set<UserEntity> matchedUserEntities;
 }

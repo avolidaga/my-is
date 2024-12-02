@@ -67,6 +67,22 @@ services:
       - config-service
     restart: on-failure
 
+  gateway-service:
+      image: gateway-service:latest
+      container_name: gateway-service
+      environment:
+        - 'PAGINATION_MAX_SIZE=50'
+        - 'JWT_SECRET=popopo'
+        - 'JWT_EXPIRED=1000000'
+      build:
+        context: ./gateway-service
+        dockerfile: Dockerfile
+      ports:
+        - "8080:8080"
+      depends_on:
+        - eureka-service
+      restart: on-failure
+
   location-service:
     image: location-service:latest
     container_name: location-service
@@ -76,7 +92,7 @@ services:
     ports:
       - "8180:8180"
     depends_on:
-      - eureka-service
+      - gateway-service
     restart: on-failure
 
   fabric-texture-service:
@@ -88,7 +104,7 @@ services:
     ports:
       - "8181:8181"
     depends_on:
-      - eureka-service
+      - gateway-service
     restart: on-failure
 
   auth-service:
@@ -100,7 +116,7 @@ services:
     ports:
       - "8182:8182"
     depends_on:
-      - eureka-service
+      - gateway-service
     restart: on-failure
 
   spacesuit-service:
@@ -112,7 +128,7 @@ services:
     ports:
       - "8183:8183"
     depends_on:
-      - eureka-service
+      - gateway-service
     restart: on-failure
 
   user-data-service:
@@ -124,7 +140,7 @@ services:
       ports:
         - "8184:8184"
       depends_on:
-        - eureka-service
+        - gateway-service
       restart: on-failure
 
 volumes:

@@ -1,5 +1,7 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -25,12 +27,14 @@ public class LocationController {
     private final LocationService locationService;
 
     @PostMapping("new")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<LocationDto> createLocation(@Valid @RequestBody RequestLocationDto dto) {
         LocationDto locationDto = locationService.createLocation(dto);
         return new ResponseEntity<>(locationDto, HttpStatus.CREATED);
     }
 
     @PutMapping("{locationId}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<LocationDto> updateLocation(@NotNull @PathVariable Long locationId,
                                                       @Valid @RequestBody RequestLocationDto dto) {
         LocationDto locationDto = locationService.updateLocationById(locationId, dto);
@@ -38,24 +42,28 @@ public class LocationController {
     }
 
     @DeleteMapping("{locationId}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<Void> deleteLocationById(@NotNull @PathVariable Long locationId) {
         locationService.deleteLocationById(locationId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("{locationId}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<LocationDto> getLocationById(@NotNull @PathVariable Long locationId) {
         LocationDto locationDto = locationService.getLocationDtoById(locationId);
         return ResponseEntity.ok(locationDto);
     }
 
     @GetMapping("list")
-    public ResponseEntity<List<LocationDto>> getLocationsByIds(@NotNull @RequestBody List<Long> locationIds) {
-        List<LocationDto> locationDtoList = locationService.getLocationsListByIds(locationIds);
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<List<LocationDto>> getLocationsByIds(@NotNull @RequestParam List<Long> locations) {
+        List<LocationDto> locationDtoList = locationService.getLocationsListByIds(locations);
         return ResponseEntity.ok(locationDtoList);
     }
 
     @GetMapping
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<Page<LocationDto>> getAllLocations(@RequestParam int page,
                                                              @RequestParam @Min(1) @Max(50) int size) {
         Pageable pageable = PageRequest.of(page, size);

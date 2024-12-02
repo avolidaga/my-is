@@ -6,8 +6,8 @@ import ru.se.info.tinder.model.UserConnection;
 public class UserConnectionMapper {
     public static UserConnectionDto toDtoUserConnection(UserConnection userConnection) {
         return UserConnectionDto.builder()
-                .userDto1(UserMapper.toDtoUser(userConnection.getUser1()))
-                .userDto2(UserMapper.toDtoUser(userConnection.getUser2()))
+                .userDto1(UserDataMapper.toUserDataDto(userConnection.getUserData1()))
+                .userDto2(UserDataMapper.toUserDataDto(userConnection.getUserData2()))
                 .matchDate(userConnection.getMatchDate())
                 .id(userConnection.getId())
                 .build();

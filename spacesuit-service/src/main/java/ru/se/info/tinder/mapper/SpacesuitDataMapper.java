@@ -5,6 +5,7 @@ import ru.se.info.tinder.dto.UpdateSpacesuitDataDto;
 import ru.se.info.tinder.dto.SpacesuitDataDto;
 import ru.se.info.tinder.model.FabricTexture;
 import ru.se.info.tinder.model.SpacesuitData;
+import ru.se.info.tinder.model.User;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,7 @@ public class SpacesuitDataMapper {
                 .footSize(dto.getFootSize())
                 .height(dto.getHeight())
                 .fabricTexture(fabricTexture)
+                .ownerUser(User.builder().id(dto.getId()).build())
                 .createdAt(LocalDateTime.now())
                 .build();
     }
@@ -34,6 +36,7 @@ public class SpacesuitDataMapper {
                 .fabricTexture(fabricTexture)
                 .createdAt(spacesuitData.getCreatedAt())
                 .updatedAt(LocalDateTime.now())
+                .ownerUser(spacesuitData.getOwnerUser())
                 .build();
     }
 

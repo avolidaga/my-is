@@ -2,10 +2,6 @@ server:
   port: 8183
   forward-headers-strategy: framework
 spring:
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
   datasource:
     url: jdbc:postgresql://database:5432/tinder
     username: postgres
@@ -17,6 +13,8 @@ spring:
       ddl-auto: none
   liquibase:
     enabled: false
+jwt:
+  secret: popopo
 eureka:
   client:
     serviceUrl:

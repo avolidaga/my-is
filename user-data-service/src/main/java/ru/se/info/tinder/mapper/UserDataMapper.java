@@ -4,6 +4,7 @@ import ru.se.info.tinder.dto.CreateUserDataDto;
 import ru.se.info.tinder.dto.UpdateUserDataDto;
 import ru.se.info.tinder.dto.UserDataDto;
 import ru.se.info.tinder.model.Location;
+import ru.se.info.tinder.model.User;
 import ru.se.info.tinder.model.UserData;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ public class UserDataMapper {
                 .lastname(createUserDataDto.getLastname())
                 .locations(locations)
                 .createdAt(LocalDateTime.now())
+                .ownerUser(User.builder().id(createUserDataDto.getUserId()).build())
                 .build();
     }
 

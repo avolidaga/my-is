@@ -15,6 +15,8 @@ import java.util.List;
 @Builder
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CreateUserDataDto {
+    @Positive
+    private Long userId;
 
     @NotNull(message = "Birth date must not be null")
     @Past(message = "Birth date must be in the past")

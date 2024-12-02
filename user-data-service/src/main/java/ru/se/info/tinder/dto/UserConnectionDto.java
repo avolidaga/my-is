@@ -13,8 +13,8 @@ import java.time.LocalDate;
 public class UserConnectionDto {
 
     private Long id;
-    private UserDto userDto1;
-    private UserDto userDto2;
+    private UserDataDto userDto1;
+    private UserDataDto userDto2;
     private LocalDate matchDate;
 }
 

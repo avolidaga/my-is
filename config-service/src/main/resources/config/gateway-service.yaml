@@ -1,0 +1,52 @@
+server:
+  port: 8080
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/user-management/**
+        - id: location-service
+          uri: lb://location-service
+          predicates:
+            - Path=/api/v1/locations/**
+        - id: user-data-service
+          uri: lb://user-data-service
+          predicates:
+            - Path=/api/v1/**
+        - id: spacesuit-service
+          uri: lb://spacesuit-service
+          predicates:
+            - Path=/api/v1/**
+        - id: fabric-texture-service
+          uri: lb://fabric-texture-service
+          predicates:
+            - Path=/api/v1/fabric-textures/**
+
+springdoc:
+  enable-native-support: true
+  api-docs:
+    groups:
+      enabled: true
+    enabled: true
+  swagger-ui:
+    use-root-path: true
+    config-url: /v3/api-docs/swagger-config
+    url: /v3/api-docs
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-service:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

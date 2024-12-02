@@ -1,5 +1,7 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -23,12 +25,14 @@ public class FabricTextureController {
     private final FabricTextureService fabricTextureService;
 
     @PostMapping("new")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<FabricTextureDto> createFabricTexture(@Valid @RequestBody RequestFabricTextureDto dto) {
         FabricTextureDto fabricTextureDto = fabricTextureService.createFabricTexture(dto);
         return new ResponseEntity<>(fabricTextureDto, HttpStatus.CREATED);
     }
 
     @PutMapping("{fabricTextureId}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<FabricTextureDto> updateFabricTexture(@NotNull @PathVariable Long fabricTextureId,
                                                                 @Valid @RequestBody RequestFabricTextureDto dto) {
         FabricTextureDto fabricTextureDto = fabricTextureService.updateFabricTextureById(fabricTextureId, dto);
@@ -36,18 +40,21 @@ public class FabricTextureController {
     }
 
     @DeleteMapping("{fabricTextureId}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<Void> deleteLocationById(@NotNull @PathVariable Long fabricTextureId) {
         fabricTextureService.deleteLocationById(fabricTextureId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("{fabricTextureId}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<FabricTextureDto> getFabricTextureById(@NotNull @PathVariable Long fabricTextureId) {
         FabricTextureDto fabricTextureDto = fabricTextureService.getFabricTextureDtoById(fabricTextureId);
         return ResponseEntity.ok(fabricTextureDto);
     }
 
     @GetMapping
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<Page<FabricTextureDto>> getAllFabricTexture(@RequestParam int page,
                                                                       @RequestParam @Min(1) @Max(50) int size) {
         Pageable pageable = PageRequest.of(page, size);

@@ -19,9 +19,9 @@ public class UserData {
     @Column(name = "user_data_id")
     private Long id;
 
-    @OneToOne(mappedBy = "userData")
-    @EqualsAndHashCode.Exclude
-    private User ownerUser;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity ownerUser;
     private String firstname;
     private String lastname;
     private LocalDate birthDate;

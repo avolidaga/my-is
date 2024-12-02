@@ -1,5 +1,7 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -24,12 +26,14 @@ public class UserRequestController {
     private final UserRequestService userRequestService;
 
     @PatchMapping("{userRequestId}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> updateUserRequestStatus(@NotNull @RequestParam UpdateRequestStatus status,
                                                      @NotNull @PathVariable Long userRequestId) {
         return ResponseEntity.ok(userRequestService.updateUserRequestStatus(userRequestId, status));
     }
 
     @GetMapping
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<Page<UserRequestDto>> getUsersRequests(@NotNull @RequestParam SearchStatus status,
                                                                  @NotNull @RequestParam int page,
                                                                  @NotNull @RequestParam @Min(1) @Max(50) int size) {

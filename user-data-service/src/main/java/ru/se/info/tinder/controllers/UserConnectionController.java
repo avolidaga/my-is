@@ -1,5 +1,6 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -20,20 +21,25 @@ public class UserConnectionController {
     private final UserConnectionService userConnectionService;
 
     @PostMapping("new")
-    public ResponseEntity<UserConnectionDto> createConnection(@Valid @RequestParam Long userDataId) {
-        UserConnectionDto userConnectionDto = userConnectionService.createConnection(userDataId);
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<UserConnectionDto> createConnection(@Valid @RequestParam Long userDataId,
+                                                              Principal principal) {
+        UserConnectionDto userConnectionDto = userConnectionService.createConnection(userDataId, principal);
         return ResponseEntity.ok(userConnectionDto);
     }
 
     @GetMapping("my")
-    public ResponseEntity<List<UserConnectionDto>> getUserConnections() {
-        List<UserConnectionDto> list = userConnectionService.getConnections();
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<List<UserConnectionDto>> getUserConnections(Principal principal) {
+        List<UserConnectionDto> list = userConnectionService.getConnections(principal);
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("my/{connectionId}")
-    public ResponseEntity<UserConnectionDto> getUserConnectionById(@NotNull @PathVariable Long connectionId) {
-        UserConnectionDto userConnectionById = userConnectionService.getUserConnectionById(connectionId);
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<UserConnectionDto> getUserConnectionById(@NotNull @PathVariable Long connectionId,
+                                                                   Principal principal) {
+        UserConnectionDto userConnectionById = userConnectionService.getUserConnectionById(connectionId, principal);
         return ResponseEntity.ok(userConnectionById);
     }
 }

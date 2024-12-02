@@ -20,11 +20,11 @@ public class UserConnection {
 
     @ManyToOne
     @JoinColumn(name = "user_id_1")
-    private User user1;
+    private UserData userData1;
 
     @ManyToOne
     @JoinColumn(name = "user_id_2")
-    private User user2;
+    private UserData userData2;
 
     @PastOrPresent
     private LocalDate matchDate;

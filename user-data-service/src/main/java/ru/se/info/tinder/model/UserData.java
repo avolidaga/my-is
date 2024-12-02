@@ -20,8 +20,8 @@ public class UserData {
     @Column(name = "user_data_id")
     private Long id;
 
-    @OneToOne(mappedBy = "userData")
-    @EqualsAndHashCode.Exclude
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User ownerUser;
     private String firstname;
     private String lastname;

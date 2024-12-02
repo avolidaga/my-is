@@ -1,5 +1,7 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -17,6 +19,7 @@ import ru.se.info.tinder.service.UserDataService;
 
 import java.security.Principal;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user-data")
@@ -25,30 +28,39 @@ public class UserDataController {
     private final UserDataService userDataService;
 
     @PostMapping("new")
-    public ResponseEntity<UserDataDto> createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto) {
-        UserDataDto userDataDto = userDataService.createUserData(createUserDataDto);
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<UserDataDto> createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto,
+                                                      @RequestHeader("Authorization") String token) {
+        UserDataDto userDataDto = userDataService.createUserData(createUserDataDto, token);
         return new ResponseEntity<>(userDataDto, HttpStatus.CREATED);
     }
 
-    @PutMapping("my")
-    public ResponseEntity updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto) {
-        UserDataDto userData = userDataService.updateUserData(updateUserDataDto);
+    @PutMapping("{id}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<UserDataDto> updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto,
+                                                            @PathVariable Long id,
+                                                            Principal principal,
+                                                            @RequestHeader("Authorization") String token) {
+        UserDataDto userData = userDataService.updateUserDataById(updateUserDataDto, id, principal, token);
         return ResponseEntity.ok(userData);
     }
 
-    @DeleteMapping("my")
-    public ResponseEntity<Void> deleteUserDataByUser() {
-        userDataService.deleteUserDataByUser();
+    @DeleteMapping("{id}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<Void> deleteUserDataByUser(@PathVariable Long id) {
+        userDataService.deleteUserDataById(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("my")
-    public ResponseEntity<UserDataDto> getUserDataByUser() {
-        UserDataDto userData = userDataService.getUserDataByUser();
+    @GetMapping("{id}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<UserDataDto> getUserDataById(@PathVariable Long id) {
+        UserDataDto userData = userDataService.getUserDataDtoById(id);
         return ResponseEntity.ok(userData);
     }
 
-    @GetMapping("{locationId}")
+    @GetMapping("location/{locationId}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<Page<UserDataDto>> getUsersByLocationId(@PathVariable Long locationId,
                                                                   @RequestParam int page,
                                                                   @RequestParam @Min(1) @Max(50) int size) {
@@ -59,6 +71,7 @@ public class UserDataController {
     }
 
     @GetMapping
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<Page<UserDataDto>> getAllUsersData(@RequestParam int page,
                                                              @RequestParam @Min(1) @Max(50) int size) {
         Pageable pageable = PageRequest.of(page, size);
