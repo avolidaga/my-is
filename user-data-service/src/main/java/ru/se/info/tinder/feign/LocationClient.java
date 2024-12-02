@@ -1,5 +1,6 @@
 package ru.se.info.tinder.feign;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import ru.se.info.tinder.dto.LocationDto;
 
 import java.util.List;
 
+@CircuitBreaker(name = "location-service-cb")
 @FeignClient("location-service")
 public interface LocationClient {
     @GetMapping("/api/v1/locations/list")
