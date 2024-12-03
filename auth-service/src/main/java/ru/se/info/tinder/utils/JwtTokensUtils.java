@@ -1,86 +1,109 @@
 package ru.se.info.tinder.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.TextCodec;
-import jakarta.servlet.http.HttpServletRequest;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+import ru.se.info.tinder.model.UserEntity;
 
+import java.text.ParseException;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static org.springframework.util.StringUtils.hasText;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokensUtils {
-    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     @Value("${jwt.secret}")
     private String jwtSecret;
     @Value("${jwt.lifetime}")
     private Duration jwtLifetime;
 
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+    @SneakyThrows
+    public String generateToken(UserEntity user) {
+        SignedJWT signedJWT;
+        JWTClaimsSet claimsSet;
 
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
+        List<String> roles = Stream.of(user.getRole())
+                .map(r -> r.getRoleName().name())
                 .toList();
-
-        claims.put("roles", roles);
 
         Date issuedDate = new Date();
         Date expiredDate = new Date(issuedDate.getTime() + jwtLifetime.toMillis());
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(issuedDate)
-                .setExpiration(expiredDate)
-                .signWith(SignatureAlgorithm.HS256, jwtSecret)
-                .compact();
+        claimsSet = new JWTClaimsSet.Builder()
+                .subject(user.getUsername())
+                .issueTime(issuedDate)
+                .expirationTime(expiredDate)
+                .claim("roles", roles)
+                .build();
+
+        signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
+        signedJWT.sign(new MACSigner(jwtSecret));
+
+        return signedJWT.serialize();
     }
 
-    public boolean validateToken(String token) {
+    public Mono<SignedJWT> check(String token) {
+        return Mono.justOrEmpty(createJWS(token))
+                .filter(isNotExpired)
+                .filter(validSignature);
+    }
+
+    private Predicate<SignedJWT> isNotExpired = token ->
+            getExpirationDate(token).after(Date.from(Instant.now()));
+
+    private Predicate<SignedJWT> validSignature = token -> {
         try {
-            getAllClaimsFromToken(token);
-            return true;
-        } catch (Exception e) {
+            JWSVerifier jwsVerifier = this.buildJWSVerifier();
+            return token.verify(jwsVerifier);
+
+        } catch (JOSEException e) {
+            e.printStackTrace();
             return false;
         }
-    }
+    };
 
-    public String getUsernameFromToken(String token) {
-        return getAllClaimsFromToken(token).getSubject();
-    }
-
-    public List<String> getRolesFromToken(String token) {
-        Claims claims = getAllClaimsFromToken(token);
-        return claims.get("roles", List.class);
-    }
-
-    private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    public String getTokenFromRequest(HttpServletRequest request) {
-        String authHeader = request.getHeader(AUTHORIZATION_HEADER);
-        if (hasText(authHeader) && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
+    private MACVerifier buildJWSVerifier() {
+        try {
+            return new MACVerifier(jwtSecret);
+        } catch (JOSEException e) {
+            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
+    //TODO обработка ошибок
+
+    private SignedJWT createJWS(String token) {
+        try {
+            return SignedJWT.parse(token);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Date getExpirationDate(SignedJWT token) {
+        try {
+            return token.getJWTClaimsSet()
+                    .getExpirationTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

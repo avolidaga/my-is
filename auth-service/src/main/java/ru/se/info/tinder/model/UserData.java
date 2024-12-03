@@ -1,6 +1,7 @@
 package ru.se.info.tinder.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+
 import lombok.*;
 import ru.se.info.tinder.model.enums.Sex;
 

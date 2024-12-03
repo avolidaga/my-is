@@ -14,7 +14,7 @@ spring:
   liquibase:
     enabled: false
 jwt:
-  secret: popopo
+  secret: 8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpJKhjJKJfn6ryDIoGRM8EPHAB6iHsc0fb
   lifetime: 10000000
 eureka:
   client:

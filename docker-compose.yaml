@@ -95,17 +95,17 @@ services:
       - gateway-service
     restart: on-failure
 
-  fabric-texture-service:
-    image: fabric-texture-service:latest
-    container_name: fabric-texture-service
-    build:
-      context: ./fabric-texture-service
-      dockerfile: Dockerfile
-    ports:
-      - "8181:8181"
-    depends_on:
-      - gateway-service
-    restart: on-failure
+#  fabric-texture-service:
+#    image: fabric-texture-service:latest
+#    container_name: fabric-texture-service
+#    build:
+#      context: ./fabric-texture-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8181:8181"
+#    depends_on:
+#      - gateway-service
+#    restart: on-failure
 
   auth-service:
     image: auth-service:latest
@@ -118,30 +118,30 @@ services:
     depends_on:
       - gateway-service
     restart: on-failure
-
-  spacesuit-service:
-    image: spacesuit-service:latest
-    container_name: spacesuit-service
-    build:
-      context: ./spacesuit-service
-      dockerfile: Dockerfile
-    ports:
-      - "8183:8183"
-    depends_on:
-      - gateway-service
-    restart: on-failure
-
-  user-data-service:
-      image: user-data-service:latest
-      container_name: user-data-service
-      build:
-        context: ./user-data-service
-        dockerfile: Dockerfile
-      ports:
-        - "8184:8184"
-      depends_on:
-        - gateway-service
-      restart: on-failure
+#
+#  spacesuit-service:
+#    image: spacesuit-service:latest
+#    container_name: spacesuit-service
+#    build:
+#      context: ./spacesuit-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8183:8183"
+#    depends_on:
+#      - gateway-service
+#    restart: on-failure
+#
+#  user-data-service:
+#      image: user-data-service:latest
+#      container_name: user-data-service
+#      build:
+#        context: ./user-data-service
+#        dockerfile: Dockerfile
+#      ports:
+#        - "8184:8184"
+#      depends_on:
+#        - gateway-service
+#      restart: on-failure
 
 volumes:
   postgres:

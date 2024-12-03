@@ -7,26 +7,30 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import ru.se.info.tinder.service.UserAuthService;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebFluxSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final UserAuthService userAuthService;
-    private final CryptoConfig cryptoConfig;
-    private final JwtFilterConfig jwtFilterConfig;
+    private final ServerHttpBearerAuthenticationConverter serverHttpBearerAuthenticationConverter;
 
 
     private static final String[] AUTH_WHITELIST = {
@@ -49,45 +53,28 @@ public class SecurityConfig {
     };
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(cryptoConfig.encoder());
-        daoAuthenticationProvider.setUserDetailsService(userAuthService);
-        return daoAuthenticationProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authorize) ->
-                        authorize
-                                .requestMatchers(AUTH_WHITELIST).permitAll()
-                                .requestMatchers("/api/v1/**").hasAnyRole("USER", "ADMIN")
-                                .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtFilterConfig, UsernamePasswordAuthenticationFilter.class);
-        // .exceptionHandling(config -> config.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) throws Exception {
+        httpSecurity.csrf().disable()
+                .httpBasic().disable()
+                .authorizeExchange()
+                .pathMatchers(AUTH_WHITELIST).permitAll()
+                .pathMatchers("/api/**").hasAnyRole("USER", "ADMIN")
+                .anyExchange().authenticated()
+                .and()
+                .addFilterAt(bearerAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
         return httpSecurity.build();
     }
 
-    // TODO проверить необходимость
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+    private AuthenticationWebFilter bearerAuthenticationFilter() {
+        AuthenticationWebFilter bearerAuthenticationFilter;
+        ReactiveAuthenticationManager authManager;
+
+        authManager = new BearerTokenReactiveAuthenticationManager();
+        bearerAuthenticationFilter = new AuthenticationWebFilter(authManager);
+        bearerAuthenticationFilter.setAuthenticationConverter(serverHttpBearerAuthenticationConverter);
+        bearerAuthenticationFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers("/api/**"));
+
+        return bearerAuthenticationFilter;
     }
 
     @Bean

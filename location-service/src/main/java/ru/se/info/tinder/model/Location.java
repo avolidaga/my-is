@@ -1,11 +1,12 @@
 package ru.se.info.tinder.model;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Table(name = "location")
+@Table("location")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,8 +14,7 @@ import lombok.*;
 public class Location {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "location_id")
+    @Column("location_id")
     private Long id;
 
     @NotNull
