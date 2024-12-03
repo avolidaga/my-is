@@ -7,12 +7,11 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.se.info.tinder.dto.FabricTextureDto;
 import ru.se.info.tinder.dto.RequestFabricTextureDto;
 import ru.se.info.tinder.service.FabricTextureService;
@@ -26,39 +25,34 @@ public class FabricTextureController {
 
     @PostMapping("new")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<FabricTextureDto> createFabricTexture(@Valid @RequestBody RequestFabricTextureDto dto) {
-        FabricTextureDto fabricTextureDto = fabricTextureService.createFabricTexture(dto);
-        return new ResponseEntity<>(fabricTextureDto, HttpStatus.CREATED);
+    public Mono<FabricTextureDto> createFabricTexture(@Valid @RequestBody RequestFabricTextureDto dto) {
+        return fabricTextureService.createFabricTexture(dto);
     }
 
     @PutMapping("{fabricTextureId}")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<FabricTextureDto> updateFabricTexture(@NotNull @PathVariable Long fabricTextureId,
-                                                                @Valid @RequestBody RequestFabricTextureDto dto) {
-        FabricTextureDto fabricTextureDto = fabricTextureService.updateFabricTextureById(fabricTextureId, dto);
-        return ResponseEntity.ok(fabricTextureDto);
+    public Mono<FabricTextureDto> updateFabricTexture(@NotNull @PathVariable Long fabricTextureId,
+                                                      @Valid @RequestBody RequestFabricTextureDto dto) {
+        return fabricTextureService.updateFabricTextureById(fabricTextureId, dto);
     }
 
     @DeleteMapping("{fabricTextureId}")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<Void> deleteLocationById(@NotNull @PathVariable Long fabricTextureId) {
-        fabricTextureService.deleteLocationById(fabricTextureId);
-        return ResponseEntity.ok().build();
+    public Mono<Void> deleteFabricTextureById(@NotNull @PathVariable Long fabricTextureId) {
+        return fabricTextureService.deleteFabricTextureById(fabricTextureId);
     }
 
     @GetMapping("{fabricTextureId}")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<FabricTextureDto> getFabricTextureById(@NotNull @PathVariable Long fabricTextureId) {
-        FabricTextureDto fabricTextureDto = fabricTextureService.getFabricTextureDtoById(fabricTextureId);
-        return ResponseEntity.ok(fabricTextureDto);
+    public Mono<FabricTextureDto> getFabricTextureById(@NotNull @PathVariable Long fabricTextureId) {
+        return fabricTextureService.getFabricTextureById(fabricTextureId);
     }
 
     @GetMapping
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<Page<FabricTextureDto>> getAllFabricTexture(@RequestParam int page,
-                                                                      @RequestParam @Min(1) @Max(50) int size) {
+    public Flux<FabricTextureDto> getAllFabricTextures(@RequestParam int page,
+                                                       @RequestParam @Min(1) @Max(50) int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<FabricTextureDto> fabricTexturePage = fabricTextureService.getAllFabricTexture(pageable);
-        return ResponseEntity.ok(fabricTexturePage);
+        return fabricTextureService.getAllFabricTextures(pageable);
     }
 }

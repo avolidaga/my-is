@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.se.info.tinder.model.FabricTexture;
 
 @Repository
-public interface FabricTextureRepository extends JpaRepository<FabricTexture, Long> {
+public interface FabricTextureRepository extends R2dbcRepository<FabricTexture, Long> {
 }
