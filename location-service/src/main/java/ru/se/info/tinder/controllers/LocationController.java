@@ -2,11 +2,8 @@ package ru.se.info.tinder.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,6 +11,10 @@ import ru.se.info.tinder.dto.LocationDto;
 import ru.se.info.tinder.dto.RequestLocationDto;
 import ru.se.info.tinder.service.LocationService;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -24,12 +25,14 @@ public class LocationController {
     private final LocationService locationService;
 
     @PostMapping("new")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public Mono<LocationDto> createLocation(@Valid @RequestBody RequestLocationDto dto) {
         return locationService.createLocation(dto);
     }
 
     @PutMapping("{locationId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public Mono<LocationDto> updateLocation(@NotNull @PathVariable Long locationId,
                                             @Valid @RequestBody RequestLocationDto dto) {
@@ -37,6 +40,7 @@ public class LocationController {
     }
 
     @DeleteMapping("{locationId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public Mono<Void> deleteLocationById(@NotNull @PathVariable Long locationId) {
         return locationService.deleteLocationById(locationId);
@@ -59,7 +63,7 @@ public class LocationController {
     public Flux<LocationDto> getAllLocations(@RequestParam @Min(0) int page,
                                              @RequestParam @Min(1) @Max(50) int size) {
         return locationService.getAllLocations()
-                .skip((long) page * size)  // Пропускаем элементы для заданной страницы
-                .take(size);              // Ограничиваем количество возвращаемых элементов
+                .skip((long) page * size)
+                .take(size);
     }
 }

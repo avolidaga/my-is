@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import ru.se.info.tinder.dto.AuthUserDto;
 import ru.se.info.tinder.dto.RequestUserDto;
+import ru.se.info.tinder.dto.ResponseUserDto;
 import ru.se.info.tinder.dto.UserDto;
+import ru.se.info.tinder.mapper.UserMapper;
 import ru.se.info.tinder.service.UserService;
 import ru.se.info.tinder.utils.JwtTokensUtils;
 
@@ -29,9 +31,9 @@ public class UserController {
 
     @PostMapping("users/new")
     @ResponseStatus(HttpStatus.CREATED)
-    //@PreAuthorize("hasRole('ADMIN')")
-    public Mono<Void> createUser(@Valid @RequestBody RequestUserDto requestUserDto) {
-        return userService.createUser(requestUserDto);
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Mono<UserDto> createUser(@Valid @RequestBody RequestUserDto requestUserDto) {
+        return userService.createUser(requestUserDto).map(UserMapper::toDtoUser);
     }
 
     @GetMapping("users/{userId}")
@@ -49,7 +51,7 @@ public class UserController {
     }
 
     @DeleteMapping("users/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public Mono<Void> deleteUserById(@NotNull @PathVariable Long userId,
                                      Principal principal) {
@@ -62,8 +64,7 @@ public class UserController {
     }
 
     @PostMapping("/validation")
-    public Mono<SignedJWT> validateToken(@RequestBody String token) {
-        return jwtTokensUtils.check(token);
+    public Mono<ResponseUserDto> validateToken(@RequestBody String token) {
+         return jwtTokensUtils.check(token).map(jwtTokensUtils::createUserDto);
     }
-
 }

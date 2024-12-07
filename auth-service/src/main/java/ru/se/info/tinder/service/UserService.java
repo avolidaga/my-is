@@ -11,6 +11,7 @@ import ru.se.info.tinder.dto.AuthUserDto;
 import ru.se.info.tinder.dto.RequestUserDto;
 import ru.se.info.tinder.dto.UserDto;
 import ru.se.info.tinder.mapper.UserMapper;
+import ru.se.info.tinder.model.Roles;
 import ru.se.info.tinder.model.UserEntity;
 import ru.se.info.tinder.model.enums.RoleName;
 import ru.se.info.tinder.repository.RoleRepository;
@@ -30,21 +31,6 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final JwtTokensUtils jwtTokensUtils;
 
-    public Mono<Void> deleteUserById(Long userId, Principal principal) {
-        return getUserEntityByUsername(principal.getName())
-                .flatMap(
-                        user ->
-                        {
-                            if (!user.getId().equals(userId)) {
-                                return Mono.error(new IllegalArgumentException("User don't have enough rights for user deleting"));
-                            }
-                            return Mono.fromRunnable(
-                                    () -> userRepository.deleteById(userId)
-                            );
-                        }
-                );
-    }
-
     @Transactional
     public Mono<UserDto> updateUserById(Long userId, RequestUserDto requestUserDto, Principal principal) {
         return getUserEntityByUsername(principal.getName())
@@ -52,7 +38,7 @@ public class UserService {
                         user ->
                         {
                             if (!user.getId().equals(userId)) {
-                                return Mono.error(new IllegalArgumentException("User don't have enough rights for user deleting"));
+                                return Mono.error(new IllegalArgumentException("User don't have enough rights for user updating"));
                             }
                             UserEntity newUserEntity = UserMapper.toEntityUser(requestUserDto, user);
                             return Mono.fromCallable(
@@ -65,45 +51,54 @@ public class UserService {
     public Mono<UserDto> getUserById(Long userId) {
         return Mono.fromCallable(
                         () -> userRepository.findById(userId)
-                ).flatMap(
-                        (user) -> {
-                            if (user.isPresent()) {
-                                return Mono.just(user.get());
-                            }
-                            return Mono.error(new NoEntityWithSuchIdException("User", userId));
-                        }
+                                .orElseThrow(() -> new NoEntityWithSuchIdException("User", userId))
                 ).subscribeOn(Schedulers.boundedElastic())
                 .map(UserMapper::toDtoUser);
     }
 
     @Transactional
-    public Mono<Void> createUser(RequestUserDto requestUserDto) {
+    public Mono<UserEntity> createUser(RequestUserDto requestUserDto) {
 
-        Mono.fromCallable(
-                        () -> userRepository.findByUsername(requestUserDto.getUsername())
-                ).subscribeOn(Schedulers.boundedElastic())
-                .flatMap(
-                        existingUser -> {
-                            if (existingUser.isPresent()) {
-                                return Mono.error(new IllegalArgumentException("User with such username already exist"));
-                            } else {
-                                return Mono.fromCallable(
-                                        () -> roleRepository.findRolesByRoleName(RoleName.USER)
-                                ).flatMap(
-                                        role -> {
-                                            UserEntity userEntity = UserMapper.toEntityUser(requestUserDto);
-                                            userEntity.setPassword(passwordEncoder.encode(requestUserDto.getPassword()));
-                                            userEntity.setRole(role);
-                                            return Mono.fromCallable(
-                                                    () -> userRepository.save(userEntity)
-                                            ).subscribeOn(Schedulers.boundedElastic());
-                                        }
-                                ).subscribeOn(Schedulers.boundedElastic());
-                            }
-                        }
-                );
-        return Mono.empty();
+        return Mono.fromCallable(
+                () -> userRepository.findByUsername(requestUserDto.getUsername())
+        ).flatMap(
+                existingUser -> {
+                    if (existingUser.isPresent()) {
+                        return Mono.error(new IllegalArgumentException("User with such username already exist"));
+                    } else {
+                        return Mono.fromCallable(
+                                () -> roleRepository.findRolesByRoleName(RoleName.USER)
+                        ).flatMap(
+                                role -> {
+                                    UserEntity userEntity = UserMapper.toEntityUser(requestUserDto);
+                                    userEntity.setPassword(passwordEncoder.encode(requestUserDto.getPassword()));
+                                    userEntity.setRole(role);
+                                    return Mono.fromCallable(
+                                            () -> userRepository.save(userEntity)
+                                    ).subscribeOn(Schedulers.boundedElastic());
+                                }
+                        ).subscribeOn(Schedulers.boundedElastic());
+                    }
+                }
+        ).subscribeOn(Schedulers.boundedElastic());
     }
+
+//    @Transactional
+//    public Mono<UserEntity> createUser(RequestUserDto requestUserDto) {
+//
+//        return Mono.fromCallable(
+//                () -> roleRepository.findRolesByRoleName(RoleName.USER)
+//        ).flatMap(
+//                role -> {
+//                    UserEntity userEntity = UserMapper.toEntityUser(requestUserDto);
+//                    userEntity.setPassword(passwordEncoder.encode(requestUserDto.getPassword()));
+//                    userEntity.setRole(role);
+//                    return Mono.fromCallable(
+//                            () -> userRepository.save(userEntity)
+//                    ).subscribeOn(Schedulers.boundedElastic());
+//                }
+//        ).subscribeOn(Schedulers.boundedElastic());
+//    }
 
     public Mono<AuthUserDto> loginUser(RequestUserDto requestUserDto) {
         return getUserEntityByUsername(requestUserDto.getUsername())
@@ -142,6 +137,15 @@ public class UserService {
                     return Mono.error(new NoEntityWithSuchIdException("User", "User data", id));
                 }
         ).subscribeOn(Schedulers.boundedElastic());
+    }
+
+    public Mono<Void> deleteUserById(Long userId, Principal principal) {
+        return getUserEntityByUsername(principal.getName())
+                .flatMap(
+                        user -> Mono.fromRunnable(
+                                () -> userRepository.deleteById(userId)
+                        )
+                );
     }
 
     protected Mono<UserEntity> saveUser(UserEntity userEntity) {

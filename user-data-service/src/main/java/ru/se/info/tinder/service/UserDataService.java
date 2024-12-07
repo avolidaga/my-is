@@ -1,6 +1,5 @@
 package ru.se.info.tinder.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +15,7 @@ import ru.se.info.tinder.repository.UserDataRepository;
 import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 import ru.se.info.tinder.service.exception.UserNotCompletedRegistrationException;
 
+import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;

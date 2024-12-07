@@ -2,9 +2,6 @@ package ru.se.info.tinder.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +14,7 @@ import ru.se.info.tinder.dto.UpdateUserDataDto;
 import ru.se.info.tinder.dto.UserDataDto;
 import ru.se.info.tinder.service.UserDataService;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 

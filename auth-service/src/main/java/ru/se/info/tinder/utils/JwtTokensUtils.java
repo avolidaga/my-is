@@ -11,8 +11,12 @@ import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+import ru.se.info.tinder.dto.ResponseUserDto;
 import ru.se.info.tinder.model.UserEntity;
 
 import java.text.ParseException;
@@ -21,6 +25,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
@@ -105,5 +110,20 @@ public class JwtTokensUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public ResponseUserDto createUserDto(SignedJWT signedJWTMono) {
+        String subject;
+        List<String> auths;
+        List<SimpleGrantedAuthority> authorities;
+
+        try {
+            subject = signedJWTMono.getJWTClaimsSet().getSubject();
+            auths = (List<String>) signedJWTMono.getJWTClaimsSet().getClaim("roles");
+        } catch (ParseException e) {
+            return null;
+        }
+
+        return new ResponseUserDto(subject, auths);
     }
 }

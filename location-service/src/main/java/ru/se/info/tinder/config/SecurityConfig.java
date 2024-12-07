@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -17,6 +18,7 @@ import org.springframework.security.web.server.util.matcher.ServerWebExchangeMat
 @Configuration
 @EnableWebFluxSecurity
 @RequiredArgsConstructor
+@EnableReactiveMethodSecurity
 public class SecurityConfig {
     private final ServerHttpBearerAuthenticationConverter serverHttpBearerAuthenticationConverter;
 
@@ -43,7 +45,7 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .authorizeExchange()
                 .pathMatchers(AUTH_WHITELIST).permitAll()
-                .pathMatchers("/api/**").hasAnyRole("USER", "ADMIN")
+                .pathMatchers("/api/**").hasAnyAuthority("USER", "ADMIN")
                 .anyExchange().authenticated()
                 .and()
                 .addFilterAt(bearerAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION);

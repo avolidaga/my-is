@@ -2,12 +2,12 @@ package ru.se.info.tinder.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 import ru.se.info.tinder.model.enums.Sex;
 import ru.se.info.tinder.validation.Age;
 
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 

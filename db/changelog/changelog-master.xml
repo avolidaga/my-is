@@ -11,5 +11,6 @@
     <include file="db/changelog/insert-changeset-fabric-texture.xml"/>
     <include file="db/changelog/insert-changeset-locations.xml"/>
     <include file="db/changelog/insert-roles.xml"/>
+    <include file="db/changelog/insert-users.xml"/>
 
 </databaseChangeLog>
