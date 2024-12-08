@@ -1,9 +1,10 @@
 package ru.se.info.tinder.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.se.info.tinder.dto.FabricTextureDto;
 import ru.se.info.tinder.dto.RequestFabricTextureDto;
 import ru.se.info.tinder.mapper.FabricTextureMapper;
@@ -17,34 +18,40 @@ public class FabricTextureService {
 
     private final FabricTextureRepository fabricTextureRepository;
 
-    public FabricTextureDto createFabricTexture(RequestFabricTextureDto dto) {
-        FabricTexture fabricTexture = fabricTextureRepository.save(FabricTextureMapper.toEntityFabricTexture(dto));
-        return FabricTextureMapper.toDtoFabricTexture(fabricTexture);
+    public Mono<FabricTextureDto> createFabricTexture(RequestFabricTextureDto dto) {
+        return fabricTextureRepository
+                .save(FabricTextureMapper.toEntityFabricTexture(dto))
+                .map(FabricTextureMapper::toDtoFabricTexture);
     }
 
-    public Page<FabricTextureDto> getAllFabricTexture(Pageable pageable) {
-        return fabricTextureRepository.findAll(pageable).map(FabricTextureMapper::toDtoFabricTexture);
+    public Flux<FabricTextureDto> getAllFabricTextures(Pageable pageable) {
+        return fabricTextureRepository
+                .findAllBy(pageable)
+                .map(FabricTextureMapper::toDtoFabricTexture);
     }
 
-    public void deleteLocationById(Long fabricTextureId) {
-        fabricTextureRepository.deleteById(fabricTextureId);
+    public Mono<Void> deleteFabricTextureById(Long fabricTextureId) {
+        return fabricTextureRepository
+                .findById(fabricTextureId)
+                .switchIfEmpty(Mono.error(new NoEntityWithSuchIdException("Fabric texture", fabricTextureId)))
+                .flatMap(fabricTexture -> fabricTextureRepository.deleteById(fabricTexture.getId()));
     }
 
-    public FabricTextureDto updateFabricTextureById(Long fabricTextureId, RequestFabricTextureDto dto) {
-        fabricTextureRepository.findById(fabricTextureId)
-                .orElseThrow(() -> new NoEntityWithSuchIdException("Fabric texture", fabricTextureId));
-        FabricTexture newFabricTexture = FabricTextureMapper.toEntityFabricTexture(fabricTextureId, dto);
-        fabricTextureRepository.save(newFabricTexture);
-        return FabricTextureMapper.toDtoFabricTexture(newFabricTexture);
+    public Mono<FabricTextureDto> updateFabricTextureById(Long fabricTextureId, RequestFabricTextureDto dto) {
+        return fabricTextureRepository
+                .findById(fabricTextureId)
+                .switchIfEmpty(Mono.error(new NoEntityWithSuchIdException("Fabric texture", fabricTextureId)))
+                .flatMap(existingFabricTexture -> {
+                    FabricTexture updatedFabricTexture = FabricTextureMapper.toEntityFabricTexture(fabricTextureId, dto);
+                    return fabricTextureRepository.save(updatedFabricTexture);
+                })
+                .map(FabricTextureMapper::toDtoFabricTexture);
     }
 
-    public FabricTextureDto getFabricTextureDtoById(Long id) {
-        FabricTexture fabricTexture = getFabricTextureById(id);
-        return FabricTextureMapper.toDtoFabricTexture(fabricTexture);
-    }
-
-    protected FabricTexture getFabricTextureById(Long id) {
-        return fabricTextureRepository.findById(id)
-                .orElseThrow(() -> new NoEntityWithSuchIdException("Fabric texture", id));
+    public Mono<FabricTextureDto> getFabricTextureById(Long id) {
+        return fabricTextureRepository
+                .findById(id)
+                .switchIfEmpty(Mono.error(new NoEntityWithSuchIdException("Fabric texture", id)))
+                .map(FabricTextureMapper::toDtoFabricTexture);
     }
 }
