@@ -2,19 +2,12 @@ server:
   port: 8181
   forward-headers-strategy: framework
 spring:
-  datasource:
-    url: jdbc:postgresql://database:5432/tinder
-    username: postgres
-    password: root
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: none
-  liquibase:
-    enabled: false
-jwt:
-  secret: popopo
+  r2dbc:
+    url: r2dbc:postgresql://${DB_HOST:database}:${DB_PORT:5432}/tinder
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:root}
+  main:
+    web-application-type: reactive
 eureka:
   client:
     serviceUrl:

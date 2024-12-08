@@ -1,23 +1,23 @@
 package ru.se.info.tinder.model;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Table(name = "fabric_texture")
+@Table("fabric_texture")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class FabricTexture {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "fabric_texture_id")
+    @Column("fabric_texture_id")
     private Long id;
 
-    @Column(name = "fabric_texture_name")
+    @Column("fabric_texture_name")
     private String name;
 
-    @Column(name = "fabric_texture_description")
+    @Column("fabric_texture_description")
     private String description;
 }

@@ -13,8 +13,6 @@ spring:
       ddl-auto: none
   liquibase:
     enabled: false
-jwt:
-  secret: popopo
 eureka:
   client:
     serviceUrl:

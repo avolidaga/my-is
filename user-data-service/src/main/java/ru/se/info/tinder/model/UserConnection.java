@@ -1,7 +1,8 @@
 package ru.se.info.tinder.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.PastOrPresent;
+import javax.persistence.*;
+import javax.validation.constraints.PastOrPresent;
+
 import lombok.*;
 
 import java.time.LocalDate;

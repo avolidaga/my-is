@@ -1,7 +1,6 @@
 package ru.se.info.tinder.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -24,9 +23,9 @@ public class FabricTextureService {
                 .map(FabricTextureMapper::toDtoFabricTexture);
     }
 
-    public Flux<FabricTextureDto> getAllFabricTextures(Pageable pageable) {
+    public Flux<FabricTextureDto> getAllFabricTextures() {
         return fabricTextureRepository
-                .findAllBy(pageable)
+                .findAll()
                 .map(FabricTextureMapper::toDtoFabricTexture);
     }
 

@@ -8,8 +8,6 @@ spring:
     password: ${DB_PASSWORD:root}
   main:
     web-application-type: reactive
-jwt:
-  secret: popopo
 eureka:
   client:
     serviceUrl:

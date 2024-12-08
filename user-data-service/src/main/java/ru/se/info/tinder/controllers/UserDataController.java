@@ -3,18 +3,18 @@ package ru.se.info.tinder.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.se.info.tinder.dto.CreateUserDataDto;
 import ru.se.info.tinder.dto.UpdateUserDataDto;
 import ru.se.info.tinder.dto.UserDataDto;
 import ru.se.info.tinder.service.UserDataService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.security.Principal;
 
 
@@ -26,55 +26,50 @@ public class UserDataController {
     private final UserDataService userDataService;
 
     @PostMapping("new")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<UserDataDto> createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto,
-                                                      @RequestHeader("Authorization") String token) {
-        UserDataDto userDataDto = userDataService.createUserData(createUserDataDto, token);
-        return new ResponseEntity<>(userDataDto, HttpStatus.CREATED);
+    public Mono<UserDataDto> createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto,
+                                            @RequestHeader("Authorization") String token) {
+        return userDataService.createUserData(createUserDataDto, token);
     }
 
     @PutMapping("{id}")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<UserDataDto> updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto,
-                                                            @PathVariable Long id,
-                                                            Principal principal,
-                                                            @RequestHeader("Authorization") String token) {
-        UserDataDto userData = userDataService.updateUserDataById(updateUserDataDto, id, principal, token);
-        return ResponseEntity.ok(userData);
+    public Mono<UserDataDto> updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto,
+                                                  @PathVariable Long id,
+                                                  Principal principal,
+                                                  @RequestHeader("Authorization") String token) {
+        return userDataService.updateUserDataById(updateUserDataDto, id, principal, token);
     }
 
     @DeleteMapping("{id}")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<Void> deleteUserDataByUser(@PathVariable Long id) {
-        userDataService.deleteUserDataById(id);
-        return ResponseEntity.ok().build();
+    public Mono<Object> deleteUserDataByUser(@PathVariable Long id) {
+        return userDataService.deleteUserDataById(id);
     }
 
     @GetMapping("{id}")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<UserDataDto> getUserDataById(@PathVariable Long id) {
-        UserDataDto userData = userDataService.getUserDataDtoById(id);
-        return ResponseEntity.ok(userData);
+    public Mono<UserDataDto> getUserDataById(@PathVariable Long id) {
+        return userDataService.getUserDataDtoById(id);
     }
 
     @GetMapping("location/{locationId}")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<Page<UserDataDto>> getUsersByLocationId(@PathVariable Long locationId,
-                                                                  @RequestParam int page,
-                                                                  @RequestParam @Min(1) @Max(50) int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UserDataDto> userDataPage = userDataService.getUsersDataByLocationId(locationId, pageable);
-
-        return new ResponseEntity<>(userDataPage, HttpStatus.OK);
+    public Flux<UserDataDto> getUsersByLocationId(@PathVariable Long locationId,
+                                                  @RequestParam int page,
+                                                  @RequestParam @Min(1) @Max(50) int size) {
+        return userDataService.getUsersDataByLocationId(locationId)
+                .skip((long) page * size)
+                .take(size);
     }
 
     @GetMapping
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<Page<UserDataDto>> getAllUsersData(@RequestParam int page,
-                                                             @RequestParam @Min(1) @Max(50) int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UserDataDto> userDataPage = userDataService.getAllUsersData(pageable);
-
-        return new ResponseEntity<>(userDataPage, HttpStatus.OK);
+    public Flux<UserDataDto> getAllUsersData(@RequestParam int page,
+                                             @RequestParam @Min(1) @Max(50) int size) {
+        return userDataService.getAllUsersData()
+                .skip((long) page * size)
+                .take(size);
     }
 }

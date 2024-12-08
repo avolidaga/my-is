@@ -1,9 +1,10 @@
 package ru.se.info.tinder.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import ru.se.info.tinder.dto.CreateUserDataDto;
 import ru.se.info.tinder.dto.UpdateUserDataDto;
 import ru.se.info.tinder.dto.UserDataDto;
@@ -18,6 +19,7 @@ import ru.se.info.tinder.service.exception.UserNotCompletedRegistrationException
 import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,60 +30,84 @@ public class UserDataService {
     private final LocationClient locationService;
 
     @Transactional
-    public UserDataDto createUserData(CreateUserDataDto createUserDataDto, String token) {
-        Set<Location> locations = new HashSet<>(locationService.getLocationsByIds(createUserDataDto.getLocations(), token)
-                .getBody().stream()
+    public Mono<UserDataDto> createUserData(CreateUserDataDto createUserDataDto, String token) {
+        Mono<List<Location>> locations = locationService.getLocationsByIds(createUserDataDto.getLocations(), token)
                 .map(l -> Location.builder().id(l.getId()).build())
-                .collect(Collectors.toList()));
-
-        UserData userData = UserDataMapper.toEntityUserData(createUserDataDto, locations);
-        UserData savedUserData = userDataRepository.save(userData);
-
-        return UserDataMapper.toUserDataDto(savedUserData);
+                .collect(Collectors.toList());
+        return locations.flatMap(
+                (locationsList) -> {
+                    UserData userData = UserDataMapper.toEntityUserData(createUserDataDto, new HashSet<>(locationsList));
+                    return Mono.fromCallable(
+                                    () -> userDataRepository.save(userData)
+                            ).map(UserDataMapper::toUserDataDto)
+                            .subscribeOn(Schedulers.boundedElastic());
+                }
+        ).subscribeOn(Schedulers.boundedElastic());
     }
 
-    public Page<UserDataDto> getAllUsersData(Pageable pageable) {
-        return userDataRepository.findAll(pageable)
-                .map(UserDataMapper::toUserDataDto);
+    public Flux<UserDataDto> getAllUsersData() {
+        return Flux.fromStream(
+                        () -> userDataRepository.findAll().stream()
+                ).map(UserDataMapper::toUserDataDto)
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
-    public Page<UserDataDto> getUsersDataByLocationId(Long locationId, Pageable pageable) {
-        return userDataRepository.findAllUserDataByLocationsId(locationId, pageable)
-                .map(UserDataMapper::toUserDataDto);
+    public Flux<UserDataDto> getUsersDataByLocationId(Long locationId) {
+        return Flux.fromStream(
+                        () -> userDataRepository.findAllUserDataByLocationsId(locationId).stream()
+                ).map(UserDataMapper::toUserDataDto)
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
     @Transactional
-    public UserDataDto updateUserDataById(UpdateUserDataDto updateUserDataDto, Long id, Principal principal, String token) {
-        Set<Location> locations = new HashSet<>(locationService.getLocationsByIds(updateUserDataDto.getLocations(), token)
-                .getBody().stream()
+    public Mono<UserDataDto> updateUserDataById(UpdateUserDataDto updateUserDataDto, Long id, Principal principal, String token) {
+        Mono<List<Location>> locations = locationService.getLocationsByIds(updateUserDataDto.getLocations(), token)
                 .map(l -> Location.builder().id(l.getId()).build())
-                .collect(Collectors.toList()));
-        UserData oldUserData = userDataRepository.findById(id)
-                .orElseThrow(() -> new NoEntityWithSuchIdException("UserData", id));
-        if (!oldUserData.getOwnerUser().getUsername().equals(principal.getName())) {
-            throw new IllegalArgumentException("User don't have enough rights for data updating");
-        }
-        UserData newUserData = UserDataMapper.toEntityUserData(updateUserDataDto, locations, oldUserData);
-        UserData savedUserData = userDataRepository.save(newUserData);
-        return UserDataMapper.toUserDataDto(savedUserData);
+                .collect(Collectors.toList());
+
+        return locations.flatMap(
+                (locationsSet) -> {
+                    return Mono.fromCallable(
+                            () -> userDataRepository.findById(id)
+                                    .orElseThrow(() -> new NoEntityWithSuchIdException("UserData", id))
+                    ).flatMap(
+                            (oldUserData) -> {
+                                if (!oldUserData.getOwnerUser().getUsername().equals(principal.getName())) {
+                                    return Mono.error(new IllegalArgumentException("User don't have enough rights for data updating"));
+                                }
+                                UserData newUserData = UserDataMapper.toEntityUserData(updateUserDataDto, new HashSet<>(locationsSet), oldUserData);
+                                return Mono.fromCallable(
+                                                () -> userDataRepository.save(newUserData)
+                                        ).map(UserDataMapper::toUserDataDto)
+                                        .subscribeOn(Schedulers.boundedElastic());
+                            }
+                    ).subscribeOn(Schedulers.boundedElastic());
+                }
+        ).subscribeOn(Schedulers.boundedElastic());
     }
 
-    public UserDataDto getUserDataDtoById(Long id) {
-        return UserDataMapper.toUserDataDto(getUserDataById(id));
+    public Mono<UserDataDto> getUserDataDtoById(Long id) {
+        return getUserDataById(id).map(UserDataMapper::toUserDataDto);
     }
 
     @Transactional
-    public void deleteUserDataById(Long id) {
-        userDataRepository.deleteById(id);
+    public Mono<Object> deleteUserDataById(Long id) {
+        return Mono.fromRunnable(
+                () -> userDataRepository.deleteById(id)
+        ).subscribeOn(Schedulers.boundedElastic());
     }
 
-    protected UserData getUserDataById(Long userDataId) {
-        return userDataRepository.findById(userDataId)
-                .orElseThrow(() -> new NoEntityWithSuchIdException("UserData", userDataId));
+    protected Mono<UserData> getUserDataById(Long userDataId) {
+        return Mono.fromCallable(
+                () -> userDataRepository.findById(userDataId)
+                        .orElseThrow(() -> new NoEntityWithSuchIdException("UserData", userDataId))
+        ).subscribeOn(Schedulers.boundedElastic());
     }
 
-    protected UserData getUserDataByUsername(String username) {
-        return userDataRepository.findUserDataByUsername(username)
-                .orElseThrow(() -> new UserNotCompletedRegistrationException(username));
+    protected Mono<UserData> getUserDataByUsername(String username) {
+        return Mono.fromCallable(
+                () -> userDataRepository.findUserDataByUsername(username)
+                        .orElseThrow(() -> new UserNotCompletedRegistrationException(username))
+        ).subscribeOn(Schedulers.boundedElastic());
     }
 }

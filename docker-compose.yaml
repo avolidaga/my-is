@@ -67,21 +67,21 @@ services:
       - config-service
     restart: on-failure
 
-#  gateway-service:
-#      image: gateway-service:latest
-#      container_name: gateway-service
-#      environment:
-#        - 'PAGINATION_MAX_SIZE=50'
-#        - 'JWT_SECRET=popopo'
-#        - 'JWT_EXPIRED=1000000'
-#      build:
-#        context: ./gateway-service
-#        dockerfile: Dockerfile
-#      ports:
-#        - "8080:8080"
-#      depends_on:
-#        - eureka-service
-#      restart: on-failure
+  gateway-service:
+    image: gateway-service:latest
+    container_name: gateway-service
+    environment:
+      - 'PAGINATION_MAX_SIZE=50'
+      - 'JWT_SECRET=popopo'
+      - 'JWT_EXPIRED=1000000'
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-service
+    restart: on-failure
 
   location-service:
     image: location-service:latest
@@ -92,20 +92,20 @@ services:
     ports:
       - "8180:8180"
     depends_on:
-      - eureka-service
+      - gateway-service
     restart: on-failure
 
-#  fabric-texture-service:
-#    image: fabric-texture-service:latest
-#    container_name: fabric-texture-service
-#    build:
-#      context: ./fabric-texture-service
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8181:8181"
-#    depends_on:
-#      - gateway-service
-#    restart: on-failure
+  fabric-texture-service:
+    image: fabric-texture-service:latest
+    container_name: fabric-texture-service
+    build:
+      context: ./fabric-texture-service
+      dockerfile: Dockerfile
+    ports:
+      - "8181:8181"
+    depends_on:
+      - gateway-service
+    restart: on-failure
 
   auth-service:
     image: auth-service:latest
@@ -116,32 +116,32 @@ services:
     ports:
       - "8182:8182"
     depends_on:
-      - eureka-service
+      - gateway-service
     restart: on-failure
-#
-#  spacesuit-service:
-#    image: spacesuit-service:latest
-#    container_name: spacesuit-service
-#    build:
-#      context: ./spacesuit-service
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8183:8183"
-#    depends_on:
-#      - gateway-service
-#    restart: on-failure
-#
-#  user-data-service:
-#      image: user-data-service:latest
-#      container_name: user-data-service
-#      build:
-#        context: ./user-data-service
-#        dockerfile: Dockerfile
-#      ports:
-#        - "8184:8184"
-#      depends_on:
-#        - gateway-service
-#      restart: on-failure
+  #
+  #  spacesuit-service:
+  #    image: spacesuit-service:latest
+  #    container_name: spacesuit-service
+  #    build:
+  #      context: ./spacesuit-service
+  #      dockerfile: Dockerfile
+  #    ports:
+  #      - "8183:8183"
+  #    depends_on:
+  #      - gateway-service
+  #    restart: on-failure
+  #
+  user-data-service:
+    image: user-data-service:latest
+    container_name: user-data-service
+    build:
+      context: ./user-data-service
+      dockerfile: Dockerfile
+    ports:
+      - "8184:8184"
+    depends_on:
+      - gateway-service
+    restart: on-failure
 
 volumes:
   postgres:
