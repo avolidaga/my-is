@@ -1,26 +1,26 @@
 package ru.se.info.tinder.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.se.info.tinder.model.UserRequest;
 
+import java.util.List;
+
 @Repository
 public interface UserRequestRepository extends JpaRepository<UserRequest, Long> {
     @Query(name = "UserRequest.getAllUserRequestIds")
-    Page<UserRequest> findAll(Pageable pageable);
+    List<UserRequest> findAll();
 
     @Query(name = "UserRequest.getDeclinedUserRequestIds")
-    Page<UserRequest> findDeclined(Pageable pageable);
+    List<UserRequest> findDeclined();
 
     @Query(name = "UserRequest.getReadyUserRequest")
-    Page<UserRequest> findReady(Pageable pageable);
+    List<UserRequest> findReady();
 
     @Query(name = "UserRequest.getInProgressUserRequest")
-    Page<UserRequest> findInProgress(Pageable pageable);
+    List<UserRequest> findInProgress();
 
     @Query(name = "UserRequest.getNewUserRequest")
-    Page<UserRequest> findNew(Pageable pageable);
+    List<UserRequest> findNew();
 }

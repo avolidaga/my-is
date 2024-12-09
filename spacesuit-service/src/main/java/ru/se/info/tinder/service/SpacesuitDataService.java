@@ -1,23 +1,21 @@
 package ru.se.info.tinder.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import ru.se.info.tinder.dto.*;
 import ru.se.info.tinder.feign.FabricTextureClient;
 import ru.se.info.tinder.mapper.FabricTextureMapper;
 import ru.se.info.tinder.mapper.SpacesuitDataMapper;
 import ru.se.info.tinder.mapper.UserRequestMapper;
-import ru.se.info.tinder.model.FabricTexture;
-import ru.se.info.tinder.model.UserRequest;
 import ru.se.info.tinder.model.SpacesuitData;
 import ru.se.info.tinder.repository.SpacesuitDataRepository;
 import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 
+import javax.transaction.Transactional;
 import java.security.Principal;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -27,61 +25,83 @@ public class SpacesuitDataService {
     private final FabricTextureClient fabricTextureService;
 
     @Transactional
-    public UserRequestDto createSpacesuitData(CreateSpacesuitDataDto createSpacesuitDataDto, String token) {
-        Long fabricTextureId = createSpacesuitDataDto.getFabricTextureId();
-        FabricTexture fabricTexture = FabricTextureMapper.toEntityFabricTexture(
-                Optional.ofNullable(fabricTextureService
-                                .getFabricTextureById(fabricTextureId, token).getBody())
-                        .orElseThrow(() -> new NoEntityWithSuchIdException("Fabric texture", fabricTextureId)));
+    public Mono<UserRequestDto> createSpacesuitData(CreateSpacesuitDataDto createSpacesuitDataDto, String token) {
 
-        SpacesuitData spacesuitData = SpacesuitDataMapper
-                .toEntitySpacesuitData(createSpacesuitDataDto, fabricTexture);
-        SpacesuitData savedSpacesuitData = spacesuitDataRepository.save(spacesuitData);
-
-        UserRequest userRequest = userRequestService.createUserRequest(savedSpacesuitData);
-        return UserRequestMapper.toUserRequestDto(userRequest);
+        return fabricTextureService.getFabricTextureById(createSpacesuitDataDto.getFabricTextureId(), token)
+                .switchIfEmpty(Mono.error(new NoEntityWithSuchIdException("Fabric texture", createSpacesuitDataDto.getFabricTextureId())))
+                .map(FabricTextureMapper::toEntityFabricTexture)
+                .flatMap(
+                        (fabricTexture) -> {
+                            SpacesuitData spacesuitData = SpacesuitDataMapper
+                                    .toEntitySpacesuitData(createSpacesuitDataDto, fabricTexture);
+                            return Mono.fromCallable(
+                                    () -> spacesuitDataRepository.save(spacesuitData)
+                            ).flatMap(
+                                    (savedSpacesuitData) -> userRequestService.createUserRequest(savedSpacesuitData)
+                                            .map(UserRequestMapper::toUserRequestDto)
+                            ).subscribeOn(Schedulers.boundedElastic());
+                        }
+                ).subscribeOn(Schedulers.boundedElastic());
     }
 
-    public Page<SpacesuitDataDto> getCurrentUserSpacesuitData(Pageable pageable, Principal principal) {
-        Page<SpacesuitData> userSpacesuitDataPage = spacesuitDataRepository
-                .findAllUserSpacesuitDataByOwnerUserUsername(principal.getName(), pageable);
-        return userSpacesuitDataPage.map(SpacesuitDataMapper::toSpacesuitDataDto);
+    public Flux<SpacesuitDataDto> getCurrentUserSpacesuitData(Principal principal) {
+        return Flux.fromStream(
+                () -> spacesuitDataRepository.findAllUserSpacesuitDataByOwnerUserUsername(principal.getName()).stream()
+        ).map(SpacesuitDataMapper::toSpacesuitDataDto);
     }
 
-    public void deleteSpacesuitData(Long spacesuitDataId, Principal principal) {
-        SpacesuitData spacesuitData = spacesuitDataRepository.findById(spacesuitDataId)
-                .orElseThrow(() -> new NoEntityWithSuchIdException("Spacesuit data", spacesuitDataId));
-        if (spacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
-            throw new IllegalArgumentException("User don't have enough rights for data deleting");
-        }
-        spacesuitDataRepository.delete(spacesuitData);
+    public Mono<Object> deleteSpacesuitData(Long spacesuitDataId, Principal principal) {
+        return Mono.fromCallable(
+                () -> spacesuitDataRepository.findById(spacesuitDataId)
+                        .orElseThrow(() -> new NoEntityWithSuchIdException("Spacesuit data", spacesuitDataId))
+        ).flatMap(
+                (spacesuitData) -> {
+                    if (spacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
+                        return Mono.error(new IllegalArgumentException("User don't have enough rights for data deleting"));
+                    }
+                    return Mono.fromRunnable(() -> spacesuitDataRepository.delete(spacesuitData));
+                }
+        );
     }
 
-    public SpacesuitDataDto updateSpacesuitData(UpdateSpacesuitDataDto spacesuitDataDto, Principal principal, String token) {
+    public Mono<SpacesuitDataDto> updateSpacesuitData(UpdateSpacesuitDataDto spacesuitDataDto, Principal principal, String token) {
+        return Mono.fromCallable(
+                () -> spacesuitDataRepository.findById(spacesuitDataDto.getId())
+                        .orElseThrow(() -> new NoEntityWithSuchIdException("User spacesuit data", spacesuitDataDto.getId()))
+        ).flatMap(
+                (oldSpacesuitData) -> {
+                    if (oldSpacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
+                        throw new IllegalArgumentException("User don't have enough rights for data updating");
+                    }
+                    Long fabricTextureId = spacesuitDataDto.getFabricTextureId();
 
-        SpacesuitData oldSpacesuitData = spacesuitDataRepository.findById(spacesuitDataDto.getId())
-                .orElseThrow(() -> new NoEntityWithSuchIdException("User spacesuit data", spacesuitDataDto.getId()));
-        if (oldSpacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
-            throw new IllegalArgumentException("User don't have enough rights for data updating");
-        }
-        Long fabricTextureId = spacesuitDataDto.getFabricTextureId();
-        FabricTexture fabricTexture = FabricTextureMapper.toEntityFabricTexture(
-                Optional.ofNullable(fabricTextureService
-                                .getFabricTextureById(fabricTextureId, token).getBody())
-                        .orElseThrow(() -> new NoEntityWithSuchIdException("Fabric texture", fabricTextureId)));
-
-        SpacesuitData newSpacesuitData = SpacesuitDataMapper.toEntitySpacesuitData(spacesuitDataDto, oldSpacesuitData, fabricTexture);
-        SpacesuitData savedSpacesuitData = spacesuitDataRepository.save(newSpacesuitData);
-        return SpacesuitDataMapper.toSpacesuitDataDto(savedSpacesuitData);
+                    return fabricTextureService.getFabricTextureById(fabricTextureId, token)
+                            .switchIfEmpty(Mono.error(new NoEntityWithSuchIdException("Fabric texture", fabricTextureId)))
+                            .map(FabricTextureMapper::toEntityFabricTexture)
+                            .flatMap(
+                                    (fabricTexture) -> {
+                                        SpacesuitData newSpacesuitData = SpacesuitDataMapper.toEntitySpacesuitData(spacesuitDataDto, oldSpacesuitData, fabricTexture);
+                                        return Mono.fromCallable(
+                                                () -> spacesuitDataRepository.save(newSpacesuitData)
+                                        ).map(SpacesuitDataMapper::toSpacesuitDataDto);
+                                    }
+                            );
+                }
+        );
     }
 
-    public SpacesuitDataDto getSpacesuitData(Long spacesuitDataId, Principal principal) {
+    public Mono<SpacesuitDataDto> getSpacesuitData(Long spacesuitDataId, Principal principal) {
 
-        SpacesuitData spacesuitData = spacesuitDataRepository.findById(spacesuitDataId)
-                .orElseThrow(() -> new NoEntityWithSuchIdException("User spacesuit data", spacesuitDataId));
-        if (spacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
-            throw new IllegalArgumentException("User don't have enough rights for data getting");
-        }
-        return SpacesuitDataMapper.toSpacesuitDataDto(spacesuitData);
+        return Mono.fromCallable(
+                () -> spacesuitDataRepository.findById(spacesuitDataId)
+                        .orElseThrow(() -> new NoEntityWithSuchIdException("User spacesuit data", spacesuitDataId))
+        ).flatMap(
+                (spacesuitData) -> {
+                    if (spacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
+                        return Mono.error(new IllegalArgumentException("User don't have enough rights for data getting"));
+                    }
+                    return Mono.just(spacesuitData).map(SpacesuitDataMapper::toSpacesuitDataDto);
+                }
+        );
     }
 }

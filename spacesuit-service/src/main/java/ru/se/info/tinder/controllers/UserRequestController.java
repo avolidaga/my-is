@@ -2,21 +2,20 @@ package ru.se.info.tinder.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.se.info.tinder.dto.UserRequestDto;
 import ru.se.info.tinder.model.enums.SearchStatus;
 import ru.se.info.tinder.model.enums.UpdateRequestStatus;
 import ru.se.info.tinder.service.UserRequestService;
+
+import javax.validation.constraints.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,21 +25,22 @@ public class UserRequestController {
     private final UserRequestService userRequestService;
 
     @PatchMapping("{userRequestId}")
+    @PreAuthorize("hasAuthority('MANAGER')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<?> updateUserRequestStatus(@NotNull @RequestParam UpdateRequestStatus status,
-                                                     @NotNull @PathVariable Long userRequestId) {
-        return ResponseEntity.ok(userRequestService.updateUserRequestStatus(userRequestId, status));
+    public Mono<UserRequestDto> updateUserRequestStatus(@NotNull @RequestParam UpdateRequestStatus status,
+                                                        @NotNull @PathVariable Long userRequestId) {
+        return userRequestService.updateUserRequestStatus(userRequestId, status);
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('MANAGER')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<Page<UserRequestDto>> getUsersRequests(@NotNull @RequestParam SearchStatus status,
-                                                                 @NotNull @RequestParam int page,
-                                                                 @NotNull @RequestParam @Min(1) @Max(50) int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UserRequestDto> requestPage = userRequestService.getUsersRequestsByStatus(status, pageable);
-
-        return ResponseEntity.ok().body(requestPage);
+    public Flux<UserRequestDto> getUsersRequests(@NotNull @RequestParam SearchStatus status,
+                                                 @NotNull @RequestParam int page,
+                                                 @NotNull @RequestParam @Min(1) @Max(50) int size) {
+        return userRequestService.getUsersRequestsByStatus(status)
+                .skip((long) page * size)
+                .take(size);
     }
 
     @ExceptionHandler(value = {IllegalStateException.class})

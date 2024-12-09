@@ -1,16 +1,17 @@
 package ru.se.info.tinder.feign;
 
-import jakarta.validation.constraints.NotNull;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
+import reactivefeign.spring.config.ReactiveFeignClient;
+import reactor.core.publisher.Mono;
 import ru.se.info.tinder.dto.FabricTextureDto;
 
-@FeignClient("fabric-texture-service")
+import javax.validation.constraints.NotNull;
+
+@ReactiveFeignClient("fabric-texture-service")
 public interface FabricTextureClient {
     @GetMapping("/api/v1/fabric-textures/{fabricTextureId}")
-    ResponseEntity<FabricTextureDto> getFabricTextureById(@NotNull @PathVariable Long fabricTextureId,
-                                                          @RequestHeader("Authorization") String token);
+    Mono<FabricTextureDto> getFabricTextureById(@NotNull @PathVariable Long fabricTextureId,
+                                                @RequestHeader("Authorization") String token);
 }
