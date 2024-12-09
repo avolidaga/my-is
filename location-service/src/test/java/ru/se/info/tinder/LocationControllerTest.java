@@ -26,12 +26,6 @@ public class LocationControllerTest {
     @LocalServerPort
     private Integer port;
 
-    @Autowired
-    private LocationService locationService;
-
-    @Autowired
-    private LocationRepository locationRepository;
-
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
             .withDatabaseName("tinder")

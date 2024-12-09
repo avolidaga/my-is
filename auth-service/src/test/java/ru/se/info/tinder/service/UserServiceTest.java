@@ -32,7 +32,7 @@ public class UserServiceTest {
     private JwtTokensUtils jwtTokensUtils;
 
     @Mock
-    private PasswordEncoder passwordEncoder; // Мокаем passwordEncoder
+    private PasswordEncoder passwordEncoder;
 
     @Mock
     private Principal principal;
@@ -79,7 +79,7 @@ public class UserServiceTest {
         when(userRepository.findByUsername(requestUserDto.getUsername())).thenReturn(Optional.empty());
         when(roleRepository.findRolesByRoleName(RoleName.valueOf("USER"))).thenReturn(role);
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
-        when(passwordEncoder.encode(requestUserDto.getPassword())).thenReturn("encodedPassword"); // Мокаем метод encode
+        when(passwordEncoder.encode(requestUserDto.getPassword())).thenReturn("encodedPassword");
 
         Mono<UserEntity> createdUser = userService.createUser(requestUserDto);
 
@@ -94,35 +94,25 @@ public class UserServiceTest {
         RequestUserDto requestUserDto = new RequestUserDto();
         requestUserDto.setUsername("updatedUser");
 
-        // Создаем существующего пользователя (будет найден по имени principal)
         UserEntity existingUser = new UserEntity();
         existingUser.setId(userId);
         existingUser.setUsername("existingUser");
 
-        // Создаем обновленного пользователя
         UserEntity updatedUser = new UserEntity();
         updatedUser.setId(userId);
         updatedUser.setUsername("updatedUser");
 
-        // Мокаем возвращаемое значение для principal.getName()
-        when(principal.getName()).thenReturn("existingUser"); // Тот пользователь, который обновляет данные
-
-        // Мокаем поиск пользователя по имени в репозитории
-        when(userRepository.findByUsername("existingUser")).thenReturn(Optional.of(existingUser));  // userRepository.findByUsername("existingUser")
-        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser)); // Поиск по ID
-
-        // Мокаем сохранение обновленного пользователя
+        when(principal.getName()).thenReturn("existingUser");
+        when(userRepository.findByUsername("existingUser")).thenReturn(Optional.of(existingUser));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
         when(userRepository.save(any(UserEntity.class))).thenReturn(updatedUser);
 
-        // Запускаем тестируемый метод
         Mono<UserDto> result = userService.updateUserById(userId, requestUserDto, principal);
 
-        // Проверяем, что результат обновления пользователя соответствует ожиданиям
         StepVerifier.create(result)
                 .expectNextMatches(userDto -> userDto.getUsername().equals("updatedUser"))
                 .verifyComplete();
     }
-
 
     @Test
     public void testLoginUser_Success() {

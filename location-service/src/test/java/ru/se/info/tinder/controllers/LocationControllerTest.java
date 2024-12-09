@@ -90,15 +90,12 @@ class LocationControllerTest {
         LocationDto locationDto2 = new LocationDto(2L, "Location 2", "Description 2", 30.0);
         List<LocationDto> locations = List.of(locationDto1, locationDto2);
 
-        // Мокируем возврат Flux из сервиса
         when(locationService.getLocationsListByIds(Flux.fromIterable(locationIds)))
                 .thenReturn(Flux.fromIterable(locations));
 
-        // Проверяем, что контроллер вернет правильные локации
         StepVerifier.create(controller.getLocationsByIds(locationIds))
                 .expectNextMatches(location -> location.getName().equals("Location 1") && location.getTemperature() == 25.0)
                 .expectNextMatches(location -> location.getName().equals("Location 2") && location.getTemperature() == 30.0)
                 .verifyComplete();
     }
-
 }
