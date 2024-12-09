@@ -39,9 +39,9 @@ public class SpacesuitDataService {
                             ).flatMap(
                                     (savedSpacesuitData) -> userRequestService.createUserRequest(savedSpacesuitData)
                                             .map(UserRequestMapper::toUserRequestDto)
-                            ).subscribeOn(Schedulers.boundedElastic());
+                            );
                         }
-                ).subscribeOn(Schedulers.boundedElastic());
+                );
     }
 
     public Flux<SpacesuitDataDto> getCurrentUserSpacesuitData(Principal principal) {
@@ -56,6 +56,8 @@ public class SpacesuitDataService {
                         .orElseThrow(() -> new NoEntityWithSuchIdException("Spacesuit data", spacesuitDataId))
         ).flatMap(
                 (spacesuitData) -> {
+                    System.out.println(spacesuitData.getOwnerUser().getUsername());
+                    System.out.println(principal.getName());
                     if (spacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
                         return Mono.error(new IllegalArgumentException("User don't have enough rights for data deleting"));
                     }

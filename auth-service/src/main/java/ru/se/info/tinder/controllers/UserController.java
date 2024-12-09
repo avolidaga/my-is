@@ -1,6 +1,5 @@
 package ru.se.info.tinder.controllers;
 
-import com.nimbusds.jwt.SignedJWT;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +64,6 @@ public class UserController {
 
     @PostMapping("/validation")
     public Mono<ResponseUserDto> validateToken(@RequestBody String token) {
-         return jwtTokensUtils.check(token).map(jwtTokensUtils::createUserDto);
+        return jwtTokensUtils.check(token).map(jwtTokensUtils::createUserDto);
     }
 }

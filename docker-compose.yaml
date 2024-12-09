@@ -118,19 +118,19 @@ services:
     depends_on:
       - gateway-service
     restart: on-failure
-  #
-  #  spacesuit-service:
-  #    image: spacesuit-service:latest
-  #    container_name: spacesuit-service
-  #    build:
-  #      context: ./spacesuit-service
-  #      dockerfile: Dockerfile
-  #    ports:
-  #      - "8183:8183"
-  #    depends_on:
-  #      - gateway-service
-  #    restart: on-failure
-  #
+
+  spacesuit-service:
+    image: spacesuit-service:latest
+    container_name: spacesuit-service
+    build:
+      context: ./spacesuit-service
+      dockerfile: Dockerfile
+    ports:
+      - "8183:8183"
+    depends_on:
+      - gateway-service
+    restart: on-failure
+
   user-data-service:
     image: user-data-service:latest
     container_name: user-data-service

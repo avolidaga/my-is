@@ -34,11 +34,10 @@ public class UserConnectionService {
                                     .build();
 
                             return Mono.fromCallable(
-                                            () -> userConnectionRepository.save(userConnection)
-                                    ).map(UserConnectionMapper::toDtoUserConnection)
-                                    .subscribeOn(Schedulers.boundedElastic());
-                        }).subscribeOn(Schedulers.boundedElastic())
-                ).subscribeOn(Schedulers.boundedElastic());
+                                    () -> userConnectionRepository.save(userConnection)
+                            ).map(UserConnectionMapper::toDtoUserConnection);
+                        })
+                );
     }
 
     public Flux<UserConnectionDto> getConnections(Principal principal) {
@@ -46,8 +45,7 @@ public class UserConnectionService {
                         () -> userConnectionRepository.findAll().stream()
                 ).filter((connection) -> connection.getUserData1().getOwnerUser().getUsername().equals(principal.getName()) ||
                         connection.getUserData2().getOwnerUser().getUsername().equals(principal.getName()))
-                .map(UserConnectionMapper::toDtoUserConnection)
-                .subscribeOn(Schedulers.boundedElastic());
+                .map(UserConnectionMapper::toDtoUserConnection);
     }
 
     public Mono<UserConnectionDto> getUserConnectionById(Long connectionId, Principal principal) {
@@ -63,6 +61,6 @@ public class UserConnectionService {
                     return Mono.just(userConnection)
                             .map(UserConnectionMapper::toDtoUserConnection);
                 }
-        ).subscribeOn(Schedulers.boundedElastic());
+        );
     }
 }

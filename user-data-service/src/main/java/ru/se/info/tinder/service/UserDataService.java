@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 import ru.se.info.tinder.dto.CreateUserDataDto;
 import ru.se.info.tinder.dto.UpdateUserDataDto;
 import ru.se.info.tinder.dto.UserDataDto;
@@ -38,25 +37,22 @@ public class UserDataService {
                 (locationsList) -> {
                     UserData userData = UserDataMapper.toEntityUserData(createUserDataDto, new HashSet<>(locationsList));
                     return Mono.fromCallable(
-                                    () -> userDataRepository.save(userData)
-                            ).map(UserDataMapper::toUserDataDto)
-                            .subscribeOn(Schedulers.boundedElastic());
+                            () -> userDataRepository.save(userData)
+                    ).map(UserDataMapper::toUserDataDto);
                 }
-        ).subscribeOn(Schedulers.boundedElastic());
+        );
     }
 
     public Flux<UserDataDto> getAllUsersData() {
         return Flux.fromStream(
-                        () -> userDataRepository.findAll().stream()
-                ).map(UserDataMapper::toUserDataDto)
-                .subscribeOn(Schedulers.boundedElastic());
+                () -> userDataRepository.findAll().stream()
+        ).map(UserDataMapper::toUserDataDto);
     }
 
     public Flux<UserDataDto> getUsersDataByLocationId(Long locationId) {
         return Flux.fromStream(
-                        () -> userDataRepository.findAllUserDataByLocationsId(locationId).stream()
-                ).map(UserDataMapper::toUserDataDto)
-                .subscribeOn(Schedulers.boundedElastic());
+                () -> userDataRepository.findAllUserDataByLocationsId(locationId).stream()
+        ).map(UserDataMapper::toUserDataDto);
     }
 
     @Transactional
@@ -77,13 +73,12 @@ public class UserDataService {
                                 }
                                 UserData newUserData = UserDataMapper.toEntityUserData(updateUserDataDto, new HashSet<>(locationsSet), oldUserData);
                                 return Mono.fromCallable(
-                                                () -> userDataRepository.save(newUserData)
-                                        ).map(UserDataMapper::toUserDataDto)
-                                        .subscribeOn(Schedulers.boundedElastic());
+                                        () -> userDataRepository.save(newUserData)
+                                ).map(UserDataMapper::toUserDataDto);
                             }
-                    ).subscribeOn(Schedulers.boundedElastic());
+                    );
                 }
-        ).subscribeOn(Schedulers.boundedElastic());
+        );
     }
 
     public Mono<UserDataDto> getUserDataDtoById(Long id) {
@@ -94,20 +89,20 @@ public class UserDataService {
     public Mono<Object> deleteUserDataById(Long id) {
         return Mono.fromRunnable(
                 () -> userDataRepository.deleteById(id)
-        ).subscribeOn(Schedulers.boundedElastic());
+        );
     }
 
     protected Mono<UserData> getUserDataById(Long userDataId) {
         return Mono.fromCallable(
                 () -> userDataRepository.findById(userDataId)
                         .orElseThrow(() -> new NoEntityWithSuchIdException("UserData", userDataId))
-        ).subscribeOn(Schedulers.boundedElastic());
+        );
     }
 
     protected Mono<UserData> getUserDataByUsername(String username) {
         return Mono.fromCallable(
                 () -> userDataRepository.findUserDataByUsername(username)
                         .orElseThrow(() -> new UserNotCompletedRegistrationException(username))
-        ).subscribeOn(Schedulers.boundedElastic());
+        );
     }
 }

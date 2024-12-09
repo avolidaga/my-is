@@ -52,8 +52,7 @@ public class UserService {
         return Mono.fromCallable(
                         () -> userRepository.findById(userId)
                                 .orElseThrow(() -> new NoEntityWithSuchIdException("User", userId))
-                ).subscribeOn(Schedulers.boundedElastic())
-                .map(UserMapper::toDtoUser);
+                ).map(UserMapper::toDtoUser);
     }
 
     @Transactional
@@ -75,38 +74,21 @@ public class UserService {
                                     userEntity.setRole(role);
                                     return Mono.fromCallable(
                                             () -> userRepository.save(userEntity)
-                                    ).subscribeOn(Schedulers.boundedElastic());
+                                    );
                                 }
-                        ).subscribeOn(Schedulers.boundedElastic());
+                        );
                     }
                 }
-        ).subscribeOn(Schedulers.boundedElastic());
+        );
     }
-
-//    @Transactional
-//    public Mono<UserEntity> createUser(RequestUserDto requestUserDto) {
-//
-//        return Mono.fromCallable(
-//                () -> roleRepository.findRolesByRoleName(RoleName.USER)
-//        ).flatMap(
-//                role -> {
-//                    UserEntity userEntity = UserMapper.toEntityUser(requestUserDto);
-//                    userEntity.setPassword(passwordEncoder.encode(requestUserDto.getPassword()));
-//                    userEntity.setRole(role);
-//                    return Mono.fromCallable(
-//                            () -> userRepository.save(userEntity)
-//                    ).subscribeOn(Schedulers.boundedElastic());
-//                }
-//        ).subscribeOn(Schedulers.boundedElastic());
-//    }
 
     public Mono<AuthUserDto> loginUser(RequestUserDto requestUserDto) {
         return getUserEntityByUsername(requestUserDto.getUsername())
                 .flatMap(
                         user -> Mono.fromCallable(
                                 () -> new AuthUserDto(jwtTokensUtils.generateToken(user))
-                        ).subscribeOn(Schedulers.boundedElastic())
-                ).subscribeOn(Schedulers.boundedElastic());
+                        )
+                );
     }
 
     public Mono<UserDto> getUserByUsername(String username) {
@@ -123,7 +105,7 @@ public class UserService {
                     }
                     return Mono.error(new UserNotFoundException(username));
                 }
-        ).subscribeOn(Schedulers.boundedElastic());
+        );
     }
 
     protected Mono<UserEntity> getUserByUserDataId(Long id) {
@@ -136,7 +118,7 @@ public class UserService {
                     }
                     return Mono.error(new NoEntityWithSuchIdException("User", "User data", id));
                 }
-        ).subscribeOn(Schedulers.boundedElastic());
+        );
     }
 
     public Mono<Void> deleteUserById(Long userId, Principal principal) {
@@ -151,6 +133,6 @@ public class UserService {
     protected Mono<UserEntity> saveUser(UserEntity userEntity) {
         return Mono.fromCallable(
                 () -> userRepository.save(userEntity)
-        ).subscribeOn(Schedulers.boundedElastic());
+        );
     }
 }

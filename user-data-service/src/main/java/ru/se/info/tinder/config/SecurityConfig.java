@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .authorizeExchange()
                 .pathMatchers(AUTH_WHITELIST).permitAll()
-                .pathMatchers("/api/**").hasAnyRole("USER", "ADMIN")
+                .pathMatchers("/api/**").hasAnyAuthority("USER", "ADMIN")
                 .anyExchange().authenticated()
                 .and()
                 .addFilterAt(bearerAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
