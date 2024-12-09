@@ -1,7 +1,4 @@
 spring:
-  application:
-    name: config-service
-
   cloud:
     config:
       server:
@@ -12,4 +9,11 @@ spring:
           default-label: lab2
         native:
           search-locations: file:./config/
+
+server:
   port: 8888
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-service:8761/eureka/
