@@ -56,9 +56,7 @@ public class SpacesuitDataService {
                         .orElseThrow(() -> new NoEntityWithSuchIdException("Spacesuit data", spacesuitDataId))
         ).flatMap(
                 (spacesuitData) -> {
-                    System.out.println(spacesuitData.getOwnerUser().getUsername());
-                    System.out.println(principal.getName());
-                    if (spacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
+                    if (!spacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
                         return Mono.error(new IllegalArgumentException("User don't have enough rights for data deleting"));
                     }
                     return Mono.fromRunnable(() -> spacesuitDataRepository.delete(spacesuitData));
@@ -72,7 +70,7 @@ public class SpacesuitDataService {
                         .orElseThrow(() -> new NoEntityWithSuchIdException("User spacesuit data", spacesuitDataDto.getId()))
         ).flatMap(
                 (oldSpacesuitData) -> {
-                    if (oldSpacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
+                    if (!oldSpacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
                         throw new IllegalArgumentException("User don't have enough rights for data updating");
                     }
                     Long fabricTextureId = spacesuitDataDto.getFabricTextureId();
@@ -99,7 +97,7 @@ public class SpacesuitDataService {
                         .orElseThrow(() -> new NoEntityWithSuchIdException("User spacesuit data", spacesuitDataId))
         ).flatMap(
                 (spacesuitData) -> {
-                    if (spacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
+                    if (!spacesuitData.getOwnerUser().getUsername().equals(principal.getName())) {
                         return Mono.error(new IllegalArgumentException("User don't have enough rights for data getting"));
                     }
                     return Mono.just(spacesuitData).map(SpacesuitDataMapper::toSpacesuitDataDto);

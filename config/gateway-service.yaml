@@ -11,7 +11,8 @@ spring:
         - id: auth-service
           uri: lb://auth-service
           predicates:
-            - Path=/api/v1/user-management/**
+            - Path=/api/v1/user-management/users/**
+            - Path=/api/v1/user-management/auth-info
         - id: location-service
           uri: lb://location-service
           predicates:
@@ -28,17 +29,6 @@ spring:
           uri: lb://fabric-texture-service
           predicates:
             - Path=/api/v1/fabric-textures/**
-
-springdoc:
-  enable-native-support: true
-  api-docs:
-    groups:
-      enabled: true
-    enabled: true
-  swagger-ui:
-    use-root-path: true
-    config-url: /v3/api-docs/swagger-config
-    url: /v3/api-docs
 
 eureka:
   client:
