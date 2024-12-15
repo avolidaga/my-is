@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 import ru.se.info.tinder.dto.*;
 import ru.se.info.tinder.feign.FabricTextureClient;
 import ru.se.info.tinder.mapper.FabricTextureMapper;
@@ -24,7 +23,6 @@ public class SpacesuitDataService {
     private final UserRequestService userRequestService;
     private final FabricTextureClient fabricTextureService;
 
-    @Transactional
     public Mono<UserRequestDto> createSpacesuitData(CreateSpacesuitDataDto createSpacesuitDataDto, String token) {
 
         return fabricTextureService.getFabricTextureById(createSpacesuitDataDto.getFabricTextureId(), token)

@@ -27,7 +27,6 @@ public class UserDataService {
     private final UserDataRepository userDataRepository;
     private final LocationClient locationService;
 
-    @Transactional
     public Mono<UserDataDto> createUserData(CreateUserDataDto createUserDataDto, String token) {
         Mono<List<Location>> locations = locationService.getLocationsByIds(createUserDataDto.getLocations(), token)
                 .map(l -> Location.builder().id(l.getId()).build())
@@ -54,7 +53,6 @@ public class UserDataService {
         ).map(UserDataMapper::toUserDataDto);
     }
 
-    @Transactional
     public Mono<UserDataDto> updateUserDataById(UpdateUserDataDto updateUserDataDto, Long id, Principal principal, String token) {
         Mono<List<Location>> locations = locationService.getLocationsByIds(updateUserDataDto.getLocations(), token)
                 .map(l -> Location.builder().id(l.getId()).build())
@@ -84,7 +82,6 @@ public class UserDataService {
         return getUserDataById(id).map(UserDataMapper::toUserDataDto);
     }
 
-    @Transactional
     public Mono<Object> deleteUserDataById(Long id) {
         return Mono.fromRunnable(
                 () -> userDataRepository.deleteById(id)

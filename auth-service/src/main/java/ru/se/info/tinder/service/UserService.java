@@ -4,14 +4,11 @@ package ru.se.info.tinder.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 import ru.se.info.tinder.dto.AuthUserDto;
 import ru.se.info.tinder.dto.RequestUserDto;
 import ru.se.info.tinder.dto.UserDto;
 import ru.se.info.tinder.mapper.UserMapper;
-import ru.se.info.tinder.model.Roles;
 import ru.se.info.tinder.model.UserEntity;
 import ru.se.info.tinder.model.enums.RoleName;
 import ru.se.info.tinder.repository.RoleRepository;
@@ -31,7 +28,6 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final JwtTokensUtils jwtTokensUtils;
 
-    @Transactional
     public Mono<UserDto> updateUserById(Long userId, RequestUserDto requestUserDto, Principal principal) {
         return getUserEntityByUsername(principal.getName())
                 .flatMap(
@@ -55,7 +51,6 @@ public class UserService {
                 ).map(UserMapper::toDtoUser);
     }
 
-    @Transactional
     public Mono<UserEntity> createUser(RequestUserDto requestUserDto) {
 
         return Mono.fromCallable(

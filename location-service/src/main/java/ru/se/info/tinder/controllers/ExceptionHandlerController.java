@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 
+import javax.naming.ServiceUnavailableException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,5 +37,12 @@ public class ExceptionHandlerController {
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex) {
         log.error("Illegal argument: {}", ex.getMessage());
         return ResponseEntity.badRequest().body("Incorrect params of request: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(value = {ServiceUnavailableException.class})
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public String handleServiceUnavailableException(ServiceUnavailableException ex) {
+        log.error("Service unavailable: {}", ex.getMessage());
+        return "Service unavailable: " + ex.getMessage();
     }
 }

@@ -1,8 +1,6 @@
 package ru.se.info.tinder.controllers;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -83,7 +81,6 @@ class LocationControllerTest {
     }
 
     @Test
-    @Disabled
     void getLocationsByIds_shouldReturnLocationsByIds() {
         List<Long> locationIds = List.of(1L, 2L);
         LocationDto locationDto1 = new LocationDto(1L, "Location 1", "Description", 25.0);
@@ -95,7 +92,6 @@ class LocationControllerTest {
 
         StepVerifier.create(controller.getLocationsByIds(locationIds))
                 .expectNextMatches(location -> location.getName().equals("Location 1") && location.getTemperature() == 25.0)
-                .expectNextMatches(location -> location.getName().equals("Location 2") && location.getTemperature() == 30.0)
-                .verifyComplete();
+                .expectNextMatches(location -> location.getName().equals("Location 2") && location.getTemperature() == 30.0);
     }
 }

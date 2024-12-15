@@ -1,7 +1,6 @@
 package ru.se.info.tinder.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,7 +14,6 @@ import ru.se.info.tinder.model.enums.UpdateRequestStatus;
 import ru.se.info.tinder.repository.UserRequestRepository;
 import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
@@ -57,7 +55,6 @@ public class UserRequestService {
         );
     }
 
-    @Transactional
     private Mono<UserRequestDto> updateStatus(UserRequest userRequest, RequestStatus status) {
         userRequest.setStatus(status);
         userRequest.setUpdatedAt(LocalDateTime.now());

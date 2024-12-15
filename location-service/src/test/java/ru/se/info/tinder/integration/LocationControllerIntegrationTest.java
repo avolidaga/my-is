@@ -1,30 +1,45 @@
-package ru.se.info.tinder;
+package ru.se.info.tinder.integration;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import io.restassured.response.ValidatableResponse;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.se.info.tinder.dto.RequestLocationDto;
-import ru.se.info.tinder.service.LocationService;
-import ru.se.info.tinder.repository.LocationRepository;
+
+import java.io.IOException;
 
 import static io.restassured.RestAssured.given;
 
-@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LocationControllerTest {
+@WireMockTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@EnableConfigurationProperties
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ContextConfiguration(classes = {WireMockConfig.class, AuthServiceMock.class})
+public class LocationControllerIntegrationTest {
 
     @LocalServerPort
     private Integer port;
+
+    @Autowired
+    private WireMockServer mockAuthService;
+
+    private final String validToken = "Valid token";
 
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
@@ -34,10 +49,9 @@ public class LocationControllerTest {
 
     @DynamicPropertySource
     static void postgresqlProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.driver-class-name", postgreSQLContainer::getDriverClassName);
-        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
-        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://${postgres.host}:${postgres.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)}/${postgres.databaseName}");
+        registry.add("spring.r2dbc.username", postgreSQLContainer::getUsername);
+        registry.add("spring.r2dbc.password", postgreSQLContainer::getPassword);
     }
 
     @BeforeAll
@@ -46,12 +60,14 @@ public class LocationControllerTest {
     }
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         RestAssured.baseURI = "http://localhost:" + port;
         RestAssured.defaultParser = Parser.JSON;
+        AuthServiceMock.setupMockValidateResponse(mockAuthService);
     }
 
     @Test
+    @Order(2)
     public void createLocationTest() {
         RequestLocationDto locationDto = RequestLocationDto.builder()
                 .name("Test Location")
@@ -61,6 +77,7 @@ public class LocationControllerTest {
 
         ValidatableResponse response = given()
                 .header("Content-type", "application/json")
+                .header("Authorization", "Bearer " + validToken)
                 .and()
                 .body(locationDto)
                 .when()
@@ -74,6 +91,7 @@ public class LocationControllerTest {
     }
 
     @Test
+    @Order(2)
     public void updateLocationTest() {
         RequestLocationDto locationDto = RequestLocationDto.builder()
                 .name("Updated Location")
@@ -85,6 +103,7 @@ public class LocationControllerTest {
 
         ValidatableResponse response = given()
                 .header("Content-type", "application/json")
+                .header("Authorization", "Bearer " + validToken)
                 .and()
                 .body(locationDto)
                 .when()
@@ -98,11 +117,13 @@ public class LocationControllerTest {
     }
 
     @Test
+    @Order(3)
     public void getLocationByIdTest() {
         Long locationId = 1L;
 
         ValidatableResponse response = given()
                 .header("Content-type", "application/json")
+                .header("Authorization", "Bearer " + validToken)
                 .when()
                 .get("/api/v1/locations/{locationId}", locationId)
                 .then();
@@ -112,11 +133,13 @@ public class LocationControllerTest {
     }
 
     @Test
+    @Order(5)
     public void deleteLocationTest() {
         Long locationId = 1L;
 
         ValidatableResponse response = given()
                 .header("Content-type", "application/json")
+                .header("Authorization", "Bearer " + validToken)
                 .when()
                 .delete("/api/v1/locations/{locationId}", locationId)
                 .then();
@@ -125,9 +148,11 @@ public class LocationControllerTest {
     }
 
     @Test
+    @Order(1)
     public void getAllLocationsTest() {
         ValidatableResponse response = given()
                 .header("Content-type", "application/json")
+                .header("Authorization", "Bearer " + validToken)
                 .queryParam("page", 0)
                 .queryParam("size", 10)
                 .when()

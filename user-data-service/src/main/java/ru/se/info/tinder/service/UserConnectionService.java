@@ -2,10 +2,8 @@ package ru.se.info.tinder.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 import ru.se.info.tinder.dto.UserConnectionDto;
 import ru.se.info.tinder.mapper.UserConnectionMapper;
 import ru.se.info.tinder.model.UserConnection;
@@ -22,7 +20,6 @@ public class UserConnectionService {
     private final UserConnectionRepository userConnectionRepository;
     private final UserDataService userDataService;
 
-    @Transactional
     public Mono<UserConnectionDto> createConnection(Long userDataId, Principal principal) {
         return userDataService.getUserDataByUsername(principal.getName())
                 .flatMap(user1 -> userDataService.getUserDataById(userDataId)
