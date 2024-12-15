@@ -7,11 +7,9 @@ spring:
       repositories:
         enabled: true
   r2dbc:
-    url: r2dbc:postgresql://${DB_HOST:database}:${DB_PORT:5432}/tinder
+    url: r2dbc:tc:postgresql:///tinder?TC_IMAGE_TAG=9.6.8
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:root}
-  main:
-    web-application-type: reactive
   cloud:
     config:
       enabled: false
@@ -21,11 +19,6 @@ spring:
           instances:
             auth-service[0]:
               uri: http://localhost:7654
-  liquibase:
-    change-log: classpath:changelog/changelog-master.xml
-    enabled: true
-    drop-first: false
-    default-schema: public
 eureka:
   client:
     enabled: false
@@ -34,17 +27,3 @@ management:
     web:
       exposure:
         include: '*'
-
-resilience4j.circuitbreaker:
-  configs:
-    default:
-      registerHealthIndicator: true
-      slidingWindowSize: 10
-      permittedNumberOfCallsInHalfOpenState: 3
-      slidingWindowType: TIME_BASED
-
-resilience4j.timelimiter:
-  configs:
-    default:
-      timeoutDuration: 15s
-      cancelRunningFuture: true

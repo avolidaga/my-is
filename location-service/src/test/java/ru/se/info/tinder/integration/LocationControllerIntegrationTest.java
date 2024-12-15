@@ -2,23 +2,26 @@ package ru.se.info.tinder.integration;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import io.r2dbc.spi.ConnectionFactory;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import io.restassured.response.ValidatableResponse;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.se.info.tinder.dto.RequestLocationDto;
 
 import java.io.IOException;
@@ -26,10 +29,11 @@ import java.io.IOException;
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@WireMockTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@EnableConfigurationProperties
+@ActiveProfiles(profiles = "test")
+@Import(DbInitializer.class)
+@AutoConfigureWebMvc
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@WireMockTest
 @ContextConfiguration(classes = {WireMockConfig.class, AuthServiceMock.class})
 public class LocationControllerIntegrationTest {
 
@@ -47,13 +51,6 @@ public class LocationControllerIntegrationTest {
             .withUsername("postgres")
             .withPassword("root");
 
-    @DynamicPropertySource
-    static void postgresqlProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://${postgres.host}:${postgres.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)}/${postgres.databaseName}");
-        registry.add("spring.r2dbc.username", postgreSQLContainer::getUsername);
-        registry.add("spring.r2dbc.password", postgreSQLContainer::getPassword);
-    }
-
     @BeforeAll
     static void pgStart() {
         postgreSQLContainer.start();
@@ -67,7 +64,6 @@ public class LocationControllerIntegrationTest {
     }
 
     @Test
-    @Order(2)
     public void createLocationTest() {
         RequestLocationDto locationDto = RequestLocationDto.builder()
                 .name("Test Location")
@@ -91,7 +87,6 @@ public class LocationControllerIntegrationTest {
     }
 
     @Test
-    @Order(2)
     public void updateLocationTest() {
         RequestLocationDto locationDto = RequestLocationDto.builder()
                 .name("Updated Location")
@@ -99,7 +94,7 @@ public class LocationControllerIntegrationTest {
                 .temperature(30.0)
                 .build();
 
-        Long locationId = 1L;
+        Long locationId = 2L;
 
         ValidatableResponse response = given()
                 .header("Content-type", "application/json")
@@ -117,9 +112,8 @@ public class LocationControllerIntegrationTest {
     }
 
     @Test
-    @Order(3)
     public void getLocationByIdTest() {
-        Long locationId = 1L;
+        int locationId = 2;
 
         ValidatableResponse response = given()
                 .header("Content-type", "application/json")
@@ -133,7 +127,6 @@ public class LocationControllerIntegrationTest {
     }
 
     @Test
-    @Order(5)
     public void deleteLocationTest() {
         Long locationId = 1L;
 
@@ -148,7 +141,6 @@ public class LocationControllerIntegrationTest {
     }
 
     @Test
-    @Order(1)
     public void getAllLocationsTest() {
         ValidatableResponse response = given()
                 .header("Content-type", "application/json")
@@ -163,4 +155,20 @@ public class LocationControllerIntegrationTest {
                 .body("size()", Matchers.greaterThan(0));
     }
 
+}
+
+class DbInitializer {
+    private static boolean initialized = false;
+
+    @Autowired
+    void initializeDb(ConnectionFactory connectionFactory) {
+        if (!initialized) {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource[] scripts = new Resource[]{
+                    resourceLoader.getResource("classpath:scripts/init_script.sql")
+            };
+            new ResourceDatabasePopulator(scripts).populate(connectionFactory).block();
+            initialized = true;
+        }
+    }
 }
