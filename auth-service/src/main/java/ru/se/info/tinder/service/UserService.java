@@ -46,9 +46,9 @@ public class UserService {
 
     public Mono<UserDto> getUserById(Long userId) {
         return Mono.fromCallable(
-                        () -> userRepository.findById(userId)
-                                .orElseThrow(() -> new NoEntityWithSuchIdException("User", userId))
-                ).map(UserMapper::toDtoUser);
+                () -> userRepository.findById(userId)
+                        .orElseThrow(() -> new NoEntityWithSuchIdException("User", userId))
+        ).map(UserMapper::toDtoUser);
     }
 
     public Mono<UserEntity> createUser(RequestUserDto requestUserDto) {
@@ -80,9 +80,14 @@ public class UserService {
     public Mono<AuthUserDto> loginUser(RequestUserDto requestUserDto) {
         return getUserEntityByUsername(requestUserDto.getUsername())
                 .flatMap(
-                        user -> Mono.fromCallable(
-                                () -> new AuthUserDto(jwtTokensUtils.generateToken(user))
-                        )
+                        user -> {
+                            if (passwordEncoder.matches(requestUserDto.getPassword(), user.getPassword())) {
+                                return Mono.fromCallable(
+                                        () -> new AuthUserDto(jwtTokensUtils.generateToken(user))
+                                );
+                            }
+                            return Mono.error(new UserNotFoundException(user.getUsername()));
+                        }
                 );
     }
 

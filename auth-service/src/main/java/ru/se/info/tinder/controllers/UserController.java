@@ -31,6 +31,7 @@ public class UserController {
     @PostMapping("users/new")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public Mono<UserDto> createUser(@Valid @RequestBody RequestUserDto requestUserDto) {
         return userService.createUser(requestUserDto).map(UserMapper::toDtoUser);
     }

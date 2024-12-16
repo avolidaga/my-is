@@ -11,19 +11,30 @@
 
         <sql>
             INSERT INTO users (username, password, role_id)
-            SELECT 'admin', 'admin', 3
+            SELECT 'admin', '$2a$10$ndxcI.OCleE64FYaOA0HneYDKiWpuJ6VxdRH9SlkIovV0/uSR84fq', 3
             WHERE NOT EXISTS (
             SELECT 1 FROM users WHERE username = 'admin'
             );
         </sql>
+        <!--        adminadmin-->
 
         <sql>
             INSERT INTO users (username, password, role_id)
-            SELECT 'manager', 'manager', 2
+            SELECT 'manager', '$2a$10$WnF2lE2CIYoqZWtq2o0RYuxUezdXLg69YiIAJUCoIRetR.gFOCAjm', 2
             WHERE NOT EXISTS (
             SELECT 1 FROM users WHERE username = 'manager'
             );
         </sql>
+        <!--        managermanager-->
+
+        <sql>
+            INSERT INTO users (username, password, role_id)
+            SELECT 'user', '$2a$10$PQWL8xWeYePDWBrQHOQGFeaQHDtfxkfWGKQJkup6DF6pAFPhtJG62', 1
+            WHERE NOT EXISTS (
+            SELECT 1 FROM users WHERE username = 'user'
+            );
+        </sql>
+        <!--        useruser-->
     </changeSet>
 
 </databaseChangeLog>

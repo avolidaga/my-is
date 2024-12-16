@@ -1,0 +1,23 @@
+server:
+  port: 8182
+  forward-headers-strategy: framework
+spring:
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+eureka:
+  client:
+    enabled: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+jwt:
+  secret: 8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpJKhjJKJfn6ryDIoGRM8EPHAB6iHsc0fb
+  lifetime: 10000000

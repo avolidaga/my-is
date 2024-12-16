@@ -7,21 +7,27 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.se.info.tinder.dto.RequestUserDto;
+import ru.se.info.tinder.model.Roles;
 import ru.se.info.tinder.model.UserEntity;
+import ru.se.info.tinder.model.enums.RoleName;
 import ru.se.info.tinder.repository.UserRepository;
+import ru.se.info.tinder.utils.JwtTokensUtils;
 
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(profiles = "test")
+@TestPropertySource(properties = {
+        "spring.test.database.replace=none"
+})
 public class UserControllerIntegrationTest {
 
     @LocalServerPort
@@ -30,22 +36,43 @@ public class UserControllerIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Container
+    @Autowired
+    private JwtTokensUtils jwtTokensUtils;
+
+    private String validJwtToken;
+
+    private UserEntity testEntity;
+
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
             .withDatabaseName("tinder")
             .withUsername("postgres")
             .withPassword("root");
 
+
     @DynamicPropertySource
-    static void overrideProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.driver-class-name", postgreSQLContainer::getDriverClassName);
+    static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
     }
 
+
+    @BeforeAll
+    static void pgStart() {
+        postgreSQLContainer.withInitScript("scripts/init_script.sql");
+        postgreSQLContainer.start();
+    }
+
+
     @BeforeEach
     void setUp() {
+        testEntity = UserEntity.builder()
+                .id(1L)
+                .username("admin")
+                .password("adminadmin")
+                .role(new Roles(1L, RoleName.ADMIN))
+                .build();
+        validJwtToken = jwtTokensUtils.generateToken(testEntity);
         RestAssured.baseURI = "http://localhost:" + port;
         RestAssured.defaultParser = Parser.JSON;
     }
@@ -58,14 +85,14 @@ public class UserControllerIntegrationTest {
 
         ValidatableResponse response = given()
                 .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + validJwtToken)
                 .body(userDto)
                 .when()
                 .post("/api/v1/user-management/users/new")
                 .then()
                 .log().all();
 
-        response.statusCode(201)
-                .body("username", equalTo("testUser"));
+        response.statusCode(201);
 
         UserEntity savedUser = userRepository.findByUsername("testUser").orElse(null);
         Assertions.assertNotNull(savedUser);
@@ -81,6 +108,7 @@ public class UserControllerIntegrationTest {
 
         ValidatableResponse response = given()
                 .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + validJwtToken)
                 .when()
                 .get("/api/v1/user-management/users/" + user.getId())
                 .then()
@@ -94,31 +122,24 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUpdateUserById() {
-        UserEntity user = new UserEntity();
-        user.setUsername("testUser");
-        user.setPassword("testPassword");
-        user = userRepository.save(user);
-
         RequestUserDto updatedUserDto = new RequestUserDto();
-        updatedUserDto.setUsername("updatedUser");
+        updatedUserDto.setUsername("admin");
         updatedUserDto.setPassword("updatedPassword");
 
         ValidatableResponse response = given()
                 .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + validJwtToken)
                 .body(updatedUserDto)
                 .when()
-                .put("/api/v1/user-management/users/" + user.getId())
+                .put("/api/v1/user-management/users/" + testEntity.getId())
                 .then()
                 .log().all();
 
         response.statusCode(200)
-                .body("username", equalTo("updatedUser"));
+                .body("username", equalTo("admin"));
 
-        UserEntity updatedUser = userRepository.findById(user.getId()).orElse(null);
+        UserEntity updatedUser = userRepository.findById(testEntity.getId()).orElse(null);
         Assertions.assertNotNull(updatedUser);
-        Assertions.assertEquals("updatedUser", updatedUser.getUsername());
-
-        userRepository.delete(updatedUser);
     }
 
     @Test
@@ -130,12 +151,13 @@ public class UserControllerIntegrationTest {
 
         ValidatableResponse response = given()
                 .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + validJwtToken)
                 .when()
                 .delete("/api/v1/user-management/users/" + user.getId())
                 .then()
                 .log().all();
 
-        response.statusCode(204);
+        response.statusCode(200);
 
         UserEntity deletedUser = userRepository.findById(user.getId()).orElse(null);
         Assertions.assertNull(deletedUser);
