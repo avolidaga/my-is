@@ -33,7 +33,7 @@ public class UserData {
     private Integer height;
     private String hairColor;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_data_location",
             joinColumns = @JoinColumn(name = "user_data_id"),

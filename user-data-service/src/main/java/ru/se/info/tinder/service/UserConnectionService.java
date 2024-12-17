@@ -24,6 +24,7 @@ public class UserConnectionService {
         return userDataService.getUserDataByUsername(principal.getName())
                 .flatMap(user1 -> userDataService.getUserDataById(userDataId)
                         .flatMap(user2 -> {
+
                             UserConnection userConnection = UserConnection.builder()
                                     .userData1(user1)
                                     .userData2(user2)
@@ -48,14 +49,16 @@ public class UserConnectionService {
     public Mono<UserConnectionDto> getUserConnectionById(Long connectionId, Principal principal) {
         return Mono.fromCallable(
                 () -> userConnectionRepository.findById(connectionId)
-                        .orElseThrow(() -> new NoEntityWithSuchIdException("Connection", connectionId))
         ).flatMap(
                 (userConnection) -> {
-                    if (!userConnection.getUserData1().getOwnerUser().getUsername().equals(principal.getName()) &&
-                            !userConnection.getUserData2().getOwnerUser().getUsername().equals(principal.getName())) {
+                    if (userConnection.isEmpty()) {
+                        return Mono.error(new NoEntityWithSuchIdException("Connection", connectionId));
+                    }
+                    if (!userConnection.get().getUserData1().getOwnerUser().getUsername().equals(principal.getName()) &&
+                            !userConnection.get().getUserData2().getOwnerUser().getUsername().equals(principal.getName())) {
                         return Mono.error(new IllegalArgumentException("User don't have enough rights for connection getting"));
                     }
-                    return Mono.just(userConnection)
+                    return Mono.just(userConnection.get())
                             .map(UserConnectionMapper::toDtoUserConnection);
                 }
         );

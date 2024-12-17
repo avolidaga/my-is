@@ -12,13 +12,14 @@ import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 import ru.se.info.tinder.service.exception.UserNotCompletedRegistrationException;
 
 import javax.naming.ServiceUnavailableException;
+import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
 public class ExceptionHandlerController {
-    @ExceptionHandler({MethodArgumentNotValidException.class, InvalidDataAccessApiUsageException.class})
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -26,6 +27,12 @@ public class ExceptionHandlerController {
                 errors.put(error.getField(), error.getDefaultMessage()));
         log.error("Validation error: {}", errors);
         return errors;
+    }
+
+    @ExceptionHandler(value = {InvalidDataAccessApiUsageException.class, ConstraintViolationException.class})
+    public ResponseEntity<?> handleValidationExceptions(RuntimeException ex) {
+        log.error("Incorrect request: {}", ex.getMessage());
+        return ResponseEntity.badRequest().body("Incorrect request: " + ex.getMessage());
     }
 
     @ExceptionHandler(value = {NoEntityWithSuchIdException.class, UserNotCompletedRegistrationException.class})

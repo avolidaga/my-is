@@ -1,6 +1,7 @@
 package ru.se.info.tinder.model;
 
 import javax.persistence.*;
+
 import lombok.*;
 
 import java.util.Set;
@@ -20,7 +21,8 @@ public class User {
 
     @OneToOne(mappedBy = "ownerUser")
     @EqualsAndHashCode.Exclude
-    private UserData userData; //TODO добавить сохранение пользователя + изменить бд
+    @ToString.Exclude
+    private UserData userData;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -33,5 +35,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "user_id_2")
     )
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<User> matchedUsers;
 }

@@ -1,0 +1,8 @@
+[
+  {
+    "id": 1,
+    "name": "Earth",
+    "description": "some place 1",
+    "temperature": 15
+  }
+]

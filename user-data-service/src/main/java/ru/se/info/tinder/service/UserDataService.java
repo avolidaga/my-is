@@ -19,6 +19,7 @@ import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -62,13 +63,16 @@ public class UserDataService {
                 (locationsSet) -> {
                     return Mono.fromCallable(
                             () -> userDataRepository.findById(id)
-                                    .orElseThrow(() -> new NoEntityWithSuchIdException("UserData", id))
                     ).flatMap(
                             (oldUserData) -> {
-                                if (!oldUserData.getOwnerUser().getUsername().equals(principal.getName())) {
+                                if (oldUserData.isEmpty()) {
+                                    return Mono.error(new NoEntityWithSuchIdException("UserData", id));
+                                }
+                                if (!oldUserData.get().getOwnerUser().getUsername().equals(principal.getName())) {
                                     return Mono.error(new IllegalArgumentException("User don't have enough rights for data updating"));
                                 }
-                                UserData newUserData = UserDataMapper.toEntityUserData(updateUserDataDto, new HashSet<>(locationsSet), oldUserData);
+                                UserData newUserData = UserDataMapper.toEntityUserData(updateUserDataDto,
+                                        new HashSet<>(locationsSet), oldUserData.get());
                                 return Mono.fromCallable(
                                         () -> userDataRepository.save(newUserData)
                                 ).map(UserDataMapper::toUserDataDto);
@@ -89,16 +93,22 @@ public class UserDataService {
     }
 
     protected Mono<UserData> getUserDataById(Long userDataId) {
-        return Mono.fromCallable(
-                () -> userDataRepository.findById(userDataId)
-                        .orElseThrow(() -> new NoEntityWithSuchIdException("UserData", userDataId))
-        );
+        return Mono.fromCallable(() -> userDataRepository.findById(userDataId))
+                .flatMap(
+                        (userData) -> {
+                            System.out.println(userData);
+                            return userData.<Mono<? extends UserData>>map(Mono::just)
+                                    .orElseGet(() -> Mono.error(new NoEntityWithSuchIdException("UserData", userDataId)));
+                        }
+                );
     }
 
     protected Mono<UserData> getUserDataByUsername(String username) {
         return Mono.fromCallable(
                 () -> userDataRepository.findUserDataByUsername(username)
-                        .orElseThrow(() -> new UserNotCompletedRegistrationException(username))
+        ).flatMap(
+                (userData) -> userData.<Mono<? extends UserData>>map(Mono::just)
+                        .orElseGet(() -> Mono.error(() -> new UserNotCompletedRegistrationException(username)))
         );
     }
 }
