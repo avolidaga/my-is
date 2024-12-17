@@ -36,5 +36,6 @@ public class SpacesuitData {
 
     @OneToMany(mappedBy = "spacesuitData")
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<UserRequest> userRequestSet;
 }

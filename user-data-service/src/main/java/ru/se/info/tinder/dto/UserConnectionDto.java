@@ -1,5 +1,6 @@
 package ru.se.info.tinder.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class UserConnectionDto {
     private Long id;
     private UserDataDto userDto1;
     private UserDataDto userDto2;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDate matchDate;
 }
 

@@ -1,0 +1,26 @@
+server:
+  port: 8182
+  forward-headers-strategy: framework
+spring:
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      client:
+        simple:
+          instances:
+            auth-service[0]:
+              uri: http://localhost:7654
+            fabric-texture-service[0]:
+              uri: http://localhost:7654
+  jpa:
+    hibernate:
+      ddl-auto: none
+eureka:
+  client:
+    enabled: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

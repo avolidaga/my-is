@@ -1,23 +1,16 @@
 package ru.se.info.tinder.service.integration;
 
-import io.r2dbc.spi.ConnectionFactory;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import io.restassured.response.ValidatableResponse;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.annotation.Import;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import ru.se.info.tinder.dto.CreateSpacesuitDataDto;
@@ -29,18 +22,19 @@ import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = "test")
-@Import(DbInitializer.class)
-@AutoConfigureWebMvc
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-//@WireMockTest
-//@ContextConfiguration(classes = {WireMockConfig.class, AuthServiceMock.class})
+@TestPropertySource(properties = {
+        "spring.test.database.replace=none"
+})
+@WireMockTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ContextConfiguration(classes = {WireMockConfig.class, AuthServiceMock.class, SpacesuitServiceMock.class})
 public class SpacesuitDataControllerIntegrationTest {
 
     @LocalServerPort
     private Integer port;
 
-//    @Autowired
-//    private WireMockServer mockAuthService;
+    @Autowired
+    private WireMockServer wireMockService;
 
     private final String validToken = "Valid token";
 
@@ -50,8 +44,16 @@ public class SpacesuitDataControllerIntegrationTest {
             .withUsername("postgres")
             .withPassword("root");
 
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+    }
+
     @BeforeAll
     static void pgStart() {
+        postgreSQLContainer.withInitScript("scripts/init_script.sql");
         postgreSQLContainer.start();
     }
 
@@ -59,12 +61,21 @@ public class SpacesuitDataControllerIntegrationTest {
     void setUp() throws IOException {
         RestAssured.baseURI = "http://localhost:" + port;
         RestAssured.defaultParser = Parser.JSON;
-//        AuthServiceMock.setupMockValidateResponse(mockAuthService);
+        AuthServiceMock.setupMockValidateResponse(wireMockService);
+        SpacesuitServiceMock.setupMockFabricTextureResponse(wireMockService);
     }
 
     @Test
+    @Order(1)
     public void createSpacesuitDataTest() {
         CreateSpacesuitDataDto dto = CreateSpacesuitDataDto.builder()
+                .id(1L)
+                .chest(10)
+                .hips(10)
+                .waist(10)
+                .head(10)
+                .height(160)
+                .footSize(10)
                 .fabricTextureId(1L)
                 .build();
 
@@ -78,15 +89,22 @@ public class SpacesuitDataControllerIntegrationTest {
                 .then();
 
         response.log().all().statusCode(201)
-                .body("userRequestId", Matchers.notNullValue())
+                .body("user_request_id", Matchers.notNullValue())
                 .body("status", Matchers.equalTo("NEW"));
     }
 
     @Test
+    @Order(2)
     public void updateSpacesuitDataTest() {
         UpdateSpacesuitDataDto dto = UpdateSpacesuitDataDto.builder()
                 .id(1L)
-                .fabricTextureId(2L)
+                .chest(10)
+                .hips(10)
+                .waist(10)
+                .head(10)
+                .height(160)
+                .footSize(20)
+                .fabricTextureId(1L)
                 .build();
 
         ValidatableResponse response = given()
@@ -100,10 +118,11 @@ public class SpacesuitDataControllerIntegrationTest {
 
         response.log().all().statusCode(200)
                 .body("id", Matchers.equalTo(1))
-                .body("fabricTextureId", Matchers.equalTo(2));
+                .body("foot_size", Matchers.equalTo(20));
     }
 
     @Test
+    @Order(3)
     public void deleteSpacesuitDataTest() {
         ValidatableResponse response = given()
                 .header("Authorization", "Bearer " + validToken)
@@ -115,6 +134,7 @@ public class SpacesuitDataControllerIntegrationTest {
     }
 
     @Test
+    @Order(2)
     public void getSpacesuitDataByIdTest() {
         ValidatableResponse response = given()
                 .header("Authorization", "Bearer " + validToken)
@@ -127,6 +147,7 @@ public class SpacesuitDataControllerIntegrationTest {
     }
 
     @Test
+    @Order(2)
     public void getCurrentUserSpacesuitDataTest() {
         ValidatableResponse response = given()
                 .header("Authorization", "Bearer " + validToken)
@@ -138,21 +159,5 @@ public class SpacesuitDataControllerIntegrationTest {
 
         response.log().all().statusCode(200)
                 .body("size()", Matchers.greaterThan(0));
-    }
-}
-
-class DbInitializer {
-    private static boolean initialized = false;
-
-    @Autowired
-    void initializeDb(ConnectionFactory connectionFactory) {
-        if (!initialized) {
-            ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource[] scripts = new Resource[]{
-                    resourceLoader.getResource("classpath:scripts/init_script.sql")
-            };
-            new ResourceDatabasePopulator(scripts).populate(connectionFactory).block();
-            initialized = true;
-        }
     }
 }
