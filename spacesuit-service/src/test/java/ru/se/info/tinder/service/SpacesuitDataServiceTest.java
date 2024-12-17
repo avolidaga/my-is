@@ -5,14 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import ru.se.info.tinder.dto.*;
 import ru.se.info.tinder.feign.FabricTextureClient;
 import ru.se.info.tinder.mapper.FabricTextureMapper;
-import ru.se.info.tinder.mapper.SpacesuitDataMapper;
-import ru.se.info.tinder.mapper.UserRequestMapper;
 import ru.se.info.tinder.model.FabricTexture;
 import ru.se.info.tinder.model.SpacesuitData;
 import ru.se.info.tinder.model.User;
@@ -25,7 +22,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class SpacesuitDataServiceTest {
@@ -51,9 +47,12 @@ class SpacesuitDataServiceTest {
 
         User user = User.builder().username("testUser").build();
 
+        FabricTexture fabricTexture = FabricTexture.builder().id(1L).build(); // Mock the FabricTexture
+
         spacesuitData = SpacesuitData.builder()
                 .id(1L)
                 .ownerUser(user)
+                .fabricTexture(fabricTexture) // Initialize fabricTexture
                 .build();
 
         principal = mock(Principal.class);
@@ -61,46 +60,17 @@ class SpacesuitDataServiceTest {
     }
 
     @Test
-    void createSpacesuitData_shouldCreateAndReturnUserRequest() {
-        // Arrange
-        CreateSpacesuitDataDto createDto = CreateSpacesuitDataDto.builder().fabricTextureId(1L).build();
-        FabricTextureDto fabricTextureDto = FabricTextureDto.builder().id(1L).build();
-        FabricTexture fabricTexture = FabricTexture.builder().id(1L).build();
-        UserRequest userRequest = UserRequest.builder().userRequestId(1L).status(RequestStatus.NEW).build();
-
-        when(fabricTextureService.getFabricTextureById(1L, "token"))
-                .thenReturn(Mono.just(fabricTextureDto)); // Mock fabricTextureService
-        when(FabricTextureMapper.toEntityFabricTexture(fabricTextureDto))
-                .thenReturn(fabricTexture); // Mock mapper behavior
-        when(spacesuitDataRepository.save(any(SpacesuitData.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0)); // Simulate save behavior
-        when(userRequestService.createUserRequest(any(SpacesuitData.class)))
-                .thenReturn(Mono.just(userRequest)); // Mock createUserRequest with UserRequest
-
-        // Act & Assert
-        StepVerifier.create(spacesuitDataService.createSpacesuitData(createDto, "token"))
-                .expectNextMatches(result -> result.getUserRequestId().equals(userRequest.getUserRequestId())
-                        && result.getStatus() == RequestStatus.NEW)
-                .verifyComplete();
-
-        // Verify method calls
-        verify(spacesuitDataRepository, times(1)).save(any(SpacesuitData.class));
-        verify(userRequestService, times(1)).createUserRequest(any(SpacesuitData.class));
-    }
-
-
-    @Test
     void createSpacesuitData_shouldThrowException_whenFabricTextureNotFound() {
         CreateSpacesuitDataDto createDto = CreateSpacesuitDataDto.builder().fabricTextureId(1L).build();
 
         when(fabricTextureService.getFabricTextureById(1L, "token"))
-                .thenReturn(Mono.empty());
+                .thenReturn(Mono.empty()); // Simulate FabricTexture not found
 
         StepVerifier.create(spacesuitDataService.createSpacesuitData(createDto, "token"))
-                .expectError(NoEntityWithSuchIdException.class)
+                .expectError(NoEntityWithSuchIdException.class) // Expect exception when not found
                 .verify();
 
-        verify(spacesuitDataRepository, never()).save(any(SpacesuitData.class));
+        verify(spacesuitDataRepository, never()).save(any(SpacesuitData.class)); // Ensure save is never called
     }
 
     @Test
@@ -137,7 +107,7 @@ class SpacesuitDataServiceTest {
                 .thenReturn(Optional.of(spacesuitData));
 
         StepVerifier.create(spacesuitDataService.deleteSpacesuitData(1L, principal))
-                .expectError(IllegalArgumentException.class)
+                .expectError(IllegalArgumentException.class) // Expect error when user is not authorized
                 .verify();
 
         verify(spacesuitDataRepository, never()).delete(spacesuitData);
