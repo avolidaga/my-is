@@ -57,6 +57,7 @@ public class UserDataDto {
     @Size(min = 1, message = "Specify at least one location")
     private List<Long> locations;
     @NotNull
+
     private LocalDateTime createdAt;
     @NotNull
     private LocalDateTime updatedAt;

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import reactivefeign.spring.config.ReactiveFeignClient;
 import reactor.core.publisher.Flux;
 import ru.se.info.tinder.dto.LocationDto;
+
 import javax.naming.ServiceUnavailableException;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -17,14 +18,14 @@ import java.util.List;
 @ReactiveFeignClient(name = "location-service", fallback = LocationClient.Fallback.class)
 public interface LocationClient {
     @GetMapping("/api/v1/locations/list")
-    Flux<LocationDto> getLocationsByIds(@NotNull @RequestParam List<Long> locations,
+    Flux<LocationDto> getLocationsByIds(@NotNull @RequestParam List<Long> locationIds,
                                         @RequestHeader("Authorization") String token);
 
     @Component
     @Log4j2
     class Fallback implements LocationClient {
         @Override
-        public Flux<LocationDto> getLocationsByIds(List<Long> locations, String token) {
+        public Flux<LocationDto> getLocationsByIds(List<Long> locationIds, String token) {
             log.warn("Circuit Breaker encountered an error while locations getting");
             return Flux.error(new ServiceUnavailableException("Location-service unavailable"));
         }

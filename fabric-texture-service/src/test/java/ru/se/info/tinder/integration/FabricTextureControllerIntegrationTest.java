@@ -1,5 +1,7 @@
 package ru.se.info.tinder.integration;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import io.r2dbc.spi.ConnectionFactory;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
@@ -31,13 +33,15 @@ import static io.restassured.RestAssured.given;
 @Import(DbInitializer.class)
 @AutoConfigureWebMvc
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@WireMockTest
+@ContextConfiguration(classes = {WireMockConfig.class, AuthServiceMock.class})
 public class FabricTextureControllerIntegrationTest {
 
     @LocalServerPort
     private Integer port;
 
-//    @Autowired
-//    private WireMockServer mockAuthService;
+    @Autowired
+    private WireMockServer mockAuthService;
 
     private final String validToken = "Valid token";
 
@@ -56,7 +60,7 @@ public class FabricTextureControllerIntegrationTest {
     void setUp() throws IOException {
         RestAssured.baseURI = "http://localhost:" + port;
         RestAssured.defaultParser = Parser.JSON;
-//        AuthServiceMock.setupMockValidateResponse(mockAuthService);
+        AuthServiceMock.setupMockValidateResponse(mockAuthService);
     }
 
     @Test
@@ -87,7 +91,7 @@ public class FabricTextureControllerIntegrationTest {
                 .description("Updated fabric texture description")
                 .build();
 
-        Long fabricTextureId = 1L;
+        Long fabricTextureId = 2L;
 
         ValidatableResponse response = given()
                 .header("Content-type", "application/json")
@@ -119,7 +123,7 @@ public class FabricTextureControllerIntegrationTest {
 
     @Test
     public void getFabricTextureByIdTest() {
-        Long fabricTextureId = 1L;
+        Long fabricTextureId = 2L;
 
         ValidatableResponse response = given()
                 .header("Content-type", "application/json")

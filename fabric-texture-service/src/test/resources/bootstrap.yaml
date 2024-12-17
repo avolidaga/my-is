@@ -1,0 +1,29 @@
+server:
+  port: 8180
+  forward-headers-strategy: framework
+spring:
+  data:
+    r2dbc:
+      repositories:
+        enabled: true
+  r2dbc:
+    url: r2dbc:tc:postgresql:///tinder?TC_IMAGE_TAG=9.6.8
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:root}
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      client:
+        simple:
+          instances:
+            auth-service[0]:
+              uri: http://localhost:7654
+eureka:
+  client:
+    enabled: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

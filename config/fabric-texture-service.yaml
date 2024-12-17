@@ -17,6 +17,7 @@ management:
     web:
       exposure:
         include: '*'
+
 resilience4j.circuitbreaker:
   configs:
     default:
@@ -24,9 +25,17 @@ resilience4j.circuitbreaker:
       slidingWindowSize: 10
       permittedNumberOfCallsInHalfOpenState: 3
       slidingWindowType: TIME_BASED
+      waitDurationInOpenState: 50s
+      failureRateThreshold: 50
 
 resilience4j.timelimiter:
   configs:
     default:
       timeoutDuration: 5s
       cancelRunningFuture: true
+
+resilience4j.retry:
+  configs:
+    default:
+      maxAttempts: 3
+      waitDuration: 10s
