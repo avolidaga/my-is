@@ -36,8 +36,8 @@ public class UserRequestController {
     @PreAuthorize("hasAuthority('MANAGER')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public Flux<UserRequestDto> getUsersRequests(@NotNull @RequestParam SearchStatus status,
-                                                 @NotNull @RequestParam int page,
-                                                 @NotNull @RequestParam @Min(1) @Max(50) int size) {
+                                                 @NotNull @RequestParam(defaultValue = "0") int page,
+                                                 @NotNull @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
         return userRequestService.getUsersRequestsByStatus(status)
                 .skip((long) page * size)
                 .take(size);

@@ -24,4 +24,16 @@ public class LocationServiceMock {
                                                 getResourceAsStream("payload/locations.txt"),
                                         defaultCharset()))));
     }
+
+    public static void setupMockLocationUnavailableResponse(WireMockServer mockService) throws IOException {
+        mockService.stubFor(WireMock.get(WireMock.urlEqualTo("/api/v1/locations/list?locationIds=2"))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-Type", String.valueOf(MediaType.APPLICATION_JSON))
+                        .withBody(
+                                copyToString(
+                                        LocationServiceMock.class.getClassLoader().
+                                                getResourceAsStream("payload/locations.txt"),
+                                        defaultCharset()))));
+    }
 }

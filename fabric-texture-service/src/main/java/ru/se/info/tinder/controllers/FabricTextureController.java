@@ -53,8 +53,8 @@ public class FabricTextureController {
 
     @GetMapping
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public Flux<FabricTextureDto> getAllFabricTextures(@RequestParam int page,
-                                                       @RequestParam @Min(1) @Max(50) int size) {
+    public Flux<FabricTextureDto> getAllFabricTextures(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
         return fabricTextureService.getAllFabricTextures()
                 .skip((long) page * size)
                 .take(size);

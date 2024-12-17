@@ -60,8 +60,8 @@ public class LocationController {
 
     @GetMapping
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public Flux<LocationDto> getAllLocations(@RequestParam @Min(0) int page,
-                                             @RequestParam @Min(1) @Max(50) int size) {
+    public Flux<LocationDto> getAllLocations(@RequestParam(defaultValue = "0") @Min(0) int page,
+                                             @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
         return locationService.getAllLocations()
                 .skip((long) page * size)
                 .take(size);

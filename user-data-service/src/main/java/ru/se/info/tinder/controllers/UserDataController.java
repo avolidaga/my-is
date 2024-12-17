@@ -57,8 +57,8 @@ public class UserDataController {
     @GetMapping("location/{locationId}")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public Flux<UserDataDto> getUsersByLocationId(@PathVariable Long locationId,
-                                                  @RequestParam int page,
-                                                  @RequestParam @Min(1) @Max(50) int size) {
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
         return userDataService.getUsersDataByLocationId(locationId)
                 .skip((long) page * size)
                 .take(size);
@@ -66,8 +66,8 @@ public class UserDataController {
 
     @GetMapping
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public Flux<UserDataDto> getAllUsersData(@RequestParam int page,
-                                             @RequestParam @Min(1) @Max(50) int size) {
+    public Flux<UserDataDto> getAllUsersData(@RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
         return userDataService.getAllUsersData()
                 .skip((long) page * size)
                 .take(size);

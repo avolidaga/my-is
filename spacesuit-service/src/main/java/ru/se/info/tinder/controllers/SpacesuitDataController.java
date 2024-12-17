@@ -63,8 +63,8 @@ public class SpacesuitDataController {
 
     @GetMapping("my")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public Flux<SpacesuitDataDto> getCurrUserSpacesuitData(@RequestParam int page,
-                                                           @RequestParam @Min(1) @Max(50) int size,
+    public Flux<SpacesuitDataDto> getCurrUserSpacesuitData(@RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size,
                                                            Principal principal) {
         return spacesuitDataService.getCurrentUserSpacesuitData(principal)
                 .skip((long) page * size)

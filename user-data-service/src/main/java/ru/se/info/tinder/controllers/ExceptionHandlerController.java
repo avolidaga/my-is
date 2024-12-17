@@ -13,6 +13,7 @@ import ru.se.info.tinder.service.exception.UserNotCompletedRegistrationException
 
 import javax.naming.ServiceUnavailableException;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class ExceptionHandlerController {
         return errors;
     }
 
-    @ExceptionHandler(value = {InvalidDataAccessApiUsageException.class, ConstraintViolationException.class})
+    @ExceptionHandler(value = {InvalidDataAccessApiUsageException.class, ValidationException.class})
     public ResponseEntity<?> handleValidationExceptions(RuntimeException ex) {
         log.error("Incorrect request: {}", ex.getMessage());
         return ResponseEntity.badRequest().body("Incorrect request: " + ex.getMessage());
