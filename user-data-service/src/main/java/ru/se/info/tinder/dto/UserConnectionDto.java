@@ -20,7 +20,7 @@ public class UserConnectionDto {
     private Long id;
     private UserDataDto userDto1;
     private UserDataDto userDto2;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate matchDate;
 }
 
