@@ -6,6 +6,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.se.info.tinder.dto.*;
 import ru.se.info.tinder.feign.FabricTextureClient;
+import ru.se.info.tinder.kafka.SpacesuitRequestProducer;
 import ru.se.info.tinder.mapper.FabricTextureMapper;
 import ru.se.info.tinder.mapper.SpacesuitDataMapper;
 import ru.se.info.tinder.mapper.UserRequestMapper;
@@ -22,6 +23,7 @@ public class SpacesuitDataService {
     private final SpacesuitDataRepository spacesuitDataRepository;
     private final UserRequestService userRequestService;
     private final FabricTextureClient fabricTextureService;
+    private final SpacesuitRequestProducer spacesuitRequestProducer;
 
     public Mono<UserRequestDto> createSpacesuitData(CreateSpacesuitDataDto createSpacesuitDataDto, String token) {
 
@@ -37,6 +39,14 @@ public class SpacesuitDataService {
                             ).flatMap(
                                     (savedSpacesuitData) -> userRequestService.createUserRequest(savedSpacesuitData)
                                             .map(UserRequestMapper::toUserRequestDto)
+                                            .doOnSuccess(
+                                                    (userRequestDto) -> {
+                                                        SpacesuitRequestMessage message = UserRequestMapper.toSpacesuitRequestMsg(userRequestDto);
+                                                        Mono.fromRunnable(
+                                                                () -> spacesuitRequestProducer.sendMessageToSpacesuitRequestChangedTopic(message)
+                                                        );
+                                                    }
+                                            )
                             );
                         }
                 );

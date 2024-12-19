@@ -13,6 +13,7 @@ import javax.naming.ServiceUnavailableException;
 
 @CircuitBreaker(name = "auth-service-cb")
 @ReactiveFeignClient(name = "auth-service", fallback = AuthServiceClient.Fallback.class)
+//@ReactiveFeignClient(name = "auth-service")
 public interface AuthServiceClient {
     @PostMapping("/api/v1/user-management/validation")
     Mono<ResponseUserDto> validateToken(@RequestBody String token);

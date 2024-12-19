@@ -13,18 +13,15 @@ import ru.se.info.tinder.dto.LocationDto;
 import ru.se.info.tinder.dto.UpdateUserDataDto;
 import ru.se.info.tinder.dto.UserDataDto;
 import ru.se.info.tinder.feign.LocationClient;
-import ru.se.info.tinder.mapper.UserDataMapper;
 import ru.se.info.tinder.model.Location;
 import ru.se.info.tinder.model.User;
 import ru.se.info.tinder.model.UserData;
 import ru.se.info.tinder.model.enums.Sex;
 import ru.se.info.tinder.repository.UserDataRepository;
 import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
-import ru.se.info.tinder.service.exception.UserNotCompletedRegistrationException;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +49,6 @@ class UserDataServiceTest {
 
     @Test
     void createUserData_success() {
-        // Подготовка данных
         CreateUserDataDto createUserDataDto = CreateUserDataDto.builder()
                 .userId(1L)
                 .birthDate(LocalDate.of(1990, 1, 1))
@@ -86,15 +82,12 @@ class UserDataServiceTest {
                 .locations(new HashSet<>(locations))
                 .build();
 
-        // Настройка моков
         when(locationClient.getLocationsByIds(eq(createUserDataDto.getLocations()), anyString()))
                 .thenReturn(Flux.fromIterable(locationDtos));
         when(userDataRepository.save(any(UserData.class))).thenReturn(savedUserData);
 
-        // Вызов метода
         Mono<UserDataDto> result = userDataService.createUserData(createUserDataDto, "Bearer test-token");
 
-        // Проверка результата
         StepVerifier.create(result)
                 .assertNext(userDataDto -> {
                     assertEquals("John", userDataDto.getFirstname());
@@ -104,7 +97,6 @@ class UserDataServiceTest {
                 })
                 .verifyComplete();
 
-        // Проверка вызовов моков
         verify(locationClient).getLocationsByIds(eq(createUserDataDto.getLocations()), eq("Bearer test-token"));
         verify(userDataRepository).save(argThat(savedUser -> {
             assertEquals("John", savedUser.getFirstname());
@@ -126,7 +118,6 @@ class UserDataServiceTest {
 
     @Test
     void testUpdateUserDataById() {
-        // Подготовка данных
         User existingUser = User.builder()
                 .id(1L)
                 .username("jane_doe")
@@ -141,7 +132,6 @@ class UserDataServiceTest {
                 .birthDate(LocalDate.of(1990, 1, 1))
                 .build();
 
-        // Связь пользователя с UserData
         existingUser.setUserData(oldUserData);
 
         UpdateUserDataDto updateUserDataDto = UpdateUserDataDto.builder()
@@ -159,11 +149,9 @@ class UserDataServiceTest {
         Location location2 = Location.builder().id(2L).build();
         List<Location> locations = List.of(location1, location2);
 
-        // Мокаем Principal
         Principal principal = mock(Principal.class);
         when(principal.getName()).thenReturn("jane_doe");
 
-        // Настройка моков
         LocationDto locationDto1 = LocationDto.builder().id(1L).build();
         LocationDto locationDto2 = LocationDto.builder().id(2L).build();
         List<LocationDto> locationDtos = List.of(locationDto1, locationDto2);
@@ -172,10 +160,8 @@ class UserDataServiceTest {
         when(locationClient.getLocationsByIds(anyList(), anyString())).thenReturn(Flux.fromIterable(locationDtos));
         when(userDataRepository.save(any(UserData.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Вызов метода
         Mono<UserDataDto> result = userDataService.updateUserDataById(updateUserDataDto, 1L, principal, "Bearer test-token");
 
-        // Проверка результата
         StepVerifier.create(result)
                 .assertNext(userDataDto -> {
                     assertEquals("New Firstname", userDataDto.getFirstname());
@@ -185,7 +171,6 @@ class UserDataServiceTest {
                 })
                 .verifyComplete();
 
-        // Проверка сохранения
         verify(userDataRepository).save(argThat(savedUserData -> {
             assertEquals("New Firstname", savedUserData.getFirstname());
             assertEquals("New Lastname", savedUserData.getLastname());
@@ -193,10 +178,8 @@ class UserDataServiceTest {
             return true;
         }));
 
-        // Проверка вызова locationClient
         verify(locationClient).getLocationsByIds(anyList(), anyString());
     }
-
 
 
     @Test
