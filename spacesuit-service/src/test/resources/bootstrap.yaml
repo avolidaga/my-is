@@ -13,6 +13,20 @@ spring:
               uri: http://localhost:7654
             fabric-texture-service[0]:
               uri: http://localhost:7654
+  kafka:
+    bootstrap-servers:
+      - PLAINTEXT://kafka:9092
+    admin:
+      auto-create: true
+    topics:
+      - name: spacesuit-request-changed
+        partitions: 3
+        replicas: 1
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      spacesuit-request-changed-topic: "spacesuit-request-changed"
+
   jpa:
     hibernate:
       ddl-auto: none
