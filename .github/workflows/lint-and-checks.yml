@@ -1,0 +1,54 @@
+name: Run Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  JDK_VERSION: 17
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [auth-service, user-data-service, spacesuit-service, location-service, fabric-texture-service, eureka-service, config-service, gateway-service]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JDK_VERSION }}
+
+      - name: Build and test ${{ matrix.service }}
+        run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false
+
+      - name: List files in target for ${{ matrix.service }}
+        run: ls -R ${{ matrix.service }}/target
+
+      - name: Upload Jacoco report
+        uses: madrapps/jacoco-report@v1.6.1
+        with:
+          paths: |
+            ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 30
+          min-coverage-changed-files: 30
+          title: Code Coverage
+          update-comment: true
+
+      - name: Upload Jacoco reports as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-reports-${{ matrix.service }}
+          path: |
+            ${{ matrix.service }}/target/jacoco-report/
+            ${{ github.workspace }}/target/jacoco-report/
+      
