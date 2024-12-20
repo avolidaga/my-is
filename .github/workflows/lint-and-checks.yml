@@ -38,6 +38,7 @@ jobs:
         if: ( github.event_name != 'workflow_dispatch' )
         with:
           paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+          token: false
           min-coverage-overall: 30
           min-coverage-changed-files: 30
           title: Code Coverage
