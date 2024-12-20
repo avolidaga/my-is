@@ -30,27 +30,15 @@ jobs:
       - name: Build and test ${{ matrix.service }}
         run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false
 
-      - name: Upload test results for ${{ matrix.service }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-${{ matrix.service }}
-          path: ${{ matrix.service }}/target/surefire-reports/*.xml
+      - name: List files in target for ${{ matrix.service }}
+        run: ls -R ${{ matrix.service }}/target
 
-      - name: Upload JaCoCo coverage report for ${{ matrix.service }}
-        uses: actions/upload-artifact@v4
+      - id: jacoco
+        uses: madrapps/jacoco-report@v1.6.1
+        if: ( github.event_name != 'workflow_dispatch' )
         with:
-          name: jacoco-coverage-${{ matrix.service }}
-          path: ${{ matrix.service }}/target/*
-
-      - name: Upload build logs for ${{ matrix.service }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-logs-${{ matrix.service }}
-          path: ${{ matrix.service }}/target/*
-
-      - name: Upload coverage to Codecov
-        if: success()
-        uses: codecov/codecov-action@v3
-        with:
-          file: ${{ matrix.service }}/target/site/jacoco/jacoco.xml
-          name: jacoco-${{ matrix.service }}
+          paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+          min-coverage-overall: 30
+          min-coverage-changed-files: 30
+          title: Code Coverage
+          update-comment: true
