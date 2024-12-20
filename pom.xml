@@ -172,6 +172,7 @@
                 <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
+                        <id>prepare-agent</id> <!-- Unique ID -->
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
@@ -180,6 +181,7 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>report-test-coverage</id> <!-- Unique ID -->
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>
@@ -188,6 +190,13 @@
                             <dataFile>${project.build.directory}/jacoco.exec</dataFile>
                             <outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
                         </configuration>
+                    </execution>
+                    <execution>
+                        <id>report-package-coverage</id> <!-- Unique ID -->
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
