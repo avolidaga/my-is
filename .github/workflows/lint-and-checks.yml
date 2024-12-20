@@ -43,7 +43,8 @@ jobs:
           path: ${{ matrix.service }}/target/*.log
 
       - name: Display test results for ${{ matrix.service }}
-        uses: dorny/test-reporter-action@v2
+        uses: github/test-reporter-action@v1
         with:
           name: 'JUnit'
           path: ${{ matrix.service }}/target/surefire-reports/TEST-*.xml
+
