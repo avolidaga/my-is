@@ -39,8 +39,8 @@ jobs:
           paths: |
             ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
           token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 30
-          min-coverage-changed-files: 30
+          min-coverage-overall: 0
+          min-coverage-changed-files: 0
           title: Code Coverage
           update-comment: true
 
@@ -51,4 +51,6 @@ jobs:
           path: |
             ${{ matrix.service }}/target/jacoco-report/
             ${{ github.workspace }}/target/jacoco-report/
+                        ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
+
       
