@@ -18,26 +18,39 @@ jobs:
       matrix:
         service: [auth-service, user-data-service, spacesuit-service, location-service, fabric-texture-service, eureka-service, config-service, gateway-service]
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: ${{ env.JDK_VERSION }}
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JDK_VERSION }}
 
-    - name: Build and test ${{ matrix.service }}
-      run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false
+      - name: Build and test ${{ matrix.service }}
+        run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false
 
-    - name: Upload test results for ${{ matrix.service }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-results-${{ matrix.service }}
-        path: ${{ matrix.service }}/target/surefire-reports/*.xml
+      - name: Upload test results for ${{ matrix.service }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.service }}
+          path: ${{ matrix.service }}/target/surefire-reports/*.xml
 
-    - name: Upload build logs for ${{ matrix.service }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-logs-${{ matrix.service }}
-        path: ${{ matrix.service }}/target/*.log
+      - name: Upload JaCoCo coverage report for ${{ matrix.service }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-coverage-${{ matrix.service }}
+          path: ${{ matrix.service }}/target/site/jacoco/*.xml
+
+      - name: Upload build logs for ${{ matrix.service }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ matrix.service }}
+          path: ${{ matrix.service }}/target/*.log
+
+      - name: Upload coverage to Codecov
+        if: success()
+        uses: codecov/codecov-action@v3
+        with:
+          file: ${{ matrix.service }}/target/site/jacoco/jacoco.xml
+          name: jacoco-${{ matrix.service }}
