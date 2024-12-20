@@ -3,7 +3,8 @@ server:
   forward-headers-strategy: framework
 spring:
   kafka:
-    bootstrap-servers: "${KAFKA_HOST:localhost:9092}"
+    bootstrap-servers:
+      - PLAINTEXT://kafka:9092
     admin:
       auto-create: true
     topics:

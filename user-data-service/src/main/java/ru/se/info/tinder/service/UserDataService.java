@@ -15,11 +15,9 @@ import ru.se.info.tinder.repository.UserDataRepository;
 import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 import ru.se.info.tinder.service.exception.UserNotCompletedRegistrationException;
 
-import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -28,12 +26,15 @@ public class UserDataService {
     private final UserDataRepository userDataRepository;
     private final LocationClient locationService;
 
-    public Mono<UserDataDto> createUserData(CreateUserDataDto createUserDataDto, String token) {
+    public Mono<UserDataDto> createUserData(CreateUserDataDto createUserDataDto, String token, Principal principal) {
         Mono<List<Location>> locations = locationService.getLocationsByIds(createUserDataDto.getLocations(), token)
                 .map(l -> Location.builder().id(l.getId()).build())
                 .collect(Collectors.toList());
         return locations.flatMap(
                 (locationsList) -> {
+                    if (userDataRepository.findUserDataByUsername(principal.getName()).isPresent()) {
+                        return Mono.error(new IllegalArgumentException("User have already complete registration"));
+                    }
                     UserData userData = UserDataMapper.toEntityUserData(createUserDataDto, new HashSet<>(locationsList));
                     return Mono.fromCallable(
                             () -> userDataRepository.save(userData)

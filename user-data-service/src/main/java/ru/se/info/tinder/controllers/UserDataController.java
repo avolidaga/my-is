@@ -29,8 +29,9 @@ public class UserDataController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public Mono<UserDataDto> createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto,
-                                            @RequestHeader("Authorization") String token) {
-        return userDataService.createUserData(createUserDataDto, token);
+                                            @RequestHeader("Authorization") String token,
+                                            Principal principal) {
+        return userDataService.createUserData(createUserDataDto, token, principal);
     }
 
     @PutMapping("{id}")

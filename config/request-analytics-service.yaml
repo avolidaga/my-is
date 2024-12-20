@@ -4,13 +4,12 @@ server:
 
 spring:
   application:
-    name: notification-service
+    name: request-analytics-service
 
   kafka:
-    bootstrap-servers: "${KAFKA_HOST:kafka:9092}"
+    bootstrap-servers:
+      - PLAINTEXT://kafka:9092
     consumer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       spacesuit-request-changed-topic: "spacesuit-request-changed"

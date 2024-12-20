@@ -22,7 +22,7 @@
         <module>eureka-service</module>
         <module>config-service</module>
         <module>gateway-service</module>
-        <module>notification-service</module>
+        <module>request-analytics-service</module>
         <module>image-service</module>
     </modules>
     <properties>

@@ -86,7 +86,12 @@ class UserDataServiceTest {
                 .thenReturn(Flux.fromIterable(locationDtos));
         when(userDataRepository.save(any(UserData.class))).thenReturn(savedUserData);
 
-        Mono<UserDataDto> result = userDataService.createUserData(createUserDataDto, "Bearer test-token");
+        Mono<UserDataDto> result = userDataService.createUserData(createUserDataDto, "Bearer test-token", new Principal() {
+            @Override
+            public String getName() {
+                return "admin";
+            }
+        });
 
         StepVerifier.create(result)
                 .assertNext(userDataDto -> {

@@ -39,27 +39,33 @@ public class JwtTokensUtils {
 
     @SneakyThrows
     public String generateToken(UserEntity user) {
-        SignedJWT signedJWT;
-        JWTClaimsSet claimsSet;
+        try {
+            SignedJWT signedJWT;
+            JWTClaimsSet claimsSet;
 
-        List<String> roles = Stream.of(user.getRole())
-                .map(r -> r.getRoleName().name())
-                .toList();
+            List<String> roles = Stream.of(user.getRole())
+                    .map(r -> r.getRoleName().name())
+                    .toList();
 
-        Date issuedDate = new Date();
-        Date expiredDate = new Date(issuedDate.getTime() + jwtLifetime.toMillis());
+            Date issuedDate = new Date();
+            Date expiredDate = new Date(issuedDate.getTime() + jwtLifetime.toMillis());
 
-        claimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getUsername())
-                .issueTime(issuedDate)
-                .expirationTime(expiredDate)
-                .claim("roles", roles)
-                .build();
+            claimsSet = new JWTClaimsSet.Builder()
+                    .subject(user.getUsername())
+                    .issueTime(issuedDate)
+                    .expirationTime(expiredDate)
+                    .claim("roles", roles)
+                    .build();
 
-        signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
-        signedJWT.sign(new MACSigner(jwtSecret));
+            signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
+            signedJWT.sign(new MACSigner(jwtSecret));
 
-        return signedJWT.serialize();
+            return signedJWT.serialize();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public Mono<SignedJWT> check(String token) {
@@ -90,8 +96,6 @@ public class JwtTokensUtils {
             return null;
         }
     }
-
-    //TODO обработка ошибок
 
     private SignedJWT createJWS(String token) {
         try {

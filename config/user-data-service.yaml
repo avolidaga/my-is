@@ -13,6 +13,10 @@ spring:
       ddl-auto: none
   liquibase:
     enabled: false
+
+websocket:
+  url: ws://image-service:8186/images
+
 eureka:
   client:
     serviceUrl:

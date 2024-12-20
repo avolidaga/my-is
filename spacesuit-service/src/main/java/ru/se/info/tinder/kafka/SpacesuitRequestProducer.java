@@ -18,7 +18,7 @@ public class SpacesuitRequestProducer {
     private String spacesuitRequestChangedTopic;
 
     public void sendMessageToSpacesuitRequestChangedTopic(SpacesuitRequestMessage message) {
-        kafkaTemplate.send(spacesuitRequestChangedTopic, message);
         log.info("Sent to Kafka {}: {}", spacesuitRequestChangedTopic, message);
+        kafkaTemplate.send(spacesuitRequestChangedTopic, message);
     }
 }

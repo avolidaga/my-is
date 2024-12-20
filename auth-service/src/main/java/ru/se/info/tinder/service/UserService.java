@@ -2,6 +2,7 @@ package ru.se.info.tinder.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -21,6 +22,7 @@ import java.security.Principal;
 
 @RequiredArgsConstructor
 @Service
+@Log4j2
 public class UserService {
 
     private final UserRepository userRepository;
@@ -81,7 +83,9 @@ public class UserService {
         return getUserEntityByUsername(requestUserDto.getUsername())
                 .flatMap(
                         user -> {
+                            log.info("User {} was found", user.getUsername());
                             if (passwordEncoder.matches(requestUserDto.getPassword(), user.getPassword())) {
+                                log.info("User {} was login correctly", user.getUsername());
                                 return Mono.fromCallable(
                                         () -> new AuthUserDto(jwtTokensUtils.generateToken(user))
                                 );

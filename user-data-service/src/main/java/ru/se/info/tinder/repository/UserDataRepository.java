@@ -16,6 +16,8 @@ public interface UserDataRepository extends JpaRepository<UserData, Long> {
 
     List<UserData> findAllUserDataByLocationsId(Long locationId);
 
+    List<UserData> findAllUserDataByUserId(Long userId);
+
     @Query("SELECT u FROM UserData u WHERE u.ownerUser.username = ?1")
     Optional<UserData> findUserDataByUsername(String username);
 }

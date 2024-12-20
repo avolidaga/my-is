@@ -1,9 +1,11 @@
 package ru.se.info.tinder.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import ru.se.info.tinder.dto.*;
 import ru.se.info.tinder.feign.FabricTextureClient;
 import ru.se.info.tinder.kafka.SpacesuitRequestProducer;
@@ -14,11 +16,11 @@ import ru.se.info.tinder.model.SpacesuitData;
 import ru.se.info.tinder.repository.SpacesuitDataRepository;
 import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 
-import javax.transaction.Transactional;
 import java.security.Principal;
 
 @RequiredArgsConstructor
 @Service
+@Log4j2
 public class SpacesuitDataService {
     private final SpacesuitDataRepository spacesuitDataRepository;
     private final UserRequestService userRequestService;
@@ -39,12 +41,16 @@ public class SpacesuitDataService {
                             ).flatMap(
                                     (savedSpacesuitData) -> userRequestService.createUserRequest(savedSpacesuitData)
                                             .map(UserRequestMapper::toUserRequestDto)
+                                            .subscribeOn(Schedulers.boundedElastic())
                                             .doOnSuccess(
                                                     (userRequestDto) -> {
                                                         SpacesuitRequestMessage message = UserRequestMapper.toSpacesuitRequestMsg(userRequestDto);
                                                         Mono.fromRunnable(
-                                                                () -> spacesuitRequestProducer.sendMessageToSpacesuitRequestChangedTopic(message)
-                                                        );
+                                                                        () -> spacesuitRequestProducer.sendMessageToSpacesuitRequestChangedTopic(message)
+                                                                ).subscribeOn(Schedulers.boundedElastic())
+                                                                .onErrorContinue(
+                                                                        (error, n) -> log.error("Failed to send message to Kafka: ${error.message}")
+                                                                ).subscribe();
                                                     }
                                             )
                             );
