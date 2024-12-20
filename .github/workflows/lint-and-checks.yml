@@ -1,0 +1,43 @@
+name: Run Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  JDK_VERSION: 17
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [auth-service, user-data-service, spacesuit-service, location-service, fabric-texture-service, eureka-service, config-service, gateway-service]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ env.JDK_VERSION }}
+
+    - name: Build and test ${{ matrix.service }}
+      run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false
+
+    - name: Upload test results for ${{ matrix.service }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.service }}
+        path: ${{ matrix.service }}/target/surefire-reports/*.xml
+
+    - name: Upload build logs for ${{ matrix.service }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-logs-${{ matrix.service }}
+        path: ${{ matrix.service }}/target/*.log
