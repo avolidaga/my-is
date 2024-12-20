@@ -1,0 +1,23 @@
+server:
+  port: 8186
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: image-service
+
+minio:
+  url: http://localhost:9000
+  accessKey: tinder
+  secretKey: tinder
+  bucket-name: profile_images
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-service:8761/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

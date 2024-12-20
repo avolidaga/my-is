@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 @Component
-@Order(-100)
+@Order(-2)
 @Log4j2
 public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHandler {
 

@@ -58,5 +58,6 @@ public class UserDataMapper {
                 .updatedAt(userData.getUpdatedAt())
                 .id(userData.getId())
                 .build();
+
     }
 }

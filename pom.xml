@@ -22,6 +22,8 @@
         <module>eureka-service</module>
         <module>config-service</module>
         <module>gateway-service</module>
+        <module>request-analytics-service</module>
+        <module>image-service</module>
     </modules>
     <properties>
         <java.version>17</java.version>

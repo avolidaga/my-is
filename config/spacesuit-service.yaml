@@ -2,6 +2,20 @@ server:
   port: 8183
   forward-headers-strategy: framework
 spring:
+  kafka:
+    bootstrap-servers:
+      - PLAINTEXT://kafka:9092
+    admin:
+      auto-create: true
+    topics:
+      - name: spacesuit-request-changed
+        partitions: 3
+        replicas: 1
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      spacesuit-request-changed-topic: "spacesuit-request-changed"
+
   datasource:
     url: jdbc:postgresql://database:5432/tinder
     username: postgres
