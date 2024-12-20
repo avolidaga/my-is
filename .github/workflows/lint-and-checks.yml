@@ -30,27 +30,39 @@ jobs:
       - name: Build and test ${{ matrix.service }}
         run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false
 
+      - name: Create build reports directory for ${{ matrix.service }}
+        run: mkdir -p ${{ github.workspace }}/services/${{ matrix.service }}/build/reports/kover
+
+      - name: Move test results for ${{ matrix.service }} to build reports folder
+        run: mv ${{ matrix.service }}/target/surefire-reports/*.xml ${{ github.workspace }}/services/${{ matrix.service }}/build/reports/surefire-reports/
+
+      - name: Move JaCoCo coverage report for ${{ matrix.service }} to build reports folder
+        run: mv ${{ matrix.service }}/target/site/jacoco/*.xml ${{ github.workspace }}/services/${{ matrix.service }}/build/reports/jacoco/
+
+      - name: Move build logs for ${{ matrix.service }} to build reports folder
+        run: mv ${{ matrix.service }}/target/*.log ${{ github.workspace }}/services/${{ matrix.service }}/build/reports/logs/
+
       - name: Upload test results for ${{ matrix.service }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ matrix.service }}
-          path: ${{ matrix.service }}/target/surefire-reports/*.xml
+          path: ${{ github.workspace }}/services/${{ matrix.service }}/build/reports/surefire-reports/*.xml
 
       - name: Upload JaCoCo coverage report for ${{ matrix.service }}
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-coverage-${{ matrix.service }}
-          path: ${{ matrix.service }}/target/site/jacoco/*.xml
+          path: ${{ github.workspace }}/services/${{ matrix.service }}/build/reports/jacoco/*.xml
 
       - name: Upload build logs for ${{ matrix.service }}
         uses: actions/upload-artifact@v4
         with:
           name: build-logs-${{ matrix.service }}
-          path: ${{ matrix.service }}/target/*.log
+          path: ${{ github.workspace }}/services/${{ matrix.service }}/build/reports/logs/*.log
 
       - name: Upload coverage to Codecov
         if: success()
         uses: codecov/codecov-action@v3
         with:
-          file: ${{ matrix.service }}/target/site/jacoco/jacoco.xml
+          file: ${{ github.workspace }}/services/${{ matrix.service }}/build/reports/jacoco/jacoco.xml
           name: jacoco-${{ matrix.service }}
