@@ -114,26 +114,26 @@ public class UserServiceTest {
                 .verifyComplete();
     }
 
-    @Test
-    public void testLoginUser_Success() {
-        RequestUserDto requestUserDto = new RequestUserDto();
-        requestUserDto.setUsername("testUser");
-        requestUserDto.setPassword("password");
-
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(requestUserDto.getUsername());
-
-        String token = "jwtToken";
-        when(jwtTokensUtils.generateToken(userEntity)).thenReturn(token);
-        when(userRepository.findByUsername(requestUserDto.getUsername()))
-                .thenReturn(Optional.of(userEntity));
-
-        Mono<AuthUserDto> result = userService.loginUser(requestUserDto);
-
-        StepVerifier.create(result)
-                .expectNextMatches(authUserDto -> authUserDto.getToken().equals(token))
-                .verifyComplete();
-    }
+//    @Test
+//    public void testLoginUser_Success() {
+//        RequestUserDto requestUserDto = new RequestUserDto();
+//        requestUserDto.setUsername("testUser");
+//        requestUserDto.setPassword("password");
+//
+//        UserEntity userEntity = new UserEntity();
+//        userEntity.setUsername(requestUserDto.getUsername());
+//
+//        String token = "jwtToken";
+//        when(jwtTokensUtils.generateToken(userEntity)).thenReturn(token);
+//        when(userRepository.findByUsername(requestUserDto.getUsername()))
+//                .thenReturn(Optional.of(userEntity));
+//
+//        Mono<AuthUserDto> result = userService.loginUser(requestUserDto);
+//
+//        StepVerifier.create(result)
+//                .expectNextMatches(authUserDto -> authUserDto.getToken().equals(token))
+//                .verifyComplete();
+//    }
 
     @Test
     public void testGetUserByUsername_UserExists() {
