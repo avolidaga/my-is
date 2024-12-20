@@ -33,13 +33,16 @@ jobs:
       - name: List files in target for ${{ matrix.service }}
         run: ls -R ${{ matrix.service }}/target
 
-      - id: jacoco
+      - name: List files in target
+        run: ls -R ${GITHUB_WORKSPACE}/target
+
+      - name: Upload Jacoco report
         uses: madrapps/jacoco-report@v1.6.1
-        if: ( github.event_name != 'workflow_dispatch' )
         with:
-          paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+          paths: ${GITHUB_WORKSPACE}/target/jacoco-report/jacoco.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 30
           min-coverage-changed-files: 30
           title: Code Coverage
           update-comment: true
+
