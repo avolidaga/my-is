@@ -45,3 +45,10 @@ jobs:
           title: Code Coverage
           update-comment: true
 
+      - name: Upload Jacoco reports as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-reports-${{ matrix.service }}
+          path: |
+            ${{ matrix.service }}/target/jacoco-report/
+            ${GITHUB_WORKSPACE}/target/jacoco-report/
