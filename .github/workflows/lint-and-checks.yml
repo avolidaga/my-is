@@ -40,13 +40,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-coverage-${{ matrix.service }}
-          path: ${{ matrix.service }}/target/site/jacoco/*.xml
+          path: ${{ matrix.service }}/target/*
 
       - name: Upload build logs for ${{ matrix.service }}
         uses: actions/upload-artifact@v4
         with:
           name: build-logs-${{ matrix.service }}
-          path: ${{ matrix.service }}/target/*.log
+          path: ${{ matrix.service }}/target/*
 
       - name: Upload coverage to Codecov
         if: success()
