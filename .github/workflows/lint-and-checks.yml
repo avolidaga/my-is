@@ -1,52 +1,49 @@
-name: CI Pipeline
+name: Run Tests
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  JDK_VERSION: 17
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        service:
-          - auth-service
-          - other-service # Пример для нескольких сервисов
-
+        service: [auth-service, user-data-service, spacesuit-service, location-service, fabric-texture-service, eureka-service, config-service, gateway-service]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'adoptopenjdk'
+          distribution: 'temurin'
+          java-version: ${{ env.JDK_VERSION }}
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v2
+      - name: Build and test ${{ matrix.service }}
+        run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false
+
+      - name: Upload test results for ${{ matrix.service }}
+        uses: actions/upload-artifact@v4
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          name: test-results-${{ matrix.service }}
+          path: ${{ matrix.service }}/target/surefire-reports/*.xml
 
-      - name: Build and run tests
-        run: mvn clean test -pl ${{ matrix.service }} -am -DskipTests=false
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v3
+      - name: Upload build logs for ${{ matrix.service }}
+        uses: actions/upload-artifact@v4
         with:
-          name: test-reports
-          path: target/surefire-reports/*.xml
+          name: build-logs-${{ matrix.service }}
+          path: ${{ matrix.service }}/target/*.log
 
-      - name: Display test results in GitHub Actions
+      - name: Display test results for ${{ matrix.service }}
         uses: dorny/test-reporter-action@v2
         with:
           name: 'JUnit'
-          path: target/surefire-reports/TEST-*.xml
+          path: ${{ matrix.service }}/target/surefire-reports/TEST-*.xml
