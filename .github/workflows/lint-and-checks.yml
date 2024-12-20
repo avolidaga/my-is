@@ -47,9 +47,7 @@ jobs:
         with:
           name: jacoco-reports-${{ matrix.service }}
           path: |
-            ${{ matrix.service }}/target/jacoco-report/
-            ${{ github.workspace }}/target/jacoco-report/
-                        ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
+              ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
       - name: Upload test results for ${{ matrix.service }}
         uses: actions/upload-artifact@v4
         with:
