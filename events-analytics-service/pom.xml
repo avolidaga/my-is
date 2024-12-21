@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>ru.se.info.tinder</groupId>
-    <artifactId>request-analytics-service</artifactId>
+    <artifactId>events-analytics-service</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -70,7 +70,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <finalName>notification-service</finalName>
+                    <finalName>events-analytics-service</finalName>
                 </configuration>
             </plugin>
         </plugins>

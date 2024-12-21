@@ -2,6 +2,26 @@ server:
   port: 8184
   forward-headers-strategy: framework
 spring:
+  main:
+    allow-bean-definition-overriding: true
+  kafka:
+    bootstrap-servers:
+      - PLAINTEXT://kafka:9092
+    admin:
+      auto-create: true
+    topics:
+      - name: profile-image-created
+        partitions: 3
+        replicas: 1
+      - name: profile-image-deleted
+        partitions: 3
+        replicas: 1
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      profile-image-created-topic: "profile-image-created"
+      profile-image-deleted-topic: "profile-image-deleted"
+
   datasource:
     url: jdbc:postgresql://database:5432/tinder
     username: postgres

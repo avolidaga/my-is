@@ -17,8 +17,16 @@ public class SpacesuitRequestProducer {
     @Value("${spring.kafka.producer.spacesuit-request-changed-topic}")
     private String spacesuitRequestChangedTopic;
 
+    @Value("${spring.kafka.producer.spacesuit-request-created-topic}")
+    private String spacesuitRequestCreatedTopic;
+
     public void sendMessageToSpacesuitRequestChangedTopic(SpacesuitRequestMessage message) {
         log.info("Sent to Kafka {}: {}", spacesuitRequestChangedTopic, message);
         kafkaTemplate.send(spacesuitRequestChangedTopic, message);
+    }
+
+    public void sendMessageToSpacesuitRequestCreatedTopic(SpacesuitRequestMessage message) {
+        log.info("Sent to Kafka {}: {}", spacesuitRequestCreatedTopic, message);
+        kafkaTemplate.send(spacesuitRequestCreatedTopic, message);
     }
 }

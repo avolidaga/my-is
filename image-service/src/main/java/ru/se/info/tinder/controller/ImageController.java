@@ -15,7 +15,7 @@ public class ImageController {
     private final ImageService imageService;
 
     @MessageMapping("/images/download")
-    @SendTo("/topic/image/get")
+    @SendTo("/topic/image/download")
     public ImageResponse getImageById(@Payload String imageId) {
         return imageService.getImageById(imageId);
     }

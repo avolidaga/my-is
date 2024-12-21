@@ -1,6 +1,7 @@
 package ru.se.info.tinder.feign;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,6 @@ import reactor.core.publisher.Flux;
 import ru.se.info.tinder.dto.LocationDto;
 
 import javax.naming.ServiceUnavailableException;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @CircuitBreaker(name = "location-service-cb")

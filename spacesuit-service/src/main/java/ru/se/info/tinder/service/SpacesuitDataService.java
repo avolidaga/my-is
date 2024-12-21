@@ -46,7 +46,7 @@ public class SpacesuitDataService {
                                                     (userRequestDto) -> {
                                                         SpacesuitRequestMessage message = UserRequestMapper.toSpacesuitRequestMsg(userRequestDto);
                                                         Mono.fromRunnable(
-                                                                        () -> spacesuitRequestProducer.sendMessageToSpacesuitRequestChangedTopic(message)
+                                                                        () -> spacesuitRequestProducer.sendMessageToSpacesuitRequestCreatedTopic(message)
                                                                 ).subscribeOn(Schedulers.boundedElastic())
                                                                 .onErrorContinue(
                                                                         (error, n) -> log.error("Failed to send message to Kafka: ${error.message}")

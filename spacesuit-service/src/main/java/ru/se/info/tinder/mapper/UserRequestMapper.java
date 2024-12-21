@@ -1,6 +1,7 @@
 package ru.se.info.tinder.mapper;
 
 import ru.se.info.tinder.dto.SpacesuitRequestMessage;
+import ru.se.info.tinder.dto.UpdateSpacesuitDataDto;
 import ru.se.info.tinder.dto.UserRequestDto;
 import ru.se.info.tinder.model.UserRequest;
 

@@ -1,7 +1,12 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.servers.Server;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,15 +17,15 @@ import ru.se.info.tinder.dto.UpdateUserDataDto;
 import ru.se.info.tinder.dto.UserDataDto;
 import ru.se.info.tinder.service.UserDataService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.security.Principal;
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user-data")
+@OpenAPIDefinition(
+        servers = {@Server(url = "http://localhost:8080")}
+)
 public class UserDataController {
 
     private final UserDataService userDataService;

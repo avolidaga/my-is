@@ -1,7 +1,9 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,9 @@ import javax.validation.constraints.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user-requests")
 @Slf4j
+@OpenAPIDefinition(
+        servers = {@Server(url = "http://localhost:8080")}
+)
 public class UserRequestController {
     private final UserRequestService userRequestService;
 

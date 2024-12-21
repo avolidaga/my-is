@@ -1,5 +1,6 @@
 package ru.se.info.tinder.controllers;
 
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,6 @@ import ru.se.info.tinder.service.exception.NoEntityWithSuchIdException;
 import ru.se.info.tinder.service.exception.UserNotCompletedRegistrationException;
 
 import javax.naming.ServiceUnavailableException;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 import java.util.HashMap;
 import java.util.Map;
 

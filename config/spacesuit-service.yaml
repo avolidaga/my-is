@@ -11,10 +11,14 @@ spring:
       - name: spacesuit-request-changed
         partitions: 3
         replicas: 1
+      - name: spacesuit-request-created
+        partitions: 3
+        replicas: 1
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       spacesuit-request-changed-topic: "spacesuit-request-changed"
+      spacesuit-request-created-topic: "spacesuit-request-created"
 
   datasource:
     url: jdbc:postgresql://database:5432/tinder

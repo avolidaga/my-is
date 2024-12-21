@@ -106,6 +106,7 @@
             <column name="user_id" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="profile_image_id" type="VARCHAR(200)"/>
             <column name="birth_date" type="DATE">
                 <constraints nullable="false"/>
             </column>

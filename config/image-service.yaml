@@ -9,7 +9,7 @@ spring:
 minio:
   url: http://localhost:9000
   accessKey: tinder
-  secretKey: tinder
+  secretKey: tindertinder
   bucket-name: profile_images
 
 eureka:

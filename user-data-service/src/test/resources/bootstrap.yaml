@@ -2,6 +2,25 @@ server:
   port: 8182
   forward-headers-strategy: framework
 spring:
+  kafka:
+    bootstrap-servers:
+      - PLAINTEXT://kafka:9092
+    admin:
+      auto-create: true
+    topics:
+      - name: profile-image-created
+        partitions: 3
+        replicas: 1
+      - name: profile-image-deleted
+        partitions: 3
+        replicas: 1
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      profile-image-created-topic: "profile-image-created"
+      profile-image-deleted-topic: "profile-image-deleted"
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     config:
       enabled: false
@@ -16,6 +35,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+
+websocket:
+  url: ws://image-service:8186/images
+
 eureka:
   client:
     enabled: false

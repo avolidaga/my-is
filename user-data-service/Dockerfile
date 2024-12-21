@@ -4,5 +4,5 @@ COPY pom.xml .
 RUN mvn clean install -DskipTests
 
 FROM openjdk:17
-COPY --from=build /target/user-data-service-2.6.1.jar /target/user-data-service-2.6.1.jar
-ENTRYPOINT ["java","-jar","/target/user-data-service-2.6.1.jar"]
+COPY --from=build /target/user-data-service-3.3.4.jar /target/user-data-service-3.3.4.jar
+ENTRYPOINT ["java","-jar","/target/user-data-service-3.3.4.jar"]

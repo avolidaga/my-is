@@ -4,7 +4,7 @@ server:
 
 spring:
   application:
-    name: request-analytics-service
+    name: events-analytics-service
 
   kafka:
     bootstrap-servers:
@@ -13,6 +13,11 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       spacesuit-request-changed-topic: "spacesuit-request-changed"
+      spacesuit-request-created-topic: "spacesuit-request-created"
+      profile-image-created-topic: "profile-image-created"
+      profile-image-deleted-topic: "profile-image-deleted"
+      user-created-topic: "user-created"
+      user-deleted-topic: "user-deleted"
     properties:
       spring.json.trusted.packages: "*"
 

@@ -14,6 +14,7 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
+import org.springframework.web.reactive.config.EnableWebFlux;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -40,15 +41,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
-                .httpBasic().disable()
-                .authorizeExchange()
-                .pathMatchers(AUTH_WHITELIST).permitAll()
-                .pathMatchers("/api/**").hasAnyAuthority("USER", "ADMIN")
-                .anyExchange().authenticated()
-                .and()
-                .addFilterAt(bearerAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
-        // .exceptionHandling(config -> config.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+        httpSecurity.csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                .authorizeExchange(
+                        (ex) -> {
+                            ex.pathMatchers(AUTH_WHITELIST).permitAll()
+                                    .pathMatchers("/api/**").hasAnyAuthority("USER", "ADMIN")
+                                    .anyExchange().authenticated();
+                        }
+
+                ).addFilterAt(bearerAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
         return httpSecurity.build();
     }
 

@@ -1,7 +1,26 @@
 server:
   port: 8182
   forward-headers-strategy: framework
+
 spring:
+  kafka:
+    bootstrap-servers:
+      - PLAINTEXT://kafka:9092
+    admin:
+      auto-create: true
+    topics:
+      - name: user-created
+        partitions: 3
+        replicas: 1
+      - name: user-deleted
+        partitions: 3
+        replicas: 1
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      user-created-topic: "user-created"
+      user-deleted-topic: "user-deleted"
+
   datasource:
     url: jdbc:postgresql://database:5432/tinder
     username: postgres

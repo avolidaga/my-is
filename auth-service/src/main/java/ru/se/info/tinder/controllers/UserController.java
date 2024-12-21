@@ -1,7 +1,9 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +26,9 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user-management")
 @Validated
+@OpenAPIDefinition(
+        servers = {@Server(url = "http://localhost:8080")}
+)
 public class UserController {
     private final UserService userService;
     private final JwtTokensUtils jwtTokensUtils;

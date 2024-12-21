@@ -1,7 +1,9 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ import javax.validation.constraints.NotNull;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/fabric-textures")
+@OpenAPIDefinition(
+        servers = {@Server(url = "http://localhost:8080")}
+)
 public class FabricTextureController {
 
     private final FabricTextureService fabricTextureService;

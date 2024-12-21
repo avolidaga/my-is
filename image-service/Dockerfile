@@ -4,5 +4,5 @@ COPY pom.xml .
 RUN mvn clean install -DskipTests
 
 FROM openjdk:17
-COPY --from=build /target/eureka-service.jar /target/eureka-service.jar
-ENTRYPOINT ["java","-jar","/target/eureka-service.jar"]
+COPY --from=build /target/image-service.jar /target/image-service.jar
+ENTRYPOINT ["java","-jar","/target/image-service.jar"]

@@ -1,9 +1,10 @@
 package ru.se.info.tinder.model;
 
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import ru.se.info.tinder.model.enums.Sex;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -23,6 +24,7 @@ public class UserData {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User ownerUser;
+    private String profileImageId;
     private String firstname;
     private String lastname;
     private LocalDate birthDate;

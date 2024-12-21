@@ -1,7 +1,11 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.servers.Server;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -9,14 +13,15 @@ import reactor.core.publisher.Mono;
 import ru.se.info.tinder.dto.UserConnectionDto;
 import ru.se.info.tinder.service.UserConnectionService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user-connections")
 @SecurityRequirement(name = "basicAuth")
+@OpenAPIDefinition(
+        servers = {@Server(url = "http://localhost:8080")}
+)
 public class UserConnectionController {
     private final UserConnectionService userConnectionService;
 

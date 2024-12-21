@@ -12,27 +12,57 @@ spring:
           uri: lb://auth-service
           predicates:
             - Path=/api/v1/user-management/users/**, /api/v1/user-management/auth-info
+          filters:
+            - RewritePath=/auth-api-service/(?<segment>/?.*), /$\{segment}
         - id: location-service
           uri: lb://location-service
           predicates:
             - Path=/api/v1/locations/**
+          filters:
+            - RewritePath=/location-api-service/(?<segment>/?.*), /$\{segment}
         - id: user-data-service
           uri: lb://user-data-service
           predicates:
             - Path=/api/v1/**
+          filters:
+            - RewritePath=/user-data-api-service/(?<segment>/?.*), /$\{segment}
         - id: spacesuit-service
           uri: lb://spacesuit-service
           predicates:
             - Path=/api/v1/**
+          filters:
+            - RewritePath=/spacesuit-api-service/(?<segment>/?.*), /$\{segment}
         - id: fabric-texture-service
           uri: lb://fabric-texture-service
           predicates:
             - Path=/api/v1/fabric-textures/**
+          filters:
+            - RewritePath=/fabric-texture-api-service/(?<segment>/?.*), /$\{segment}
 
 eureka:
   client:
     serviceUrl:
       defaultZone: http://eureka-service:8761/eureka/
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    urls:
+      - name: gateway-service
+        url: /v3/api-docs
+      - name: auth-service
+        url: /auth-api-service/v3/api-docs
+      - name: location-service
+        url: /location-api-service/v3/api-docs
+      - name: user-data-service
+        url: /user-data-api-service/v3/api-docs
+      - name: spacesuit-service
+        url: /spacesuit-api-service/v3/api-docs
+      - name: fabric-texture-service
+        url: /fabric-texture-service/v3/api-docs
 
 management:
   endpoints:

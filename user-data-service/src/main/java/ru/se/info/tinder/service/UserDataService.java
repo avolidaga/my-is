@@ -112,4 +112,28 @@ public class UserDataService {
                         .orElseGet(() -> Mono.error(() -> new UserNotCompletedRegistrationException(username)))
         );
     }
+
+    protected void addProfileImageToUserData(Long userDataId, String id) {
+        getUserDataById(userDataId)
+                .flatMap(
+                        (userData) -> {
+                            userData.setProfileImageId(id);
+                            return Mono.fromCallable(() ->
+                                    userDataRepository.save(userData)
+                            );
+                        }
+                );
+    }
+
+    public void deleteProfileImageToUserData(Long userDataId) {
+        getUserDataById(userDataId)
+                .flatMap(
+                        (userData) -> {
+                            userData.setProfileImageId(null);
+                            return Mono.fromCallable(() ->
+                                    userDataRepository.save(userData)
+                            );
+                        }
+                );
+    }
 }

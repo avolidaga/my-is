@@ -1,7 +1,8 @@
 package ru.se.info.tinder.validation;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
 import java.time.LocalDate;
 import java.time.Period;
 
