@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +33,11 @@ public class UserRequestController {
 
     @PatchMapping("{userRequestId}")
     @PreAuthorize("hasAuthority('MANAGER')")
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")}, summary = "Update user request status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated user request status"),
+            @ApiResponse(responseCode = "400", description = "Invalid user request ID or status")
+    })
     public Mono<UserRequestDto> updateUserRequestStatus(@NotNull @RequestParam UpdateRequestStatus status,
                                                         @NotNull @PathVariable Long userRequestId) {
         return userRequestService.updateUserRequestStatus(userRequestId, status);
@@ -39,7 +45,11 @@ public class UserRequestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('MANAGER')")
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")}, summary = "Get all user requests by status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved user requests"),
+            @ApiResponse(responseCode = "400", description = "Invalid status or pagination parameters")
+    })
     public Flux<UserRequestDto> getUsersRequests(@NotNull @RequestParam SearchStatus status,
                                                  @NotNull @RequestParam(defaultValue = "0") int page,
                                                  @NotNull @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {

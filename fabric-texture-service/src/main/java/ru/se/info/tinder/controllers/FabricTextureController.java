@@ -2,6 +2,8 @@ package ru.se.info.tinder.controllers;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +32,31 @@ public class FabricTextureController {
 
     @PostMapping("new")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @Operation(
+            summary = "Create a new fabric texture",
+            description = "Create a new fabric texture with the provided details.",
+            security = {@SecurityRequirement(name = "bearer-key")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Fabric texture created successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request due to validation errors")
+    })
     public Mono<FabricTextureDto> createFabricTexture(@Valid @RequestBody RequestFabricTextureDto dto) {
         return fabricTextureService.createFabricTexture(dto);
     }
 
     @PutMapping("{fabricTextureId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @Operation(
+            summary = "Update an existing fabric texture",
+            description = "Update a fabric texture by its ID with the provided details.",
+            security = {@SecurityRequirement(name = "bearer-key")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Fabric texture updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request due to invalid data"),
+            @ApiResponse(responseCode = "404", description = "Fabric texture not found")
+    })
     public Mono<FabricTextureDto> updateFabricTexture(@NotNull @PathVariable Long fabricTextureId,
                                                       @Valid @RequestBody RequestFabricTextureDto dto) {
         return fabricTextureService.updateFabricTextureById(fabricTextureId, dto);
@@ -45,19 +64,43 @@ public class FabricTextureController {
 
     @DeleteMapping("{fabricTextureId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @Operation(
+            summary = "Delete a fabric texture",
+            description = "Delete a fabric texture by its ID.",
+            security = {@SecurityRequirement(name = "bearer-key")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Fabric texture deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Fabric texture not found")
+    })
     public Mono<Void> deleteFabricTextureById(@NotNull @PathVariable Long fabricTextureId) {
         return fabricTextureService.deleteFabricTextureById(fabricTextureId);
     }
 
     @GetMapping("{fabricTextureId}")
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @Operation(
+            summary = "Get fabric texture by ID",
+            description = "Retrieve the details of a fabric texture by its ID.",
+            security = {@SecurityRequirement(name = "bearer-key")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Fabric texture found"),
+            @ApiResponse(responseCode = "404", description = "Fabric texture not found")
+    })
     public Mono<FabricTextureDto> getFabricTextureById(@NotNull @PathVariable Long fabricTextureId) {
         return fabricTextureService.getFabricTextureById(fabricTextureId);
     }
 
     @GetMapping
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @Operation(
+            summary = "Get all fabric textures",
+            description = "Retrieve a paginated list of all fabric textures.",
+            security = {@SecurityRequirement(name = "bearer-key")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of fabric textures"),
+            @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
+    })
     public Flux<FabricTextureDto> getAllFabricTextures(@RequestParam(defaultValue = "0") int page,
                                                        @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
         return fabricTextureService.getAllFabricTextures()
