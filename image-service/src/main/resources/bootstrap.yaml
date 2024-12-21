@@ -1,6 +1,6 @@
 spring:
   application:
-    name: eureka-service
+    name: image-service
   cloud:
     config:
       fail-fast: true

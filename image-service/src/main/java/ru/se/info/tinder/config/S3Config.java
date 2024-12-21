@@ -4,21 +4,22 @@ import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@RequiredArgsConstructor
 public class S3Config {
-
-    private final String minioUrl = "http://localhost:9000";
-    private final String accessKey = "tinder";
-    private final String secretKey = "tindertinder";
+    @Value("${minio.url}")
+    private String minioUrl;
+    @Value("${minio.accessKey}")
+    private String accessKey;
+    @Value("${minio.secretKey}")
+    private String secretKey;
     @Getter
-    private final String bucketName = "profile_images";
+    @Value("${minio.bucket-name}")
+    private String bucketName;
 
     @Bean
     @SneakyThrows

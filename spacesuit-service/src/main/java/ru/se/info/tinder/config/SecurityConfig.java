@@ -14,6 +14,9 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
+import org.springframework.web.reactive.config.CorsRegistry;
+import org.springframework.web.reactive.config.EnableWebFlux;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -71,5 +74,15 @@ public class SecurityConfig {
                 .components(new Components()
                         .addSecuritySchemes("bearer-key",
                                 new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")));
+    }
+}
+
+@Configuration
+@EnableWebFlux
+class CorsGlobalConfiguration implements WebFluxConfigurer {
+    public void addCorsMappings(CorsRegistry corsRegistry) {
+        corsRegistry.addMapping("/**")
+                .allowedOriginPatterns("http://localhost:*")
+                .allowedMethods("*");
     }
 }
