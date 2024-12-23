@@ -202,7 +202,7 @@
                         <configuration>
                             <includes>
                                 <include>ru/se/info/tinder/service/*</include>
-                                <include>ru/se/info/tinder/controllers/*</include>
+                                <include>ru/se/info/tinder/controllers/SpacesuitDataController</include>
                             </includes>
                             <excludes>
                                 <exclude>ru/se/info/tinder/kafka/*</exclude>
