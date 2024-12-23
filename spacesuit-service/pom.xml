@@ -230,6 +230,15 @@
                                     <goal>prepare-agent</goal>
                                     <goal>report</goal>
                                 </goals>
+                                <configuration>
+                                    <includes>
+                                        <include>ru/se/info/tinder/service/*</include>
+                                        <include>ru/se/info/tinder/controllers/*</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>ru/se/info/tinder/kafka/*</exclude>
+                                    </excludes>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
