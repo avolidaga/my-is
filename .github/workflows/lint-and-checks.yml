@@ -30,22 +30,23 @@ jobs:
       - name: Build and test ${{ matrix.service }}
         run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false -Djacoco.skip=false
 
-      - name: Upload Jacoco report
+      - name: List files in target for ${{ matrix.service }}
+        run: ls -R ${{ matrix.service }}/target
+
+      - name: Upload Jacoco report for ${{ matrix.service }}
         uses: madrapps/jacoco-report@v1.6.1
         with:
           paths: |
             ${{ matrix.service }}/target/site/jacoco/*.xml
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: Code Coverage
+          title: Code Coverage - ${{ matrix.service }}
           update-comment: true
 
-      - name: Upload Jacoco reports as artifact
+      - name: Upload Jacoco reports as artifact for ${{ matrix.service }}
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-reports-${{ matrix.service }}
           path: ${{ matrix.service }}/target/site/jacoco/*.xml
-      - name: List files in target for ${{ matrix.service }}
-        run: ls -R ${{ matrix.service }}/target
 
       - name: Upload test results for ${{ matrix.service }}
         uses: actions/upload-artifact@v3
