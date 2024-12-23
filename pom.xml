@@ -28,7 +28,7 @@
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2022.0.3</spring-cloud.version>
-        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -181,7 +181,7 @@
                     </execution>
                     <execution>
                         <id>report-test-coverage</id>
-                        <phase>test</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
@@ -190,6 +190,7 @@
                             <outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
                         </configuration>
                     </execution>
+
                 </executions>
             </plugin>
             <plugin>

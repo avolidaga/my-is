@@ -28,27 +28,22 @@ jobs:
           java-version: ${{ env.JDK_VERSION }}
 
       - name: Build and test ${{ matrix.service }}
-        run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false
+        run: mvn clean verify -pl ${{ matrix.service }} -am
 
-      - name: Generate Jacoco coverage report for ${{ matrix.service }}
-        run: mvn jacoco:report -pl ${{ matrix.service }}
-
-      - name: List Jacoco report files
-        run: ls -R ${{ matrix.service }}/target/site/jacoco
+      - name: Check Jacoco XML Report Existence
+        run: test -f ${{ matrix.service }}/target/site/jacoco/jacoco.xml
 
       - name: Upload Jacoco HTML report
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-html-report-${{ matrix.service }}
-          path: |
-            ${{ matrix.service }}/target/site/jacoco
+          path: ${{ matrix.service }}/target/site/jacoco
 
       - name: Upload Jacoco XML report
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-xml-report-${{ matrix.service }}
-          path: |
-            ${{ matrix.service }}/target/site/jacoco/jacoco.xml
+          path: ${{ matrix.service }}/target/site/jacoco/jacoco.xml
 
       - name: Upload test results for ${{ matrix.service }}
         uses: actions/upload-artifact@v3
