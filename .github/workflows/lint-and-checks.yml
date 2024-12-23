@@ -42,12 +42,18 @@ jobs:
           title: Code Coverage
           update-comment: true
 
+      - name: List files  target for ${{ matrix.service }}
+        run: ls -R ${{ matrix.service }}/build
+
       - name: Upload Jacoco reports as artifact
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-reports-${{ matrix.service }}
           path: |
             ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
+
+      - name: List  in target for ${{ matrix.service }}
+        run: ls -R ${{ matrix.service }}/build
       - name: Upload test results for ${{ matrix.service }}
         uses: actions/upload-artifact@v4
         with:
