@@ -33,15 +33,6 @@ jobs:
       - name: List files in target for ${{ matrix.service }}
         run: ls -R ${{ matrix.service }}/target
 
-      - name: Upload Jacoco report for ${{ matrix.service }}
-        uses: madrapps/jacoco-report@v1.6.1
-        with:
-          paths: |
-            ${{ matrix.service }}/target/site/jacoco/*.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: Code Coverage - ${{ matrix.service }}
-          update-comment: true
-
       - name: Upload Jacoco reports as artifact for ${{ matrix.service }}
         uses: actions/upload-artifact@v3
         with:
