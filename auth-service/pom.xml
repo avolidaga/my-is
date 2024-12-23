@@ -200,6 +200,10 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
+                            <includes>
+                                <include>ru/se/info/tinder/service/UserService</include>
+                                <include>ru/se/info/tinder/controllers/UserController</include>
+                            </includes>
                             <excludes>
                                 <exclude>ru/se/info/tinder/repository/*</exclude>
                                 <exclude>ru/se/info/tinder/dto/*</exclude>
@@ -209,6 +213,7 @@
                                 <exclude>ru/se/info/tinder/model/*</exclude>
                                 <exclude>ru/se/info/tinder/utils/*</exclude>
                                 <exclude>ru/se/info/tinder/mapper/*</exclude>
+                                <exclude>ru/se/info/tinder/controllers/ExceptionHandlerController</exclude>
                             </excludes>
                         </configuration>
                     </execution>
