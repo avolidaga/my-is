@@ -28,7 +28,7 @@ jobs:
           java-version: ${{ env.JDK_VERSION }}
 
       - name: Build and test ${{ matrix.service }}
-        run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false
+        run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false -Djacoco.skip=false
 
       - name: Upload Jacoco report
         uses: madrapps/jacoco-report@v1.6.1
