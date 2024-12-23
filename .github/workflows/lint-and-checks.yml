@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [auth-service, user-data-service, spacesuit-service, location-service, fabric-texture-service, eureka-service, config-service, gateway-service]
+        service: [auth-service, spacesuit-service, location-service, fabric-texture-service, eureka-service, config-service, gateway-service]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
