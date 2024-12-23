@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [auth-service, user-data-service, spacesuit-service, location-service, fabric-texture-service]
+        service: [auth-service, user-data-service, spacesuit-service, location-service, fabric-texture-service, eureka-service, config-service, gateway-service]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,25 +28,31 @@ jobs:
           java-version: ${{ env.JDK_VERSION }}
 
       - name: Build and test ${{ matrix.service }}
-        run: mvn clean verify -pl ${{ matrix.service }} -am
+        run: mvn clean verify -pl ${{ matrix.service }} -am -DskipTests=false
 
-      - name: Check Jacoco XML Report Existence
+      - name: List files in target for ${{ matrix.service }}
         run: ls -R ${{ matrix.service }}/target
 
-      - name: Upload Jacoco HTML report
+      - name: Upload Jacoco report
+        uses: madrapps/jacoco-report@v1.6.1
+        with:
+          paths: |
+            ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Code Coverage
+          update-comment: true
+
+      - name: Upload Jacoco reports as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: jacoco-html-report-${{ matrix.service }}
-          path: ${{ matrix.service }}/target/site/jacoco
-
-      - name: Upload Jacoco XML report
-        uses: actions/upload-artifact@v3
-        with:
-          name: jacoco-xml-report-${{ matrix.service }}
-          path: ${{ matrix.service }}/target/site/jacoco/jacoco.xml
-
+          name: jacoco-reports-${{ matrix.service }}
+          path: |
+            ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
       - name: Upload test results for ${{ matrix.service }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ matrix.service }}
           path: ${{ matrix.service }}/target/surefire-reports/*.xml
+
+
+

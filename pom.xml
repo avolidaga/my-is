@@ -28,7 +28,7 @@
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2022.0.3</spring-cloud.version>
-        <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -129,11 +129,14 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest -->
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
+
+
     </dependencies>
 
     <build>
@@ -171,17 +174,17 @@
                 <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>prepare-agent</id>
+                        <id>prepare-agent</id> <!-- Unique ID -->
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
-                            <propertyName>jacoco.agent.arg</propertyName>
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>report-test-coverage</id>
-                        <phase>verify</phase>
+                        <id>report-test-coverage</id> <!-- Unique ID -->
+                        <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
@@ -190,9 +193,16 @@
                             <outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
                         </configuration>
                     </execution>
-
+                    <execution>
+                        <id>report-package-coverage</id> <!-- Unique ID -->
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -204,4 +214,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
