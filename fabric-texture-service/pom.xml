@@ -249,8 +249,8 @@
                         </goals>
                         <configuration>
                             <includes>
-                                <include>ru/se/info/tinder/service/FabricTextureService</include>
-                                <include>ru/se/info/tinder/controllers/FabricTextureController</include>
+                                <include>ru/se/info/tinder/service/*</include>
+                                <include>ru/se/info/tinder/controllers/*</include>
                             </includes>
                             <excludes>
                                 <exclude>ru/se/info/tinder/repository/*</exclude>

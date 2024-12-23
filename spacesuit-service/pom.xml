@@ -232,9 +232,9 @@
                                 </goals>
                                 <configuration>
                                     <includes>
-                                        <include>ru/se/info/tinder/service/SpacesuitDataService</include>
-                                        <include>ru/se/info/tinder/service/UserRequestService</include>
-                                        <include>ru/se/info/tinder/controllers/SpacesuitDataController</include>
+                                        <include>ru/se/info/tinder/service/*</include>
+                                        <include>ru/se/info/tinder/service/*</include>
+                                        <include>ru/se/info/tinder/controllers/*</include>
                                     </includes>
                                     <excludes>
                                         <exclude>ru/se/info/tinder/repository/*</exclude>
