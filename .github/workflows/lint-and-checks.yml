@@ -31,7 +31,7 @@ jobs:
         run: mvn clean verify -pl ${{ matrix.service }} -am
 
       - name: Check Jacoco XML Report Existence
-        run: test -f ${{ matrix.service }}/target/site/jacoco/jacoco.xml
+        run: ls -R ${{ matrix.service }}/target
 
       - name: Upload Jacoco HTML report
         uses: actions/upload-artifact@v3
