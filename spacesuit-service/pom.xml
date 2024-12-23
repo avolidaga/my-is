@@ -230,23 +230,23 @@
                                     <goal>prepare-agent</goal>
                                     <goal>report</goal>
                                 </goals>
-                                <configuration>
-                                    <includes>
-                                        <include>ru/se/info/tinder/service/*</include>
-                                        <include>ru/se/info/tinder/service/*</include>
-                                        <include>ru/se/info/tinder/controllers/*</include>
-                                    </includes>
-<!--                                    <excludes>-->
-<!--                                        <exclude>ru/se/info/tinder/repository/*</exclude>-->
-<!--                                        <exclude>ru/se/info/tinder/dto/*</exclude>-->
-<!--                                        <exclude>ru/se/info/tinder/kafka/*</exclude>-->
-<!--                                        <exclude>ru/se/info/tinder/config/*</exclude>-->
-<!--                                        <exclude>ru/se/info/tinder/feign/*</exclude>-->
-<!--                                        <exclude>ru/se/info/tinder/model/*</exclude>-->
-<!--                                        <exclude>ru/se/info/tinder/utils/*</exclude>-->
-<!--                                        <exclude>ru/se/info/tinder/mapper/*</exclude>-->
-<!--                                    </excludes>-->
-                                </configuration>
+<!--                                <configuration>-->
+<!--                                    <includes>-->
+<!--                                        <include>ru/se/info/tinder/service/*</include>-->
+<!--                                        <include>ru/se/info/tinder/service/*</include>-->
+<!--                                        <include>ru/se/info/tinder/controllers/*</include>-->
+<!--                                    </includes>-->
+<!--&lt;!&ndash;                                    <excludes>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <exclude>ru/se/info/tinder/repository/*</exclude>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <exclude>ru/se/info/tinder/dto/*</exclude>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <exclude>ru/se/info/tinder/kafka/*</exclude>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <exclude>ru/se/info/tinder/config/*</exclude>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <exclude>ru/se/info/tinder/feign/*</exclude>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <exclude>ru/se/info/tinder/model/*</exclude>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <exclude>ru/se/info/tinder/utils/*</exclude>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <exclude>ru/se/info/tinder/mapper/*</exclude>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </excludes>&ndash;&gt;-->
+<!--                                </configuration>-->
                             </execution>
                         </executions>
                     </plugin>
