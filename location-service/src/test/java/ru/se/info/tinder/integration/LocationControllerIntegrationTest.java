@@ -41,7 +41,7 @@ public class LocationControllerIntegrationTest {
     private Integer port;
 
     @Autowired
-    private WireMockServer mockAuthService;
+    private WireMockServer mockLoginService;
 
     private final String validToken = "Valid token";
 
@@ -60,7 +60,7 @@ public class LocationControllerIntegrationTest {
     void setUp() throws IOException {
         RestAssured.baseURI = "http://localhost:" + port;
         RestAssured.defaultParser = Parser.JSON;
-        AuthServiceMock.setupMockValidateResponse(mockAuthService);
+        AuthServiceMock.setupMockValidateResponse(mockLoginService);
     }
 
     @Test
@@ -85,6 +85,26 @@ public class LocationControllerIntegrationTest {
                 .body("description", Matchers.equalTo("This is a test location"))
                 .body("temperature", Matchers.equalTo(23.5f));
     }
+
+    @Test
+    public void createLocationWithValidationErrorsTest() {
+        RequestLocationDto locationDto = RequestLocationDto.builder()
+                .name("")
+                .description("")
+                .build();
+
+        ValidatableResponse response = given()
+                .header("Content-type", "application/json")
+                .header("Authorization", "Bearer " + validToken)
+                .and()
+                .body(locationDto)
+                .when()
+                .post("/api/v1/locations/new")
+                .then();
+
+        response.log().all().statusCode(500);
+    }
+
 
     @Test
     public void updateLocationTest() {
@@ -153,6 +173,24 @@ public class LocationControllerIntegrationTest {
 
         response.log().all().statusCode(200)
                 .body("size()", Matchers.greaterThan(0));
+    }
+
+    @Test
+    public void getAllLocationsWithCircuitBreakerTest() throws IOException {
+        AuthServiceMock.setupMockValidateResponseWithError(mockLoginService);
+        ValidatableResponse response = null;
+        for (int i = 0; i < 6; i++) {
+            response = given()
+                    .header("Content-type", "application/json")
+                    .header("Authorization", "Bearer " + validToken)
+                    .queryParam("page", 0)
+                    .queryParam("size", 10)
+                    .when()
+                    .get("/api/v1/locations")
+                    .then();
+        }
+
+        response.log().all().statusCode(500);
     }
 
 }

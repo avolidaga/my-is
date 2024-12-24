@@ -40,7 +40,7 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
         log.error("Errors: {}", errorPropertiesMap);
 
-        return ServerResponse.status(HttpStatus.BAD_REQUEST)
+        return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(errorPropertiesMap));
     }

@@ -28,14 +28,8 @@ public class ExceptionHandlerController {
         return errors;
     }
 
-    @ExceptionHandler(value = {InvalidDataAccessApiUsageException.class, ValidationException.class})
+    @ExceptionHandler(value = {InvalidDataAccessApiUsageException.class, ValidationException.class, NoEntityWithSuchIdException.class})
     public ResponseEntity<?> handleValidationExceptions(RuntimeException ex) {
-        log.error("Incorrect request: {}", ex.getMessage());
-        return ResponseEntity.badRequest().body("Incorrect request: " + ex.getMessage());
-    }
-
-    @ExceptionHandler(value = {NoEntityWithSuchIdException.class})
-    public ResponseEntity<?> handleNoSuchEntityExceptions(RuntimeException ex) {
         log.error("Incorrect request: {}", ex.getMessage());
         return ResponseEntity.badRequest().body("Incorrect request: " + ex.getMessage());
     }

@@ -24,4 +24,10 @@ public class AuthServiceMock {
                                                 getResourceAsStream("payload/validate.txt"),
                                         defaultCharset()))));
     }
+
+    public static void setupMockValidateResponseWithError(WireMockServer mockService) throws IOException {
+        mockService.stubFor(WireMock.post(WireMock.urlEqualTo("/api/v1/user-management/validation"))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(HttpStatus.SERVICE_UNAVAILABLE.value())));
+    }
 }
