@@ -83,17 +83,16 @@ class UserDataServiceTest {
                 .build();
 
         when(locationClient.getLocationsByIds(eq(createUserDataDto.getLocations()), anyString()))
-                .thenReturn(Flux.fromIterable(locationDtos));
+                .thenReturn(locationDtos);
         when(userDataRepository.save(any(UserData.class))).thenReturn(savedUserData);
-
-        Mono<UserDataDto> result = userDataService.createUserData(createUserDataDto, "Bearer test-token", new Principal() {
+        UserDataDto result = userDataService.createUserData(createUserDataDto, "Bearer test-token", new Principal() {
             @Override
             public String getName() {
                 return "admin";
             }
         });
 
-        StepVerifier.create(result)
+        StepVerifier.create(Mono.just(result))
                 .assertNext(userDataDto -> {
                     assertEquals("John", userDataDto.getFirstname());
                     assertEquals("Doe", userDataDto.getLastname());
@@ -115,10 +114,7 @@ class UserDataServiceTest {
     @Test
     void getUserDataById_notFound() {
         when(userDataRepository.findById(1L)).thenReturn(Optional.empty());
-
-        Mono<UserData> result = userDataService.getUserDataById(1L);
-
-        assertThrows(NoEntityWithSuchIdException.class, result::block);
+        assertThrows(NoEntityWithSuchIdException.class, () -> userDataService.getUserDataById(1L));
     }
 
     @Test
@@ -162,12 +158,12 @@ class UserDataServiceTest {
         List<LocationDto> locationDtos = List.of(locationDto1, locationDto2);
 
         when(userDataRepository.findById(1L)).thenReturn(Optional.of(oldUserData));
-        when(locationClient.getLocationsByIds(anyList(), anyString())).thenReturn(Flux.fromIterable(locationDtos));
+        when(locationClient.getLocationsByIds(anyList(), anyString())).thenReturn(locationDtos);
         when(userDataRepository.save(any(UserData.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Mono<UserDataDto> result = userDataService.updateUserDataById(updateUserDataDto, 1L, principal, "Bearer test-token");
+        UserDataDto result = userDataService.updateUserDataById(updateUserDataDto, 1L, principal, "Bearer test-token");
 
-        StepVerifier.create(result)
+        StepVerifier.create(Mono.just(result))
                 .assertNext(userDataDto -> {
                     assertEquals("New Firstname", userDataDto.getFirstname());
                     assertEquals("New Lastname", userDataDto.getLastname());
@@ -191,10 +187,7 @@ class UserDataServiceTest {
     void deleteUserDataById_success() {
         doNothing().when(userDataRepository).deleteById(1L);
 
-        Mono<Object> result = userDataService.deleteUserDataById(1L);
-
-        assertNotNull(result);
-        result.block();
+        userDataService.deleteUserDataById(1L);
 
         verify(userDataRepository).deleteById(1L);
     }

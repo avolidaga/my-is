@@ -2,7 +2,6 @@ package ru.se.info.tinder.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import ru.se.info.tinder.model.enums.Sex;
 
 import java.time.LocalDate;

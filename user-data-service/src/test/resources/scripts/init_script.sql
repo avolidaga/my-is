@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS user_data (
     hair_color VARCHAR(255) NOT NULL,
     firstname VARCHAR(255),
     lastname VARCHAR(255),
+    profile_image_id VARCHAR(255),
     created_at DATE NOT NULL,
     updated_at DATE,
     CONSTRAINT fk_user_data FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

@@ -10,12 +10,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import ru.se.info.tinder.dto.UserConnectionDto;
 import ru.se.info.tinder.service.UserConnectionService;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,8 +37,8 @@ public class UserConnectionController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "401", description = "Unauthorized access")
     })
-    public Mono<UserConnectionDto> createConnection(@Valid @RequestParam Long userDataId,
-                                                    Principal principal) {
+    public UserConnectionDto createConnection(@Valid @RequestParam Long userDataId,
+                                              Principal principal) {
         return userConnectionService.createConnection(userDataId, principal);
     }
 
@@ -53,7 +52,7 @@ public class UserConnectionController {
             @ApiResponse(responseCode = "200", description = "Connections fetched successfully"),
             @ApiResponse(responseCode = "401", description = "Unauthorized access")
     })
-    public Flux<UserConnectionDto> getUserConnections(Principal principal) {
+    public List<UserConnectionDto> getUserConnections(Principal principal) {
         return userConnectionService.getConnections(principal);
     }
 
@@ -68,8 +67,8 @@ public class UserConnectionController {
             @ApiResponse(responseCode = "401", description = "Unauthorized access"),
             @ApiResponse(responseCode = "404", description = "Connection not found")
     })
-    public Mono<UserConnectionDto> getUserConnectionById(@NotNull @PathVariable Long connectionId,
-                                                         Principal principal) {
+    public UserConnectionDto getUserConnectionById(@NotNull @PathVariable Long connectionId,
+                                                   Principal principal) {
         return userConnectionService.getUserConnectionById(connectionId, principal);
     }
 }

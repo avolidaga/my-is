@@ -7,23 +7,31 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
-import org.springframework.web.reactive.config.CorsRegistry;
-import org.springframework.web.reactive.config.EnableWebFlux;
-import org.springframework.web.reactive.config.WebFluxConfigurer;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
-@EnableWebFluxSecurity
-@EnableReactiveMethodSecurity
+@EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final ServerHttpBearerAuthenticationConverter serverHttpBearerAuthenticationConverter;
+    private final JwtFilterConfig jwtFilterConfig;
 
     private static final String[] AUTH_WHITELIST = {
             "/swagger-ui/**",
@@ -42,31 +50,31 @@ public class SecurityConfig {
     };
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
-                .authorizeExchange(
+    public SecurityFilterChain securityWebFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(
                         (ex) -> {
-                            ex.pathMatchers(AUTH_WHITELIST).permitAll()
-                                    .pathMatchers("/api/**").hasAnyAuthority("USER", "ADMIN")
-                                    .anyExchange().authenticated();
+                            ex.requestMatchers(AUTH_WHITELIST).permitAll()
+                                    .requestMatchers("/api/**").hasAnyAuthority("USER", "ADMIN")
+                                    .anyRequest().authenticated();
                         }
 
-                ).addFilterAt(bearerAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
+                ).addFilterBefore(jwtFilterConfig, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
-    private AuthenticationWebFilter bearerAuthenticationFilter() {
-        AuthenticationWebFilter bearerAuthenticationFilter;
-        ReactiveAuthenticationManager authManager;
-
-        authManager = new BearerTokenReactiveAuthenticationManager();
-        bearerAuthenticationFilter = new AuthenticationWebFilter(authManager);
-
-        bearerAuthenticationFilter.setAuthenticationConverter(serverHttpBearerAuthenticationConverter);
-        bearerAuthenticationFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers("/api/**"));
-
-        return bearerAuthenticationFilter;
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOriginPattern("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
     @Bean
@@ -78,12 +86,3 @@ public class SecurityConfig {
     }
 }
 
-@Configuration
-@EnableWebFlux
-class CorsGlobalConfiguration implements WebFluxConfigurer {
-    public void addCorsMappings(CorsRegistry corsRegistry) {
-        corsRegistry.addMapping("/**")
-                .allowedOriginPatterns("http://localhost:*")
-                .allowedMethods("*");
-    }
-}

@@ -7,12 +7,11 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 import ru.se.info.tinder.dto.ProfileImageMessage;
 import ru.se.info.tinder.dto.ProfileImageResponse;
 import ru.se.info.tinder.dto.WebSocketImageResponse;
 import ru.se.info.tinder.kafka.SpacesuitRequestProducer;
+import ru.se.info.tinder.model.UserData;
 
 import java.io.*;
 import java.lang.module.FindException;
@@ -29,88 +28,62 @@ public class ProfileImageService {
     private final SpacesuitRequestProducer spacesuitRequestProducer;
 
     @SneakyThrows
-    public Mono<ProfileImageResponse> uploadProfileImageByUserDataId(Long userDataId, MultipartFile file) {
-        String fileStr = Arrays.toString(file.getBytes());
-        return userDataService.getUserDataById(userDataId)
-                .flatMap(
-                        (userData) -> Mono.fromFuture(() -> sendToImageService(
-                                        "/images/upload",
-                                        fileStr,
-                                        "/image/upload"
-                                )).flatMap(
-                                        (webSocketImageResponse) -> {
-                                            if (webSocketImageResponse.isSuccess()) {
-                                                String id = webSocketImageResponse.getPayload();
-                                                userDataService.addProfileImageToUserData(userDataId, id);
-                                                return Mono.just(new ProfileImageResponse(id));
-                                            }
-                                            return Mono.error(new FindException(webSocketImageResponse.getPayload()));
-                                        }
-                                ).subscribeOn(Schedulers.boundedElastic())
-                                .doOnSuccess(
-                                        (ProfileImageResponse) -> {
-                                            ProfileImageMessage message = new ProfileImageMessage(ProfileImageResponse.getImageId(), userDataId);
-                                            Mono.fromRunnable(
-                                                            () -> spacesuitRequestProducer.sendMessageToProfileImageCreatedTopic(message)
-                                                    ).subscribeOn(Schedulers.boundedElastic())
-                                                    .onErrorContinue(
-                                                            (error, n) -> log.error("Failed to send message to Kafka: ${error.message}")
-                                                    ).subscribe();
-                                        }
-                                )
-                );
+    public ProfileImageResponse uploadProfileImageByUserDataId(Long userDataId, MultipartFile file) {
+        UserData userData = userDataService.getUserDataById(userDataId);
+        WebSocketImageResponse webSocketImageResponse = sendToImageService(
+                "/images/upload",
+                Arrays.toString(file.getBytes()),
+                "/image/upload"
+        ).get();
+
+        if (webSocketImageResponse.isSuccess()) {
+            String id = webSocketImageResponse.getPayload();
+            userDataService.addProfileImageToUserData(userDataId, id);
+
+            ProfileImageMessage message = new ProfileImageMessage(id, userDataId);
+            spacesuitRequestProducer.sendMessageToProfileImageCreatedTopic(message);
+            return new ProfileImageResponse(id);
+        }
+        throw new FindException(webSocketImageResponse.getPayload());
     }
 
-    public Mono<ProfileImageResponse> deleteProfileImageById(Long userDataId, String id) {
-        return userDataService.getUserDataById(userDataId)
-                .flatMap(
-                        (userData) -> Mono.fromFuture(() -> sendToImageService(
-                                        "/images/delete",
-                                        id,
-                                        "/image/delete"
-                                )).flatMap(
-                                        (webSocketImageResponse) -> {
-                                            if (webSocketImageResponse.isSuccess()) {
-                                                userDataService.deleteProfileImageToUserData(userDataId);
-                                                return Mono.just(new ProfileImageResponse(id));
-                                            }
-                                            return Mono.error(new FindException(webSocketImageResponse.getPayload()));
-                                        }
-                                ).subscribeOn(Schedulers.boundedElastic())
-                                .doOnSuccess(
-                                        (ProfileImageResponse) -> {
-                                            ProfileImageMessage message = new ProfileImageMessage(ProfileImageResponse.getImageId(), userDataId);
-                                            Mono.fromRunnable(
-                                                            () -> spacesuitRequestProducer.sendMessageToProfileImageDeletedTopic(message)
-                                                    ).subscribeOn(Schedulers.boundedElastic())
-                                                    .onErrorContinue(
-                                                            (error, n) -> log.error("Failed to send message to Kafka: ${error.message}")
-                                                    ).subscribe();
-                                        }
-                                )
-                );
+    @SneakyThrows
+    public ProfileImageResponse deleteProfileImageById(Long userDataId, String id) {
+        UserData userData = userDataService.getUserDataById(userDataId);
+        WebSocketImageResponse webSocketImageResponse = sendToImageService(
+                "/images/delete",
+                id,
+                "/image/delete"
+        ).get();
+
+        if (webSocketImageResponse.isSuccess()) {
+            userDataService.deleteProfileImageToUserData(userDataId);
+
+            ProfileImageMessage message = new ProfileImageMessage(id, userDataId);
+            spacesuitRequestProducer.sendMessageToProfileImageDeletedTopic(message);
+
+            return new ProfileImageResponse(id);
+        }
+        throw new FindException(webSocketImageResponse.getPayload());
     }
 
-    public Mono<OutputStream> getProfileImageById(Long userDataId, String id) {
-        return userDataService.getUserDataById(userDataId)
-                .flatMap(
-                        (userData) -> Mono.fromFuture(() -> sendToImageService(
-                                "/images/download",
-                                id,
-                                "/image/download"
-                        )).flatMap(
-                                (webSocketImageResponse) -> {
-                                    if (webSocketImageResponse.isSuccess()) {
-                                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                                        PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(byteArrayOutputStream));
-                                        printWriter.print(webSocketImageResponse.getPayload());
-                                        printWriter.flush();
-                                        return Mono.just(byteArrayOutputStream);
-                                    }
-                                    return Mono.error(new FindException(webSocketImageResponse.getPayload()));
-                                }
-                        )
-                );
+    @SneakyThrows
+    public OutputStream getProfileImageById(Long userDataId, String id) {
+        UserData userData = userDataService.getUserDataById(userDataId);
+        WebSocketImageResponse webSocketImageResponse = sendToImageService(
+                "/images/download",
+                id,
+                "/image/download"
+        ).get();
+
+        if (webSocketImageResponse.isSuccess()) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(byteArrayOutputStream));
+            printWriter.print(webSocketImageResponse.getPayload());
+            printWriter.flush();
+            return byteArrayOutputStream;
+        }
+        throw new FindException(webSocketImageResponse.getPayload());
     }
 
     @SneakyThrows

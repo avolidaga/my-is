@@ -185,7 +185,7 @@ public class UserDataControllerIntegrationTest {
                 .then();
 
         response.log().all()
-                .statusCode(200);
+                .statusCode(204);
     }
 
     @Test

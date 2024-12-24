@@ -12,32 +12,22 @@ spring:
           uri: lb://auth-service
           predicates:
             - Path=/api/v1/user-management/users/**, /api/v1/user-management/auth-info
-          filters:
-            - RewritePath=/auth-api-service/(?<segment>/?.*), /$\{segment}
         - id: location-service
           uri: lb://location-service
           predicates:
             - Path=/api/v1/locations/**
-          filters:
-            - RewritePath=/location-api-service/(?<segment>/?.*), /$\{segment}
         - id: user-data-service
           uri: lb://user-data-service
           predicates:
-            - Path=/api/v1/**
-          filters:
-            - RewritePath=/user-data-api-service/(?<segment>/?.*), /$\{segment}
+            - Path=/api/v1/user-data/**, /api/v1/user-connections/**
         - id: spacesuit-service
           uri: lb://spacesuit-service
           predicates:
-            - Path=/api/v1/**
-          filters:
-            - RewritePath=/spacesuit-api-service/(?<segment>/?.*), /$\{segment}
+            - Path=/api/v1/spacesuit-data/**, /api/v1/user-requests/**
         - id: fabric-texture-service
           uri: lb://fabric-texture-service
           predicates:
             - Path=/api/v1/fabric-textures/**
-          filters:
-            - RewritePath=/fabric-texture-api-service/(?<segment>/?.*), /$\{segment}
 
 eureka:
   client:

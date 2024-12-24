@@ -4,7 +4,6 @@ package ru.se.info.tinder.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 

@@ -11,15 +11,15 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import ru.se.info.tinder.dto.CreateUserDataDto;
 import ru.se.info.tinder.dto.UpdateUserDataDto;
 import ru.se.info.tinder.dto.UserDataDto;
 import ru.se.info.tinder.service.UserDataService;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +32,7 @@ public class UserDataController {
     private final UserDataService userDataService;
 
     @PostMapping("new")
+    @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Create a new user data",
@@ -43,9 +44,9 @@ public class UserDataController {
             @ApiResponse(responseCode = "400", description = "Invalid request payload"),
             @ApiResponse(responseCode = "401", description = "Unauthorized access")
     })
-    public Mono<UserDataDto> createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto,
-                                            @RequestHeader("Authorization") String token,
-                                            Principal principal) {
+    public UserDataDto createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto,
+                                      @RequestHeader("Authorization") String token,
+                                      Principal principal) {
         return userDataService.createUserData(createUserDataDto, token, principal);
     }
 
@@ -61,10 +62,10 @@ public class UserDataController {
             @ApiResponse(responseCode = "401", description = "Unauthorized access"),
             @ApiResponse(responseCode = "404", description = "User data not found")
     })
-    public Mono<UserDataDto> updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto,
-                                                  @PathVariable Long id,
-                                                  Principal principal,
-                                                  @RequestHeader("Authorization") String token) {
+    public UserDataDto updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto,
+                                            @PathVariable Long id,
+                                            Principal principal,
+                                            @RequestHeader("Authorization") String token) {
         return userDataService.updateUserDataById(updateUserDataDto, id, principal, token);
     }
 
@@ -79,8 +80,9 @@ public class UserDataController {
             @ApiResponse(responseCode = "401", description = "Unauthorized access"),
             @ApiResponse(responseCode = "404", description = "User data not found")
     })
-    public Mono<Object> deleteUserDataByUser(@PathVariable Long id) {
-        return userDataService.deleteUserDataById(id);
+    public ResponseEntity<Void> deleteUserDataByUser(@PathVariable Long id) {
+        userDataService.deleteUserDataById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("{id}")
@@ -94,7 +96,7 @@ public class UserDataController {
             @ApiResponse(responseCode = "401", description = "Unauthorized access"),
             @ApiResponse(responseCode = "404", description = "User data not found")
     })
-    public Mono<UserDataDto> getUserDataById(@PathVariable Long id) {
+    public UserDataDto getUserDataById(@PathVariable Long id) {
         return userDataService.getUserDataDtoById(id);
     }
 
@@ -109,12 +111,13 @@ public class UserDataController {
             @ApiResponse(responseCode = "401", description = "Unauthorized access"),
             @ApiResponse(responseCode = "404", description = "Location not found")
     })
-    public Flux<UserDataDto> getUsersByLocationId(@PathVariable Long locationId,
+    public List<UserDataDto> getUsersByLocationId(@PathVariable Long locationId,
                                                   @RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
         return userDataService.getUsersDataByLocationId(locationId)
+                .stream()
                 .skip((long) page * size)
-                .take(size);
+                .limit(size).toList();
     }
 
     @GetMapping
@@ -127,10 +130,10 @@ public class UserDataController {
             @ApiResponse(responseCode = "200", description = "User data fetched successfully"),
             @ApiResponse(responseCode = "401", description = "Unauthorized access")
     })
-    public Flux<UserDataDto> getAllUsersData(@RequestParam(defaultValue = "0") int page,
+    public List<UserDataDto> getAllUsersData(@RequestParam(defaultValue = "0") int page,
                                              @RequestParam(defaultValue = "10") @Min(1) @Max(50) int size) {
-        return userDataService.getAllUsersData()
+        return userDataService.getAllUsersData().stream()
                 .skip((long) page * size)
-                .take(size);
+                .limit(size).toList();
     }
 }
