@@ -42,13 +42,10 @@ public class ProfileImageController {
         return profileImageService.deleteProfileImageById(userDataId, id);
     }
 
-    @GetMapping(path = "{userDataId}/image/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(path = "{userDataId}/image/{id}")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<InputStreamResource> getProfileImageById(@PathVariable Long userDataId,
-                                                                   @PathVariable String id) {
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + id + "\"")
-                .body(profileImageService.getProfileImageById(userDataId, id));
+    public String getProfileImageUrlById(@PathVariable Long userDataId,
+                                         @PathVariable String id) {
+        return profileImageService.getProfileImageUrlById(userDataId, id);
     }
 }

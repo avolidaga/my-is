@@ -18,6 +18,7 @@ import java.io.*;
 import java.lang.module.FindException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
@@ -72,7 +73,23 @@ public class ProfileImageService {
     }
 
     @SneakyThrows
-    public InputStreamResource getProfileImageById(Long userDataId, String id) {
+    public String getProfileImageUrlById(Long userDataId, String id) {
+        UserData userData = userDataService.getUserDataById(userDataId);
+        WebSocketImageResponse webSocketImageResponse = sendToImageService(
+                "/images/url",
+                id,
+                "/image/url"
+        ).get();
+
+        if (webSocketImageResponse.isSuccess()) {
+            log.info("Get image url by id {}", id);
+            return webSocketImageResponse.getPayload();
+        }
+        throw new FindException(webSocketImageResponse.getPayload());
+    }
+
+    @SneakyThrows
+    public byte[] getProfileImageById(Long userDataId, String id) {
         UserData userData = userDataService.getUserDataById(userDataId);
         WebSocketImageResponse webSocketImageResponse = sendToImageService(
                 "/images/download",
@@ -81,7 +98,8 @@ public class ProfileImageService {
         ).get();
 
         if (webSocketImageResponse.isSuccess()) {
-            return new InputStreamResource(new ByteArrayInputStream(webSocketImageResponse.getPayload().getBytes()));
+            log.info("Get image by id {}", id);
+            return Base64.getDecoder().decode(webSocketImageResponse.getPayload());
         }
         throw new FindException(webSocketImageResponse.getPayload());
     }
