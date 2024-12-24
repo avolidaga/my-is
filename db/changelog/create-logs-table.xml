@@ -6,8 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <!-- Changelog для таблицы profile_images_log -->
-    <changeSet id="1" author="yourusername">
+    <changeSet id="1" author="nika">
         <createTable tableName="profile_images_log">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
@@ -24,8 +23,7 @@
         </createTable>
     </changeSet>
 
-    <!-- Changelog для таблицы spacesuit_requests_log -->
-    <changeSet id="2" author="yourusername">
+    <changeSet id="2" author="nika">
         <createTable tableName="spacesuit_requests_log">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
@@ -43,7 +41,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="updated_at" type="timestamp">
-                <constraints nullable="false"/>
             </column>
             <column name="message_type" type="varchar(255)">
                 <constraints nullable="false"/>
@@ -51,8 +48,7 @@
         </createTable>
     </changeSet>
 
-    <!-- Changelog для таблицы users_log -->
-    <changeSet id="3" author="yourusername">
+    <changeSet id="3" author="nika">
         <createTable tableName="users_log">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>

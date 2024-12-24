@@ -2,33 +2,33 @@ version: '3.8'
 
 services:
 
-  minio:
-    image: minio/minio
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - minio_storage:/data
-    environment:
-      MINIO_ROOT_USER: tinder
-      MINIO_ROOT_PASSWORD: tindertinder
-    command: server --console-address ":9001" /data
-    networks:
-      - tinder
-
-  image-service:
-    image: image-service:latest
-    container_name: image-service
-    build:
-      context: ./image-service
-      dockerfile: Dockerfile
-    ports:
-      - "8186:8186"
-    depends_on:
-      - minio
-    restart: on-failure
-    networks:
-      - tinder
+#  minio:
+#    image: minio/minio
+#    ports:
+#      - "9000:9000"
+#      - "9001:9001"
+#    volumes:
+#      - minio_storage:/data
+#    environment:
+#      MINIO_ROOT_USER: tinder
+#      MINIO_ROOT_PASSWORD: tindertinder
+#    command: server --console-address ":9001" /data
+#    networks:
+#      - tinder
+#
+#  image-service:
+#    image: image-service:latest
+#    container_name: image-service
+#    build:
+#      context: ./image-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8186:8186"
+#    depends_on:
+#      - minio
+#    restart: on-failure
+#    networks:
+#      - tinder
 
 
   kafka-1:
@@ -278,21 +278,21 @@ services:
     networks:
       - tinder
 
-  user-data-service:
-    image: user-data-service:latest
-    container_name: user-data-service
-    environment:
-      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx168m -XX:+UseSerialGC -Xss256k -XX:MaxRAM=350m"
-    build:
-      context: ./user-data-service
-      dockerfile: Dockerfile
-    ports:
-      - "8184:8184"
-    depends_on:
-      - gateway-service
-    restart: on-failure
-    networks:
-      - tinder
+#  user-data-service:
+#    image: user-data-service:latest
+#    container_name: user-data-service
+#    environment:
+#      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx168m -XX:+UseSerialGC -Xss256k -XX:MaxRAM=350m"
+#    build:
+#      context: ./user-data-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8184:8184"
+#    depends_on:
+#      - gateway-service
+#    restart: on-failure
+#    networks:
+#      - tinder
 
   events-analytics-service:
     image: events-analytics-service:latest

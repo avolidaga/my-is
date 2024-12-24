@@ -4,7 +4,9 @@ server:
 spring:
   kafka:
     bootstrap-servers:
-      - PLAINTEXT://kafka:9092
+      - PLAINTEXT://kafka-1:9092
+      - PLAINTEXT://kafka-2:9092
+      - PLAINTEXT://kafka-3:9092
     admin:
       auto-create: true
     topics:

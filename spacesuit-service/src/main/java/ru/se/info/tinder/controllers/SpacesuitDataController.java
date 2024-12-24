@@ -1,7 +1,9 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -44,7 +46,7 @@ public class SpacesuitDataController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     public Mono<UserRequestDto> createUserSpacesuitData(@Valid @RequestBody CreateSpacesuitDataDto dto,
-                                                        @RequestHeader("Authorization") String token) {
+                                                        @Parameter(hidden = true) @RequestHeader("Authorization") String token) {
         return spacesuitDataService.createSpacesuitData(dto, token);
     }
 

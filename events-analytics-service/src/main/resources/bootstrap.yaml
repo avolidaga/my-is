@@ -1,6 +1,6 @@
 spring:
   application:
-    name: notification-service
+    name: events-analytics-service
   cloud:
     config:
       fail-fast: true
