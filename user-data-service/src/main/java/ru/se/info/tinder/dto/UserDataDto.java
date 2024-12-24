@@ -27,6 +27,7 @@ public class UserDataDto {
 
     @NotNull
     private Long ownerUserId;
+    private String profileImageId;
 
     @NotNull(message = "Birth date must not be null")
     @Past(message = "Birth date must be in the past")

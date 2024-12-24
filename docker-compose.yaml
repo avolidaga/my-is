@@ -145,33 +145,33 @@ services:
       - eureka-service
     restart: on-failure
 
-  location-service:
-    image: location-service:latest
-    container_name: location-service
-    environment:
-      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx168m -XX:+UseSerialGC -Xss256k -XX:MaxRAM=350m"
-    build:
-      context: ./location-service
-      dockerfile: Dockerfile
-    ports:
-      - "8180:8180"
-    depends_on:
-      - gateway-service
-    restart: on-failure
-
-  fabric-texture-service:
-    image: fabric-texture-service:latest
-    container_name: fabric-texture-service
-    environment:
-      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx168m -XX:+UseSerialGC -Xss256k -XX:MaxRAM=350m"
-    build:
-      context: ./fabric-texture-service
-      dockerfile: Dockerfile
-    ports:
-      - "8181:8181"
-    depends_on:
-      - gateway-service
-    restart: on-failure
+#  location-service:
+#    image: location-service:latest
+#    container_name: location-service
+#    environment:
+#      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx168m -XX:+UseSerialGC -Xss256k -XX:MaxRAM=350m"
+#    build:
+#      context: ./location-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8180:8180"
+#    depends_on:
+#      - gateway-service
+#    restart: on-failure
+#
+#  fabric-texture-service:
+#    image: fabric-texture-service:latest
+#    container_name: fabric-texture-service
+#    environment:
+#      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx168m -XX:+UseSerialGC -Xss256k -XX:MaxRAM=350m"
+#    build:
+#      context: ./fabric-texture-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8181:8181"
+#    depends_on:
+#      - gateway-service
+#    restart: on-failure
 
   auth-service:
     image: auth-service:latest
@@ -187,19 +187,19 @@ services:
       - gateway-service
     restart: on-failure
 
-  spacesuit-service:
-    image: spacesuit-service:latest
-    container_name: spacesuit-service
-    environment:
-      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx168m -XX:+UseSerialGC -Xss256k -XX:MaxRAM=350m"
-    build:
-      context: ./spacesuit-service
-      dockerfile: Dockerfile
-    ports:
-      - "8183:8183"
-    depends_on:
-      - gateway-service
-    restart: on-failure
+#  spacesuit-service:
+#    image: spacesuit-service:latest
+#    container_name: spacesuit-service
+#    environment:
+#      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx168m -XX:+UseSerialGC -Xss256k -XX:MaxRAM=350m"
+#    build:
+#      context: ./spacesuit-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8183:8183"
+#    depends_on:
+#      - gateway-service
+#    restart: on-failure
 
   user-data-service:
     image: user-data-service:latest
@@ -215,17 +215,17 @@ services:
       - gateway-service
     restart: on-failure
 
-  events-analytics-service:
-    image: events-analytics-service:latest
-    container_name: events-analytics-service
-    build:
-      context: ./events-analytics-service
-      dockerfile: Dockerfile
-    ports:
-      - "8185:8185"
-    depends_on:
-      - kafka
-    restart: on-failure
+#  events-analytics-service:
+#    image: events-analytics-service:latest
+#    container_name: events-analytics-service
+#    build:
+#      context: ./events-analytics-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8185:8185"
+#    depends_on:
+#      - kafka
+#    restart: on-failure
 
 volumes:
   postgres:

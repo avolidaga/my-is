@@ -5,7 +5,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.se.info.tinder.dto.ProfileImageResponse;
@@ -23,11 +27,11 @@ public class ProfileImageController {
 
     private final ProfileImageService profileImageService;
 
-    @PostMapping("{userDataId}/image/new")
+    @PostMapping(path = "{userDataId}/image/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ProfileImageResponse uploadProfileImage(@PathVariable Long userDataId,
-                                                   @RequestParam MultipartFile file) {
+    public ProfileImageResponse uploadProfileImage(@PathVariable("userDataId") Long userDataId,
+                                                   @RequestPart("file") MultipartFile file) {
         return profileImageService.uploadProfileImageByUserDataId(userDataId, file);
     }
 
@@ -38,10 +42,13 @@ public class ProfileImageController {
         return profileImageService.deleteProfileImageById(userDataId, id);
     }
 
-    @GetMapping("{userDataId}/image/{id}")
+    @GetMapping(path = "{userDataId}/image/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public OutputStream getProfileImageById(@PathVariable Long userDataId,
-                                            @PathVariable String id) {
-        return profileImageService.getProfileImageById(userDataId, id);
+    public ResponseEntity<InputStreamResource> getProfileImageById(@PathVariable Long userDataId,
+                                                                   @PathVariable String id) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + id + "\"")
+                .body(profileImageService.getProfileImageById(userDataId, id));
     }
 }

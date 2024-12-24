@@ -5,3 +5,10 @@ spring:
     config:
       fail-fast: true
       uri: http://config-service:8888 # config server
+  web:
+    socket:
+      message-size: 512MB
+    servlet:
+      multipart:
+        enabled: false
+        max-file-size: 10MB
