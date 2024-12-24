@@ -6,6 +6,18 @@ spring:
   application:
     name: events-analytics-service
 
+  datasource:
+    url: jdbc:postgresql://database:5432/tinder
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    enabled: false
+
   kafka:
     bootstrap-servers:
       - PLAINTEXT://kafka:9092
