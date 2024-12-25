@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.se.info.tinder.dto.ProfileImageMessage;
+import ru.se.info.tinder.dto.ProfileImageRequest;
 import ru.se.info.tinder.dto.ProfileImageResponse;
 import ru.se.info.tinder.dto.WebSocketImageResponse;
 import ru.se.info.tinder.kafka.SpacesuitRequestProducer;
@@ -17,6 +18,7 @@ import ru.se.info.tinder.model.UserData;
 import java.io.*;
 import java.lang.module.FindException;
 import java.lang.reflect.Type;
+import java.nio.charset.CharsetEncoder;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
@@ -37,7 +39,7 @@ public class ProfileImageService {
         }
         WebSocketImageResponse webSocketImageResponse = sendToImageService(
                 "/images/upload",
-                Arrays.toString(file.getBytes()),
+                new ProfileImageRequest(Base64.getEncoder().encodeToString(file.getInputStream().readAllBytes())),
                 "/image/upload"
         ).get();
 
@@ -89,7 +91,7 @@ public class ProfileImageService {
     }
 
     @SneakyThrows
-    public byte[] getProfileImageById(Long userDataId, String id) {
+    public InputStreamResource getProfileImageById(Long userDataId, String id) {
         UserData userData = userDataService.getUserDataById(userDataId);
         WebSocketImageResponse webSocketImageResponse = sendToImageService(
                 "/images/download",
@@ -99,13 +101,13 @@ public class ProfileImageService {
 
         if (webSocketImageResponse.isSuccess()) {
             log.info("Get image by id {}", id);
-            return Base64.getDecoder().decode(webSocketImageResponse.getPayload());
+            return new InputStreamResource(new ByteArrayInputStream(Base64.getDecoder().decode(webSocketImageResponse.getPayload())));
         }
         throw new FindException(webSocketImageResponse.getPayload());
     }
 
     @SneakyThrows
-    private CompletableFuture<WebSocketImageResponse> sendToImageService(String dest, String payload, String subDest) {
+    private <T> CompletableFuture<WebSocketImageResponse> sendToImageService(String dest, T payload, String subDest) {
         CompletableFuture<WebSocketImageResponse> future = new CompletableFuture<>();
         StompFrameHandler handler = prepareStompFrameHandler(future);
         stompWebSocketClient.sendMessage(dest, payload, subDest, handler);

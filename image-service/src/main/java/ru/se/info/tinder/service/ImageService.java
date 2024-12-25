@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.se.info.tinder.dto.ImageResponse;
+import ru.se.info.tinder.dto.ProfileImageRequest;
 import ru.se.info.tinder.repository.MinioComponent;
 
 import java.util.UUID;
@@ -45,10 +46,10 @@ public class ImageService {
         }
     }
 
-    public ImageResponse saveImage(String image) {
+    public ImageResponse saveImage(ProfileImageRequest imageRequest) {
         try {
             String imageId = UUID.randomUUID().toString();
-            minioComponent.saveImage(image, imageId);
+            minioComponent.saveImage(imageRequest.getFile(), imageId);
             return ImageResponse.builder()
                     .payload(imageId)
                     .isSuccess(true)

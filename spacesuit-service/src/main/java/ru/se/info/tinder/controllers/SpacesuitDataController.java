@@ -59,7 +59,7 @@ public class SpacesuitDataController {
     })
     public Mono<SpacesuitDataDto> updateSpacesuitDataById(@Valid @RequestBody UpdateSpacesuitDataDto dto,
                                                           Principal principal,
-                                                          @RequestHeader("Authorization") String token) {
+                                                          @Parameter(hidden = true) @RequestHeader("Authorization") String token) {
         return spacesuitDataService.updateSpacesuitData(dto, principal, token);
     }
 

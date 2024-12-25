@@ -2,6 +2,7 @@ package ru.se.info.tinder.controllers;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -45,7 +46,7 @@ public class UserDataController {
             @ApiResponse(responseCode = "401", description = "Unauthorized access")
     })
     public UserDataDto createUserData(@Valid @RequestBody CreateUserDataDto createUserDataDto,
-                                      @RequestHeader("Authorization") String token,
+                                      @Parameter(hidden = true) @RequestHeader("Authorization") String token,
                                       Principal principal) {
         return userDataService.createUserData(createUserDataDto, token, principal);
     }
@@ -65,7 +66,7 @@ public class UserDataController {
     public UserDataDto updateUserDataByUser(@Valid @RequestBody UpdateUserDataDto updateUserDataDto,
                                             @PathVariable Long id,
                                             Principal principal,
-                                            @RequestHeader("Authorization") String token) {
+                                            @Parameter(hidden = true) @RequestHeader("Authorization") String token) {
         return userDataService.updateUserDataById(updateUserDataDto, id, principal, token);
     }
 

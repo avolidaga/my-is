@@ -11,8 +11,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class S3Config {
+    @Getter
     @Value("${minio.url}")
     private String minioUrl;
+    @Getter
+    @Value("${minio.public-url}")
+    private String publicUrl;
     @Value("${minio.accessKey}")
     private String accessKey;
     @Value("${minio.secretKey}")

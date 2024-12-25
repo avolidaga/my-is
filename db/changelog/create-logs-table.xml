@@ -8,8 +8,8 @@
 
     <changeSet id="1" author="nika">
         <createTable tableName="profile_images_log">
-            <column name="id" type="bigint">
-                <constraints primaryKey="true" nullable="false"/>
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
             </column>
             <column name="image_id" type="varchar(255)">
                 <constraints nullable="false"/>
@@ -25,8 +25,8 @@
 
     <changeSet id="2" author="nika">
         <createTable tableName="spacesuit_requests_log">
-            <column name="id" type="bigint">
-                <constraints primaryKey="true" nullable="false"/>
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
             </column>
             <column name="user_request_id" type="bigint">
                 <constraints nullable="false"/>
@@ -50,8 +50,8 @@
 
     <changeSet id="3" author="nika">
         <createTable tableName="users_log">
-            <column name="id" type="bigint">
-                <constraints primaryKey="true" nullable="false"/>
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
             </column>
             <column name="user_id" type="bigint">
                 <constraints nullable="false"/>

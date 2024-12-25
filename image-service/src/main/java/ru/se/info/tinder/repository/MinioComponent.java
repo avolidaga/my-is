@@ -24,15 +24,16 @@ public class MinioComponent {
 
     private final S3Config s3Config;
     private final MinioClient minioClient;
+    private final static String EXTENSION = ".jpg";
 
     public String getPresignedImageUrl(String imageId) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         try {
             return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
-                    .bucket(s3Config.getBucketName())
-                    .object(imageId + "jpg")
-                    .expiry(3, TimeUnit.DAYS)
-                    .method(Method.GET)
-                    .build());
+                            .bucket(s3Config.getBucketName())
+                            .object(imageId + EXTENSION)
+                            .expiry(3, TimeUnit.DAYS)
+                            .method(Method.GET)
+                            .build());
         } catch (Exception ex) {
             log.error("Error occurred during image url getting: ", ex);
             throw ex;
@@ -43,7 +44,7 @@ public class MinioComponent {
     public String getObject(String imageId) throws Exception {
         GetObjectArgs args = GetObjectArgs.builder()
                 .bucket(s3Config.getBucketName())
-                .object(imageId + "jpg")
+                .object(imageId + EXTENSION)
                 .build();
         try (InputStream stream = minioClient.getObject(args)) {
             return Base64.getEncoder().encodeToString(stream.readAllBytes());
@@ -58,7 +59,7 @@ public class MinioComponent {
             minioClient.removeObject(
                     RemoveObjectArgs.builder()
                             .bucket(s3Config.getBucketName())
-                            .object(imageId + "jpg")
+                            .object(imageId + EXTENSION)
                             .build()
             );
         } catch (Exception ex) {
@@ -68,10 +69,10 @@ public class MinioComponent {
     }
 
     public void saveImage(String image, String imageId) throws Exception {
-        try (InputStream imageStream = new ByteArrayInputStream(image.getBytes())) {
+        try (InputStream imageStream = new ByteArrayInputStream(Base64.getDecoder().decode(image))) {
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(s3Config.getBucketName())
-                    .object(imageId + "jpg")
+                    .object(imageId + EXTENSION)
                     .stream(imageStream, -1, 10485760)
                     .contentType("image/jpg")
                     .build());

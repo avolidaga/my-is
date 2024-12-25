@@ -1,5 +1,6 @@
 package ru.se.info.tinder.controllers;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -42,10 +43,21 @@ public class ProfileImageController {
         return profileImageService.deleteProfileImageById(userDataId, id);
     }
 
-    @GetMapping(path = "{userDataId}/image/{id}")
+    @GetMapping(path = "{userDataId}/image/{id}/url")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public String getProfileImageUrlById(@PathVariable Long userDataId,
                                          @PathVariable String id) {
         return profileImageService.getProfileImageUrlById(userDataId, id);
+    }
+
+    @Hidden
+    @GetMapping(path = "{userDataId}/image/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<InputStreamResource> getProfileImageById(@PathVariable Long userDataId,
+                                                                   @PathVariable String id) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + id + ".jpg\"")
+                .body(profileImageService.getProfileImageById(userDataId, id));
     }
 }

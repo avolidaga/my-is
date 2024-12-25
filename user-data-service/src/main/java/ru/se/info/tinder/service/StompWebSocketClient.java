@@ -41,7 +41,7 @@ public class StompWebSocketClient {
     }
 
 
-    public void sendMessage(String dest, String payload, String subDest, StompFrameHandler handler) throws ServiceUnavailableException {
+    public <T> void sendMessage(String dest, T payload, String subDest, StompFrameHandler handler) throws ServiceUnavailableException {
         try {
             connectToServer();
             session.subscribe("/topic" + subDest, handler);

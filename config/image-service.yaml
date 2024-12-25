@@ -8,6 +8,7 @@ spring:
 
 minio:
   url: http://minio:9000
+  public-url: http://localhost:9000
   accessKey: tinder
   secretKey: tindertinder
   bucket-name: profile-images

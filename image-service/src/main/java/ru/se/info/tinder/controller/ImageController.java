@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import ru.se.info.tinder.dto.ImageResponse;
+import ru.se.info.tinder.dto.ProfileImageRequest;
 import ru.se.info.tinder.service.ImageService;
 
 @Controller
@@ -26,8 +27,8 @@ public class ImageController {
 
     @MessageMapping("/images/upload")
     @SendTo("/topic/image/upload")
-    public ImageResponse sendImage(@Payload String image) {
-        return imageService.saveImage(image);
+    public ImageResponse sendImage(@Payload ProfileImageRequest imageRequest) {
+        return imageService.saveImage(imageRequest);
     }
 
     @MessageMapping("/images/url")
