@@ -6,3 +6,11 @@
 ```sh run.sh```
 
 ## Интерфейс
+#### Авторизация
+![](static/img_1.png)
+#### Главная
+![](static/img.png)
+#### Встречи
+![](static/img_3.png)
+#### Карта
+![](static/img_2.png)
