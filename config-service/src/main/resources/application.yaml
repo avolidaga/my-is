@@ -3,7 +3,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/NikaT1/tinder-configs.git
+          uri: https://github.com/avolidaga/tinder-configs.git
           search-paths:
             - config
           default-label: main

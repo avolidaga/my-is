@@ -249,14 +249,14 @@
                                  referencedColumnNames="user_data_id"/>
     </changeSet>
 
-    <!-- Table location -->
+    <!-- Table info -->
     <changeSet id="10" author="lisache121">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="location"/>
+                <tableExists tableName="info"/>
             </not>
         </preConditions>
-        <createTable tableName="location">
+        <createTable tableName="info">
             <column name="location_id" type="serial">
                 <constraints primaryKey="true"/>
             </column>
@@ -288,7 +288,7 @@
         <addForeignKeyConstraint baseTableName="user_data_location"
                                  baseColumnNames="location_id"
                                  constraintName="fk_location"
-                                 referencedTableName="location"
+                                 referencedTableName="info"
                                  referencedColumnNames="location_id"
                                  onDelete="CASCADE"/>
         <addForeignKeyConstraint baseTableName="user_data_location"

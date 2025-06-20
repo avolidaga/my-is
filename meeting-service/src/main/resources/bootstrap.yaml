@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: spacesuit-service
+  cloud:
+    config:
+      fail-fast: true
+      uri: http://config-service:8888 # config server
+resilience4j:
+  circuitbreaker:
+    instances:
+      auth-service-cb: # Circuit Breaker для Auth Service
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 1000ms

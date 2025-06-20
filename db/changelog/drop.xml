@@ -49,7 +49,7 @@
     </changeSet>
 
     <changeSet id="drop_table_location" author="lisache121">
-        <dropTable tableName="location"/>
+        <dropTable tableName="info"/>
     </changeSet>
 
     <changeSet id="drop_table_user_connections" author="lisache121">
